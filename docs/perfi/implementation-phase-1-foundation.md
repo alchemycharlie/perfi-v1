@@ -93,6 +93,8 @@ perfi-v1/
 │   │   └── admin.ts          # service_role client
 │   ├── stripe/
 │   │   └── config.ts         # Stripe server client
+│   ├── actions/
+│   │   └── utils.ts          # Server Action pattern: ActionResult type, validateFormData
 │   ├── utils/
 │   │   ├── cn.ts             # Class name merge utility
 │   │   ├── currency.ts       # GBP formatting
@@ -170,11 +172,12 @@ CSS custom properties defined in `globals.css` per Phase 4 Section 4:
 
 ## Deviations from Planning Docs
 
-| Area              | Plan                         | Actual                                                  | Reason                                                                                                                          |
-| ----------------- | ---------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| Font loading      | `next/font/google` for Inter | System sans-serif fallback                              | Google Fonts blocked in build environment. Self-hosted Inter to be added in Phase B/C when deployment environment is confirmed. |
-| Middleware naming | `middleware.ts`              | `middleware.ts` (deprecated in Next.js 16, now "proxy") | Next.js 16 renamed middleware to proxy. The file still works under the old name. Will evaluate migration in a future phase.     |
-| Hosting           | Phase 5 recommends Vercel    | Not yet deployed                                        | Deployment is part of Build Phase A in the planning docs. Will be addressed in Implementation Phase 2.                          |
+| Area              | Plan                                                  | Actual                                                                                   | Reason                                                                                                                                                                                                         |
+| ----------------- | ----------------------------------------------------- | ---------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Font loading      | `next/font/google` for Inter                          | System sans-serif fallback                                                               | Google Fonts blocked in build environment. Self-hosted Inter to be added in Phase B/C when deployment environment is confirmed.                                                                                |
+| Middleware naming | `middleware.ts`                                       | `middleware.ts` (deprecated in Next.js 16, now "proxy")                                  | Next.js 16 renamed middleware to proxy. The file still works under the old name. Will evaluate migration in a future phase.                                                                                    |
+| Tailwind config   | Phase 4 lists `tailwind.config.ts` in repo structure  | No `tailwind.config.ts` — config via CSS `@theme` in `globals.css`                       | Tailwind v4 moved to CSS-based configuration. The `@theme inline` block in `globals.css` replaces the JS config file. This is the correct approach for Tailwind v4.                                            |
+| Hosting           | Phase 5 recommends Vercel, prompt mentions Cloudflare | Not yet deployed. Vercel is the approved host per planning docs. Cloudflare is DNS only. | Final master plan (tech stack table) says: "Hosting: Vercel (changed from Cloudflare in Phase 5 — less friction for Next.js App Router)" and "DNS: Cloudflare". Deployment deferred to Implementation Phase 2. |
 
 ---
 

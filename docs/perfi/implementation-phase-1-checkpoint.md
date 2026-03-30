@@ -61,6 +61,7 @@
 - [x] Supabase: 4-client pattern (browser, server, middleware, admin)
 - [x] Stripe: server client with API version pinned
 - [x] Zod: schema patterns established (auth, contact, waitlist)
+- [x] Form handling: Server Action pattern with `ActionResult` type, `validateFormData` helper (`lib/actions/utils.ts`)
 - [x] Radix UI: primitives installed (no components built yet)
 - [x] Recharts: installed (no charts built yet)
 - [x] Utility helpers: `cn()`, `formatCurrency()`, plan limits
