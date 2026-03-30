@@ -74,29 +74,57 @@ async function handleWorkspaceType(
   const workspaceType = (data.workspaceType as WorkspaceType) || 'personal';
   const workspaceName = workspaceType === 'personal_household' ? 'Household' : 'My Finances';
 
-  // Create workspace
-  const { data: workspace, error: wsError } = await supabase
-    .from('workspaces')
-    .insert({ name: workspaceName, type: workspaceType, owner_id: userId })
-    .select('id')
+  // Check if workspace already exists (user navigated back)
+  const { data: existingMembership } = await supabase
+    .from('workspace_members')
+    .select('workspace_id')
+    .eq('user_id', userId)
+    .limit(1)
     .single();
 
-  if (wsError) return { success: false, error: wsError.message };
+  let workspaceId: string;
 
-  // Create membership
-  const { error: memberError } = await supabase
-    .from('workspace_members')
-    .insert({ workspace_id: workspace.id, user_id: userId, role: 'owner' });
+  if (existingMembership) {
+    // Update existing workspace type and name
+    workspaceId = existingMembership.workspace_id;
+    await supabase
+      .from('workspaces')
+      .update({ name: workspaceName, type: workspaceType })
+      .eq('id', workspaceId);
 
-  if (memberError) return { success: false, error: memberError.message };
+    // Re-seed categories: delete old defaults, insert new ones
+    await supabase
+      .from('categories')
+      .delete()
+      .eq('workspace_id', workspaceId)
+      .eq('is_default', true);
+    await seedDefaultCategories(supabase, workspaceId, workspaceType);
+  } else {
+    // Create workspace
+    const { data: workspace, error: wsError } = await supabase
+      .from('workspaces')
+      .insert({ name: workspaceName, type: workspaceType, owner_id: userId })
+      .select('id')
+      .single();
 
-  // Seed default categories
-  await seedDefaultCategories(supabase, workspace.id, workspaceType);
+    if (wsError) return { success: false, error: wsError.message };
+    workspaceId = workspace.id;
+
+    // Create membership
+    const { error: memberError } = await supabase
+      .from('workspace_members')
+      .insert({ workspace_id: workspaceId, user_id: userId, role: 'owner' });
+
+    if (memberError) return { success: false, error: memberError.message };
+
+    // Seed default categories
+    await seedDefaultCategories(supabase, workspaceId, workspaceType);
+  }
 
   // Update onboarding step
   await supabase.from('profiles').update({ onboarding_step: 2 }).eq('id', userId);
 
-  return { success: true, data: workspace.id };
+  return { success: true, data: workspaceId };
 }
 
 async function handleIncome(
