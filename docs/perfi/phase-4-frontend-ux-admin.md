@@ -14,12 +14,12 @@ App Router is the right choice for PerFi because:
 
 ### Rendering strategy per surface
 
-| Surface | Strategy | Reason |
-|---------|----------|--------|
-| Marketing (`(marketing)/*`) | Static (SSG) with `generateStaticParams` or static exports | SEO, fast load, no user-specific data |
-| Auth (`(auth)/*`) | Server-rendered | Minimal, no caching needed |
-| App (`app/*`) | Server Components + Client Components where interactive | Data fetched server-side via Supabase, interactive elements (forms, charts, modals) are Client Components |
-| Admin (`admin/*`) | Server Components | Data fetched via service_role server-side. Minimal interactivity. |
+| Surface                     | Strategy                                                   | Reason                                                                                                    |
+| --------------------------- | ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| Marketing (`(marketing)/*`) | Static (SSG) with `generateStaticParams` or static exports | SEO, fast load, no user-specific data                                                                     |
+| Auth (`(auth)/*`)           | Server-rendered                                            | Minimal, no caching needed                                                                                |
+| App (`app/*`)               | Server Components + Client Components where interactive    | Data fetched server-side via Supabase, interactive elements (forms, charts, modals) are Client Components |
+| Admin (`admin/*`)           | Server Components                                          | Data fetched via service_role server-side. Minimal interactivity.                                         |
 
 ### Key architectural decisions
 
@@ -112,12 +112,12 @@ perfi/
 
 Covered in Phase 2 section 4 and confirmed in Phase 3 section 9. Summary of layout behaviour:
 
-| Route group | Layout | Chrome | Auth |
-|-------------|--------|--------|------|
-| `(marketing)` | Marketing layout | Header nav + footer | None |
-| `(auth)` | Auth layout | Centred card, logo only | Redirect if logged in |
-| `app/` | App layout | Sidebar + top bar + workspace context | Required |
-| `admin/` | Admin layout | Admin sidebar + admin top bar | Required + admin role |
+| Route group   | Layout           | Chrome                                | Auth                  |
+| ------------- | ---------------- | ------------------------------------- | --------------------- |
+| `(marketing)` | Marketing layout | Header nav + footer                   | None                  |
+| `(auth)`      | Auth layout      | Centred card, logo only               | Redirect if logged in |
+| `app/`        | App layout       | Sidebar + top bar + workspace context | Required              |
+| `admin/`      | Admin layout     | Admin sidebar + admin top bar         | Required + admin role |
 
 ### Layout composition
 
@@ -141,18 +141,18 @@ Define the design system as CSS custom properties in `globals.css`, referenced b
 
 ```css
 :root {
-  --color-bg-primary: 255 255 255;       /* White */
-  --color-bg-secondary: 248 248 248;     /* Off-white */
-  --color-bg-tertiary: 240 240 240;      /* Light grey */
-  --color-text-primary: 23 23 23;        /* Near-black */
-  --color-text-secondary: 100 100 100;   /* Mid grey */
-  --color-text-muted: 160 160 160;       /* Light text */
-  --color-accent: 56 120 100;            /* Muted teal-green */
-  --color-accent-hover: 45 100 82;       /* Darker teal */
-  --color-success: 34 139 84;            /* Green */
-  --color-warning: 200 140 30;           /* Amber */
-  --color-danger: 180 50 50;             /* Muted red — not aggressive */
-  --color-border: 230 230 230;           /* Subtle borders */
+  --color-bg-primary: 255 255 255; /* White */
+  --color-bg-secondary: 248 248 248; /* Off-white */
+  --color-bg-tertiary: 240 240 240; /* Light grey */
+  --color-text-primary: 23 23 23; /* Near-black */
+  --color-text-secondary: 100 100 100; /* Mid grey */
+  --color-text-muted: 160 160 160; /* Light text */
+  --color-accent: 56 120 100; /* Muted teal-green */
+  --color-accent-hover: 45 100 82; /* Darker teal */
+  --color-success: 34 139 84; /* Green */
+  --color-warning: 200 140 30; /* Amber */
+  --color-danger: 180 50 50; /* Muted red — not aggressive */
+  --color-border: 230 230 230; /* Subtle borders */
   --radius-sm: 0.375rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
@@ -185,13 +185,13 @@ Define the design system as CSS custom properties in `globals.css`, referenced b
 
 ### Brand alignment
 
-| Brand reference | What to borrow | What to avoid |
-|-----------------|----------------|---------------|
-| **Notion** | Clean typography, generous whitespace, flat UI with subtle depth | Over-complex nested UI, icon overload |
-| **Granola** | Interactive homepage feel, organic warmth, modern polish | Nothing specific to avoid |
-| **Plum** | Friendly finance tone, approachable savings UX | Chatbot gimmick, overly playful |
-| **Hostinger** | Bold CTAs, clean pricing tables, trust-building layout | Aggressive upselling |
-| **DixonBaxi** | Slightly futuristic aesthetic, confident typography | Too abstract or art-directed for a utility product |
+| Brand reference | What to borrow                                                   | What to avoid                                      |
+| --------------- | ---------------------------------------------------------------- | -------------------------------------------------- |
+| **Notion**      | Clean typography, generous whitespace, flat UI with subtle depth | Over-complex nested UI, icon overload              |
+| **Granola**     | Interactive homepage feel, organic warmth, modern polish         | Nothing specific to avoid                          |
+| **Plum**        | Friendly finance tone, approachable savings UX                   | Chatbot gimmick, overly playful                    |
+| **Hostinger**   | Bold CTAs, clean pricing tables, trust-building layout           | Aggressive upselling                               |
+| **DixonBaxi**   | Slightly futuristic aesthetic, confident typography              | Too abstract or art-directed for a utility product |
 
 ---
 
@@ -276,6 +276,7 @@ export async function createTransaction(formData: FormData) {
 ### When to use API routes
 
 Only for:
+
 - `/api/webhooks/stripe` — Stripe webhook handler
 - `/api/waitlist` — Public waitlist form submission (no auth)
 - `/api/contact` — Public contact form submission (no auth)
@@ -287,6 +288,7 @@ These are endpoints called by external services or public forms that cannot use 
 Minimal. Most state lives on the server (database) and is fetched per-request.
 
 Client-side state is used for:
+
 - **Active workspace ID**: React context, persisted to localStorage. Sent with every server action.
 - **UI state**: Modal open/closed, form input values, sidebar collapsed state. Standard React state.
 - **Optimistic updates**: When adding a transaction, show it in the list immediately before the server action completes. Use `useOptimistic` from React.
@@ -332,14 +334,14 @@ Every form in PerFi follows the same pattern:
 
 ### Validation rules
 
-| Entity | Key validations |
-|--------|----------------|
-| Transaction | Amount > 0, description required, valid account_id, valid category_id, date not in far future |
-| Account | Name required, type from enum, balance is numeric |
-| Budget | Amount > 0, valid category_id, unique per category per workspace |
-| Bill | Name required, amount > 0, valid frequency, valid payment method, next_due_date required |
-| Goal | Name required, target_amount > 0, valid type |
-| Income source | Name required, amount > 0, valid frequency, valid type |
+| Entity        | Key validations                                                                               |
+| ------------- | --------------------------------------------------------------------------------------------- |
+| Transaction   | Amount > 0, description required, valid account_id, valid category_id, date not in far future |
+| Account       | Name required, type from enum, balance is numeric                                             |
+| Budget        | Amount > 0, valid category_id, unique per category per workspace                              |
+| Bill          | Name required, amount > 0, valid frequency, valid payment method, next_due_date required      |
+| Goal          | Name required, target_amount > 0, valid type                                                  |
+| Income source | Name required, amount > 0, valid frequency, valid type                                        |
 
 ### Error handling
 
@@ -354,6 +356,7 @@ Every form in PerFi follows the same pattern:
 ### Library: Recharts
 
 **Recharts** is the recommended charting library:
+
 - Built on React + D3 — composable, customisable
 - Good SSR support (renders SVG, not Canvas)
 - Accessible: SVG elements can have ARIA labels
@@ -362,17 +365,17 @@ Every form in PerFi follows the same pattern:
 
 ### Charts needed for v1
 
-| Location | Chart type | Data |
-|----------|-----------|------|
-| **Dashboard — Budget status** | Horizontal bar chart | Per-category: budget vs spent this month |
-| **Dashboard — Account balances** | No chart — use StatCards | Balance per account |
-| **Budgets page** | Progress bars (per category) | Budget limit vs spent, month selector |
-| **Analytics — Spending by category** | Donut/pie chart | Spending breakdown for selected period |
-| **Analytics — Spending over time** | Line or area chart | Monthly spending trend (3–6 months) |
-| **Analytics — Income vs expenses** | Stacked bar chart | Monthly income vs expenses |
-| **Goals — Progress** | Progress bar or ring | Current amount vs target |
-| **Debt — Payoff progress** | Progress bar | Balance vs original amount |
-| **Cashflow calendar** | Custom calendar grid | Not a chart — a date grid with income/expense markers |
+| Location                             | Chart type                   | Data                                                  |
+| ------------------------------------ | ---------------------------- | ----------------------------------------------------- |
+| **Dashboard — Budget status**        | Horizontal bar chart         | Per-category: budget vs spent this month              |
+| **Dashboard — Account balances**     | No chart — use StatCards     | Balance per account                                   |
+| **Budgets page**                     | Progress bars (per category) | Budget limit vs spent, month selector                 |
+| **Analytics — Spending by category** | Donut/pie chart              | Spending breakdown for selected period                |
+| **Analytics — Spending over time**   | Line or area chart           | Monthly spending trend (3–6 months)                   |
+| **Analytics — Income vs expenses**   | Stacked bar chart            | Monthly income vs expenses                            |
+| **Goals — Progress**                 | Progress bar or ring         | Current amount vs target                              |
+| **Debt — Payoff progress**           | Progress bar                 | Balance vs original amount                            |
+| **Cashflow calendar**                | Custom calendar grid         | Not a chart — a date grid with income/expense markers |
 
 ### Visualisation principles
 
@@ -405,16 +408,16 @@ These are concrete design rules, not abstract principles. Every page and compone
 
 Every page has one clear thing the user can do. The primary action is visually prominent (filled button, contrasting colour). Secondary actions are text links or outlined buttons.
 
-| Page | Primary action |
-|------|---------------|
-| Dashboard | + Transaction |
-| Accounts | Add account |
+| Page         | Primary action                   |
+| ------------ | -------------------------------- |
+| Dashboard    | + Transaction                    |
+| Accounts     | Add account                      |
 | Transactions | + Transaction (or filter/search) |
-| Budgets | Set budget (or adjust) |
-| Bills | Add bill |
-| Goals | Create goal |
-| Debt | Add debt |
-| Income | Add income source |
+| Budgets      | Set budget (or adjust)           |
+| Bills        | Add bill                         |
+| Goals        | Create goal                      |
+| Debt         | Add debt                         |
+| Income       | Add income source                |
 
 ### 9.2 Predictable layout
 
@@ -462,18 +465,18 @@ Every page has one clear thing the user can do. The primary action is visually p
 
 ### Concrete requirements
 
-| Requirement | Implementation |
-|-------------|---------------|
-| **Keyboard navigation** | Every interactive element reachable via Tab. Focus ring visible on all focused elements. Custom components (dropdowns, modals) trap focus correctly. |
+| Requirement               | Implementation                                                                                                                                                                                                      |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Keyboard navigation**   | Every interactive element reachable via Tab. Focus ring visible on all focused elements. Custom components (dropdowns, modals) trap focus correctly.                                                                |
 | **Screen reader support** | All images have alt text. All icons have aria-label or are aria-hidden if decorative. Form fields have associated labels (never placeholder-only). Landmarks: `<nav>`, `<main>`, `<aside>`, `<header>`, `<footer>`. |
-| **Colour contrast** | All text meets 4.5:1 contrast ratio against background. Large text (18px+) meets 3:1. Interactive elements meet 3:1 for non-text contrast. |
-| **Focus management** | When a modal opens, focus moves to the modal. When it closes, focus returns to the trigger. Page transitions move focus to the main content area. |
-| **Reduced motion** | Respect `prefers-reduced-motion`. No animations when this preference is set. Charts render instantly. Page transitions are instant. |
-| **Semantic HTML** | Use correct heading hierarchy (h1 → h2 → h3, no skipping). Use `<button>` for actions, `<a>` for navigation. Use `<table>` for tabular data (transaction lists, admin tables). |
-| **Error identification** | Form errors are associated with their field via `aria-describedby`. Error text is visually distinct (colour + icon) and announced to screen readers. |
-| **Skip links** | "Skip to main content" link at the top of every page, visible on focus. |
-| **Touch targets** | All interactive elements at least 44x44px on touch devices. |
-| **Zoom** | Content is readable and functional at 200% browser zoom. No horizontal scrolling at 200%. |
+| **Colour contrast**       | All text meets 4.5:1 contrast ratio against background. Large text (18px+) meets 3:1. Interactive elements meet 3:1 for non-text contrast.                                                                          |
+| **Focus management**      | When a modal opens, focus moves to the modal. When it closes, focus returns to the trigger. Page transitions move focus to the main content area.                                                                   |
+| **Reduced motion**        | Respect `prefers-reduced-motion`. No animations when this preference is set. Charts render instantly. Page transitions are instant.                                                                                 |
+| **Semantic HTML**         | Use correct heading hierarchy (h1 → h2 → h3, no skipping). Use `<button>` for actions, `<a>` for navigation. Use `<table>` for tabular data (transaction lists, admin tables).                                      |
+| **Error identification**  | Form errors are associated with their field via `aria-describedby`. Error text is visually distinct (colour + icon) and announced to screen readers.                                                                |
+| **Skip links**            | "Skip to main content" link at the top of every page, visible on focus.                                                                                                                                             |
+| **Touch targets**         | All interactive elements at least 44x44px on touch devices.                                                                                                                                                         |
+| **Zoom**                  | Content is readable and functional at 200% browser zoom. No horizontal scrolling at 200%.                                                                                                                           |
 
 ### Testing strategy
 
@@ -525,15 +528,15 @@ Desktop: 2-column grid with a full-width top section.
 
 ### Cards
 
-| Card | Data source | Link |
-|------|-------------|------|
-| **Total balance** | Sum of all `accounts.balance` | → Accounts |
-| **Account balances** | Each active account | → Account detail |
-| **Next pay day** | Nearest `income_sources.next_pay_date` | → Income |
-| **Upcoming bills** | `bills` where `next_due_date` within 7 days | → Bills |
-| **Budget status** | `budgets` with transaction sum for current month | → Budgets |
-| **Goals progress** | Active `goals` with `current_amount / target_amount` | → Goals |
-| **Recent transactions** | Last 5 `transactions` ordered by date | → Transactions |
+| Card                    | Data source                                          | Link             |
+| ----------------------- | ---------------------------------------------------- | ---------------- |
+| **Total balance**       | Sum of all `accounts.balance`                        | → Accounts       |
+| **Account balances**    | Each active account                                  | → Account detail |
+| **Next pay day**        | Nearest `income_sources.next_pay_date`               | → Income         |
+| **Upcoming bills**      | `bills` where `next_due_date` within 7 days          | → Bills          |
+| **Budget status**       | `budgets` with transaction sum for current month     | → Budgets        |
+| **Goals progress**      | Active `goals` with `current_amount / target_amount` | → Goals          |
+| **Recent transactions** | Last 5 `transactions` ordered by date                | → Transactions   |
 
 ### Responsive behaviour
 
@@ -569,17 +572,17 @@ Every section of the app has a thoughtful empty state. No blank pages, no "No da
 
 ### Empty states per page
 
-| Page | Title | Description | Action |
-|------|-------|-------------|--------|
-| **Dashboard** (no accounts) | "Welcome to PerFi" | "Add your first account to start tracking your finances." | Add account |
-| **Accounts** | "No accounts yet" | "Accounts help you track your balances. Add a current account, savings, credit card, or cash." | Add account |
-| **Transactions** | "No transactions yet" | "Start logging your spending and income. It only takes a few seconds." | Add transaction |
-| **Budgets** | "No budgets set" | "Budgets help you control spending by category. Set a monthly limit and see how you're tracking." | Set a budget |
-| **Bills** | "No bills tracked" | "Track your recurring bills and subscriptions so you never miss a payment." | Add a bill |
-| **Cashflow** | "Not enough data" | "Add some accounts, income sources, and bills to see your cashflow calendar." | Add account |
-| **Goals** | "No goals yet" | "Set a savings target or a financial goal to work toward." | Create a goal |
-| **Debt** | "No debts tracked" | "If you have credit cards, loans, or other debts, tracking them helps you plan payoff." | Add a debt |
-| **Income** | "No income sources" | "Add your employment income, benefits, or other income to see your full financial picture." | Add income source |
+| Page                        | Title                 | Description                                                                                       | Action            |
+| --------------------------- | --------------------- | ------------------------------------------------------------------------------------------------- | ----------------- |
+| **Dashboard** (no accounts) | "Welcome to PerFi"    | "Add your first account to start tracking your finances."                                         | Add account       |
+| **Accounts**                | "No accounts yet"     | "Accounts help you track your balances. Add a current account, savings, credit card, or cash."    | Add account       |
+| **Transactions**            | "No transactions yet" | "Start logging your spending and income. It only takes a few seconds."                            | Add transaction   |
+| **Budgets**                 | "No budgets set"      | "Budgets help you control spending by category. Set a monthly limit and see how you're tracking." | Set a budget      |
+| **Bills**                   | "No bills tracked"    | "Track your recurring bills and subscriptions so you never miss a payment."                       | Add a bill        |
+| **Cashflow**                | "Not enough data"     | "Add some accounts, income sources, and bills to see your cashflow calendar."                     | Add account       |
+| **Goals**                   | "No goals yet"        | "Set a savings target or a financial goal to work toward."                                        | Create a goal     |
+| **Debt**                    | "No debts tracked"    | "If you have credit cards, loans, or other debts, tracking them helps you plan payoff."           | Add a debt        |
+| **Income**                  | "No income sources"   | "Add your employment income, benefits, or other income to see your full financial picture."       | Add income source |
 
 ### In-app walkthrough (guided tour)
 
@@ -587,12 +590,12 @@ Triggered when a user starts with demo data (Phase 2 section 9):
 
 **Tour steps:**
 
-| Step | Target | Message |
-|------|--------|---------|
-| 1 | Dashboard total balance card | "This is your dashboard. It shows your balances, upcoming bills, and budget status at a glance." |
-| 2 | Quick-add button (top bar) | "Tap here to add a transaction quickly from anywhere in the app." |
-| 3 | Sidebar | "Use the sidebar to explore your accounts, budgets, cashflow, and more." |
-| 4 | Cashflow in sidebar | "Your cashflow calendar shows when money comes in and goes out." |
+| Step | Target                       | Message                                                                                          |
+| ---- | ---------------------------- | ------------------------------------------------------------------------------------------------ |
+| 1    | Dashboard total balance card | "This is your dashboard. It shows your balances, upcoming bills, and budget status at a glance." |
+| 2    | Quick-add button (top bar)   | "Tap here to add a transaction quickly from anywhere in the app."                                |
+| 3    | Sidebar                      | "Use the sidebar to explore your accounts, budgets, cashflow, and more."                         |
+| 4    | Cashflow in sidebar          | "Your cashflow calendar shows when money comes in and goes out."                                 |
 
 **Implementation:**
 
@@ -686,12 +689,14 @@ The landing page is a long-scroll single page built from stacked sections. Each 
 ### Section-by-section content plan
 
 **Hero**
+
 - Headline: "Your money. Your way." (from Phase 1 positioning)
 - Subheadline: "A calm, accessible personal finance tool built for the UK. Track your income — including benefits — manage budgets, and see your cashflow clearly. No bank sync needed."
 - CTA: "Get Started — it's free" (primary, filled button)
 - Visual: Product screenshot or stylised dashboard render showing account balances, a budget bar, and upcoming bills. Should feel real, not a generic mockup.
 
 **Problem statement**
+
 - Lead: "Managing money shouldn't feel this hard."
 - Pain points (3 short paragraphs):
   1. "Most finance apps want to connect to your bank. But what if you'd rather stay in control?"
@@ -699,6 +704,7 @@ The landing page is a long-scroll single page built from stacked sections. Each 
   3. "And if you're neurodivergent, cluttered dashboards make financial admin even harder."
 
 **Feature highlights**
+
 - 4 cards in a grid:
   1. **Track everything manually** — "Add accounts, log transactions, and see your balances. No bank sync, no fuss."
   2. **Budgets and goals** — "Set spending limits by category. Save toward what matters."
@@ -706,16 +712,19 @@ The landing page is a long-scroll single page built from stacked sections. Each 
   4. **Benefits-aware** — "Universal Credit, PIP, Child Benefit — tracked with the same dignity as a salary."
 
 **Differentiators** (3 columns)
-  1. **Built for the UK** — "GBP. Direct debits. Pay dates. Council tax. Designed around how money actually works here."
-  2. **Designed for everyone** — "Calm, clear, and accessible by default. Built with neurodivergent users in mind."
-  3. **No bank connections** — "You control your data. No Open Banking, no API sync, no anxiety."
+
+1. **Built for the UK** — "GBP. Direct debits. Pay dates. Council tax. Designed around how money actually works here."
+2. **Designed for everyone** — "Calm, clear, and accessible by default. Built with neurodivergent users in mind."
+3. **No bank connections** — "You control your data. No Open Banking, no API sync, no anxiety."
 
 **Pricing**
+
 - Two-column comparison: Free vs Pro £4.99/month (from Phase 2 section 6)
 - Below the table: "Start free. Upgrade when you need more."
 - CTA: "Get Started — it's free"
 
 **Trust / accessibility section**
+
 - Headline: "Built with accessibility at its core."
 - 4 trust points in a grid:
   1. "WCAG 2.1 AA compliant" — "Tested with screen readers and keyboard navigation."
@@ -724,10 +733,12 @@ The landing page is a long-scroll single page built from stacked sections. Each 
   4. "Delete anytime" — "Your data is fully deletable. No dark patterns, no lock-in."
 
 **FAQ**
+
 - Accordion component grouped by topic (Phase 2 section 10 has the question list)
 - Default: all collapsed. Click to expand one at a time.
 
 **Waitlist / final CTA**
+
 - Pre-launch: "Join the waitlist" with email input + optional interest checkboxes
 - Post-launch: "Get Started — it's free" with signup button
 
@@ -745,12 +756,12 @@ A fixed-position or sticky product preview frame in the centre of the viewport. 
 
 **Scroll sequence:**
 
-| Scroll position | Preview shows | Feature text alongside |
-|----------------|---------------|----------------------|
-| Feature 1 — Manual tracking | Dashboard with account balance cards and recent transactions | "Track everything manually" copy |
-| Feature 2 — Budgets and goals | Budget progress bars and a goal card | "Budgets and goals" copy |
-| Feature 3 — Cashflow calendar | Calendar view with income/expense markers | "Cashflow calendar" copy |
-| Feature 4 — Benefits-aware | Income page showing employment + benefits side by side | "Benefits-aware" copy |
+| Scroll position               | Preview shows                                                | Feature text alongside           |
+| ----------------------------- | ------------------------------------------------------------ | -------------------------------- |
+| Feature 1 — Manual tracking   | Dashboard with account balance cards and recent transactions | "Track everything manually" copy |
+| Feature 2 — Budgets and goals | Budget progress bars and a goal card                         | "Budgets and goals" copy         |
+| Feature 3 — Cashflow calendar | Calendar view with income/expense markers                    | "Cashflow calendar" copy         |
+| Feature 4 — Benefits-aware    | Income page showing employment + benefits side by side       | "Benefits-aware" copy            |
 
 ### Technical implementation
 
@@ -805,12 +816,14 @@ The admin panel is a **functional tool**, not a showcase. It prioritises informa
 ### Page-by-page admin UX
 
 **Admin Dashboard**
+
 - 4 StatCards at top: Total users, Active (30d), Waitlist size, MRR
 - Line chart: Signups over time (last 30 days)
 - Pie chart: Plan distribution (Free vs Pro)
 - Recent signups list (last 10)
 
 **Users**
+
 - DataTable: name, email, plan, status (active/disabled), signup date, last active
 - Search by name or email
 - Filter by plan (Free/Pro), status (active/disabled)
@@ -818,6 +831,7 @@ The admin panel is a **functional tool**, not a showcase. It prioritises informa
 - User detail: profile info, subscription status, workspace count, account count, admin notes. Actions: disable/enable, add note.
 
 **Waitlist**
+
 - DataTable: email, date joined, interests, status (pending/invited/converted)
 - Search by email
 - Filter by status
@@ -825,16 +839,19 @@ The admin panel is a **functional tool**, not a showcase. It prioritises informa
 - "Export CSV" button (downloads all waitlist entries)
 
 **Subscriptions**
+
 - DataTable: user email, plan, status (active/cancelled/past_due/expired), start date, next billing
 - Summary row: Total active, MRR (active Pro × £4.99), Churned (30d)
 - No direct billing actions — link to Stripe Dashboard for payment issues
 
 **Support**
+
 - List of users with admin notes, ordered by most recent note
 - Click to view user detail + notes history
 - "Add note" form: simple textarea + save
 
 **System**
+
 - Feature flags: table of key-value pairs with toggle switches
 - Maintenance mode: prominent toggle at top
 - No complex configuration — just on/off flags
@@ -856,10 +873,12 @@ The admin panel is a **functional tool**, not a showcase. It prioritises informa
 **Location**: Dedicated `/waitlist` page + embedded section at the bottom of the landing page.
 
 **Fields**:
+
 - Email (required)
 - Interest areas (optional checkboxes): Budgeting, Cashflow, Benefits tracking, Debt tracking, Goals
 
 **Submission flow**:
+
 1. Client-side validation (valid email format)
 2. POST to `/api/waitlist` (public API route, no auth required)
 3. Server validates with Zod, checks for duplicate email
@@ -876,11 +895,13 @@ The admin panel is a **functional tool**, not a showcase. It prioritises informa
 **Location**: `/contact` page.
 
 **Fields**:
+
 - Name (required)
 - Email (required)
 - Message (required, textarea)
 
 **Submission flow**:
+
 1. Client-side validation
 2. POST to `/api/contact` (public API route)
 3. Server validates with Zod
@@ -893,6 +914,7 @@ The admin panel is a **functional tool**, not a showcase. It prioritises informa
 ### Transactional emails (auth)
 
 Supabase Auth handles transactional emails:
+
 - **Signup confirmation**: "Verify your email" — sent by Supabase Auth
 - **Password reset**: "Reset your password" — sent by Supabase Auth
 - **Magic link**: "Sign in to PerFi" — sent by Supabase Auth
@@ -902,6 +924,7 @@ Supabase Auth handles transactional emails:
 ### Waitlist invite emails (admin)
 
 When the admin sends invites from the admin panel:
+
 - Option 1: **Manual.** Admin copies the email address and sends an invite manually from their email client. Simplest for v1.
 - Option 2: **Resend integration.** Admin clicks "Send invite", which calls an API route that sends a branded email via Resend with a signup link. Better UX but adds a dependency.
 
@@ -920,6 +943,7 @@ Phase 1 lists CSV export as a v1 feature. Phase 2 defines the tier split (Free: 
 **Location**: Settings → Export Data (a section within the Settings page, not a separate page).
 
 **UX**:
+
 - Heading: "Export your data"
 - Description: "Download your financial data as a CSV file."
 - For Free users: single button "Export transactions" — downloads a CSV of all transactions in the active workspace.
@@ -950,19 +974,20 @@ Phase 2 section 8 defines a 5-step onboarding flow. This section provides the UX
 
 **Step-by-step UX**:
 
-| Step | Screen | UX detail |
-|------|--------|-----------|
-| 1. Welcome | "What should we call you?" | Single text input for display name. Pre-focused. Placeholder: "Your name". Below: "Skip" link (defaults to "User"). Primary CTA: "Continue". |
-| 2. Workspace | "How will you use PerFi?" | Two large selectable cards: "Personal" (icon: single person, description: "Track your own finances") and "Personal + Household" (icon: house, description: "Track personal and household spending together"). Click to select, then "Continue". Skip defaults to Personal. |
-| 3. Income | "What's your main income?" | Amount: CurrencyInput with bracket selector (e.g. "£0–£1,000", "£1,000–£2,000", "£2,000–£3,000", "£3,000+", or exact amount toggle). Pay frequency: segmented control (Weekly / Fortnightly / Four-weekly / Monthly). Next pay date: date picker defaulting to next occurrence. All optional. "Skip" link skips income setup. |
-| 4. Benefits | "Do you receive benefits income?" | Yes/No toggle. If Yes: checkboxes for UC, PIP, Child Benefit, Carer's Allowance, ESA, Housing Benefit, Council Tax Reduction, Other. Optional amount and frequency per selected type. All optional. "Skip" link skips benefits. |
-| 5. Start mode | "How would you like to start?" | Two large selectable cards: "Explore with demo data" (description: "See PerFi in action with sample data. You can clear it anytime.") and "Start fresh" (description: "Begin with a blank workspace and add your own data."). Must choose one — no skip. |
+| Step          | Screen                            | UX detail                                                                                                                                                                                                                                                                                                                     |
+| ------------- | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1. Welcome    | "What should we call you?"        | Single text input for display name. Pre-focused. Placeholder: "Your name". Below: "Skip" link (defaults to "User"). Primary CTA: "Continue".                                                                                                                                                                                  |
+| 2. Workspace  | "How will you use PerFi?"         | Two large selectable cards: "Personal" (icon: single person, description: "Track your own finances") and "Personal + Household" (icon: house, description: "Track personal and household spending together"). Click to select, then "Continue". Skip defaults to Personal.                                                    |
+| 3. Income     | "What's your main income?"        | Amount: CurrencyInput with bracket selector (e.g. "£0–£1,000", "£1,000–£2,000", "£2,000–£3,000", "£3,000+", or exact amount toggle). Pay frequency: segmented control (Weekly / Fortnightly / Four-weekly / Monthly). Next pay date: date picker defaulting to next occurrence. All optional. "Skip" link skips income setup. |
+| 4. Benefits   | "Do you receive benefits income?" | Yes/No toggle. If Yes: checkboxes for UC, PIP, Child Benefit, Carer's Allowance, ESA, Housing Benefit, Council Tax Reduction, Other. Optional amount and frequency per selected type. All optional. "Skip" link skips benefits.                                                                                               |
+| 5. Start mode | "How would you like to start?"    | Two large selectable cards: "Explore with demo data" (description: "See PerFi in action with sample data. You can clear it anytime.") and "Start fresh" (description: "Begin with a blank workspace and add your own data."). Must choose one — no skip.                                                                      |
 
 **Transitions**: Cards slide left-to-right between steps (or instant if `prefers-reduced-motion`). Back arrow in top-left to go to previous step.
 
 ### 17.4 Workspace Switcher and User Menu UX
 
 **Workspace switcher** (top bar, left side):
+
 - Shows the active workspace name as a dropdown trigger (e.g. "My Finances ▾")
 - Click opens a dropdown listing all workspaces the user is a member of
 - Each item shows workspace name and type badge (Personal / Household)
@@ -971,6 +996,7 @@ Phase 2 section 8 defines a 5-step onboarding flow. This section provides the UX
 - Free users see only 1 workspace. Pro users see up to 5.
 
 **User avatar menu** (top bar, right side):
+
 - Shows the user's avatar (initials on a coloured circle) or display name
 - Click opens a dropdown:
   - **Settings** → `/app/settings`
@@ -985,34 +1011,36 @@ Phase 2 section 8 defines a 5-step onboarding flow. This section provides the UX
 
 Sections, each expandable or visible as a vertical stack:
 
-| Section | Fields | Actions |
-|---------|--------|---------|
-| **Profile** | Display name (editable inline), email (read-only, with "Change email" link) | Save |
-| **Workspace** | Active workspace name (editable), type (read-only), default categories (manage list) | Save |
-| **Preferences** | Reduce motion toggle, date format preference | Save |
-| **Export** | Export data section (see 17.1) | Export buttons |
-| **Tour** | "Replay the PerFi tour" link | Resets `has_seen_tour` and redirects to dashboard |
-| **Danger zone** | "Delete my account" — red text, requires confirmation dialog ("Type DELETE to confirm") | Delete |
+| Section         | Fields                                                                                  | Actions                                           |
+| --------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| **Profile**     | Display name (editable inline), email (read-only, with "Change email" link)             | Save                                              |
+| **Workspace**   | Active workspace name (editable), type (read-only), default categories (manage list)    | Save                                              |
+| **Preferences** | Reduce motion toggle, date format preference                                            | Save                                              |
+| **Export**      | Export data section (see 17.1)                                                          | Export buttons                                    |
+| **Tour**        | "Replay the PerFi tour" link                                                            | Resets `has_seen_tour` and redirects to dashboard |
+| **Danger zone** | "Delete my account" — red text, requires confirmation dialog ("Type DELETE to confirm") | Delete                                            |
 
 **Billing page** (`/app/settings/billing`):
 
-| State | Display |
-|-------|---------|
-| **Free plan** | "You're on the Free plan." Feature comparison card showing what Pro unlocks. CTA: "Upgrade to Pro — £4.99/month" → Opens Stripe Checkout. |
-| **Pro plan (active)** | "You're on Pro. Next billing date: [date]." Payment method summary (last 4 digits). Actions: "Manage payment method" (→ Stripe Customer Portal), "Cancel subscription". |
-| **Pro plan (cancelling)** | "Your Pro plan ends on [date]. You'll keep access until then." CTA: "Resume subscription" (→ reactivates via Stripe). |
-| **Pro plan (past due)** | "Your payment failed. Please update your payment method." CTA: "Update payment" (→ Stripe Customer Portal). |
+| State                     | Display                                                                                                                                                                 |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Free plan**             | "You're on the Free plan." Feature comparison card showing what Pro unlocks. CTA: "Upgrade to Pro — £4.99/month" → Opens Stripe Checkout.                               |
+| **Pro plan (active)**     | "You're on Pro. Next billing date: [date]." Payment method summary (last 4 digits). Actions: "Manage payment method" (→ Stripe Customer Portal), "Cancel subscription". |
+| **Pro plan (cancelling)** | "Your Pro plan ends on [date]. You'll keep access until then." CTA: "Resume subscription" (→ reactivates via Stripe).                                                   |
+| **Pro plan (past due)**   | "Your payment failed. Please update your payment method." CTA: "Update payment" (→ Stripe Customer Portal).                                                             |
 
 ### 17.6 Financial Goals vs Savings Goals — UX Distinction
 
 The Goals page (`/app/goals`) shows both types with clear visual distinction:
 
 **Goal creation flow**:
+
 - Click "Create goal" → modal or form with type selector:
   - **"Save toward something"** (savings goal) — fields: Name, Target amount, Target date (optional)
   - **"Reach a financial target"** (financial goal) — fields: Name, Target description, Link to debt (optional dropdown), Link to budget category (optional dropdown), Target date (optional)
 
 **Goals list**:
+
 - Each goal card shows a type badge: "Savings" (teal) or "Financial" (amber)
 - Savings goals show a progress bar: £620 / £1,500 (41%)
 - Financial goals show progress differently depending on link:
@@ -1025,6 +1053,7 @@ The Goals page (`/app/goals`) shows both types with clear visual distinction:
 **Layout**: Month view, 7-column CSS grid (Mon–Sun), 5–6 rows.
 
 **Day cells**:
+
 - Date number in top-left
 - Coloured dots for events:
   - Income (teal dot) — pay dates from `income_sources`
@@ -1040,6 +1069,7 @@ The Goals page (`/app/goals`) shows both types with clear visual distinction:
 **Projected balance line**: Below the calendar grid, a simple horizontal sparkline showing projected balance across the month — rising on income days, falling on bill/expense days. This is a lightweight visualisation, not a full chart.
 
 **Responsive**:
+
 - Desktop: full month grid
 - Mobile: list view — days stacked vertically, showing only days with events. "Show all days" toggle.
 
@@ -1060,6 +1090,7 @@ Phase 4 defers to Phase 3 section 8 for auth implementation details. For clarity
 Phase 4 defers to Phase 3 section 14 for Stripe implementation details. For clarity, the key frontend touchpoints are:
 
 **Upgrade flow**:
+
 1. User clicks "Upgrade to Pro" (from UpgradeBanner, billing page, or pricing)
 2. Server Action creates a Stripe Checkout Session with the user's email and the Pro price ID
 3. User is redirected to Stripe Checkout (hosted by Stripe, not embedded)
@@ -1068,6 +1099,7 @@ Phase 4 defers to Phase 3 section 14 for Stripe implementation details. For clar
 6. User is redirected back to PerFi with updated subscription
 
 **Cancel flow**:
+
 1. User clicks "Cancel subscription" on billing page
 2. Server Action calls Stripe API to set `cancel_at_period_end = true`
 3. Stripe sends `customer.subscription.updated` webhook
@@ -1075,6 +1107,7 @@ Phase 4 defers to Phase 3 section 14 for Stripe implementation details. For clar
 5. UI shows "Your Pro plan ends on [date]"
 
 **Webhook handler** (`/api/webhooks/stripe`):
+
 - Verifies Stripe signature using webhook signing secret
 - Handles events: `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.payment_failed`, `invoice.paid`
 - All updates via `service_role` client
@@ -1084,17 +1117,17 @@ Phase 4 defers to Phase 3 section 14 for Stripe implementation details. For clar
 
 Maps Phase 3 entitlement rules to specific UI enforcement points:
 
-| Plan limit | Where enforced | UX behaviour |
-|------------|---------------|--------------|
-| **Accounts ≤ 3** (Free) | Account creation form / "Add account" action | Check count before showing form. If at limit, show UpgradeBanner inline instead of form. |
-| **Budgets ≤ 5** (Free) | Budget creation / "Set budget" action | Same pattern — inline UpgradeBanner. |
-| **Goals ≤ 2** (Free) | Goal creation / "Create goal" action | Same pattern. |
-| **Workspaces ≤ 1** (Free) | Workspace switcher "Create workspace" | Greyed out with tooltip: "Upgrade to Pro for multiple workspaces." |
-| **Advanced analytics** (Pro only) | Analytics page | Free users see basic spending-by-category chart. Below it: UpgradeBanner with "Unlock trends, net worth tracking, and more with Pro." |
-| **Cashflow forecasting** (Pro only) | Cashflow page, below the calendar | Free users see the calendar with current/past data. Forecasting section shows UpgradeBanner. |
-| **Net worth tracking** (Pro only) | Analytics page, net worth section | Section shows UpgradeBanner for Free users. |
-| **CSV import** (Pro only) | Settings → Import section (not built in v1 but gated) | If accessed, show UpgradeBanner. |
-| **CSV export (full)** (Pro only) | Settings → Export section | Free users see "Export transactions" only. Other options show Pro badge + UpgradeBanner. |
+| Plan limit                          | Where enforced                                        | UX behaviour                                                                                                                          |
+| ----------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| **Accounts ≤ 3** (Free)             | Account creation form / "Add account" action          | Check count before showing form. If at limit, show UpgradeBanner inline instead of form.                                              |
+| **Budgets ≤ 5** (Free)              | Budget creation / "Set budget" action                 | Same pattern — inline UpgradeBanner.                                                                                                  |
+| **Goals ≤ 2** (Free)                | Goal creation / "Create goal" action                  | Same pattern.                                                                                                                         |
+| **Workspaces ≤ 1** (Free)           | Workspace switcher "Create workspace"                 | Greyed out with tooltip: "Upgrade to Pro for multiple workspaces."                                                                    |
+| **Advanced analytics** (Pro only)   | Analytics page                                        | Free users see basic spending-by-category chart. Below it: UpgradeBanner with "Unlock trends, net worth tracking, and more with Pro." |
+| **Cashflow forecasting** (Pro only) | Cashflow page, below the calendar                     | Free users see the calendar with current/past data. Forecasting section shows UpgradeBanner.                                          |
+| **Net worth tracking** (Pro only)   | Analytics page, net worth section                     | Section shows UpgradeBanner for Free users.                                                                                           |
+| **CSV import** (Pro only)           | Settings → Import section (not built in v1 but gated) | If accessed, show UpgradeBanner.                                                                                                      |
+| **CSV export (full)** (Pro only)    | Settings → Export section                             | Free users see "Export transactions" only. Other options show Pro badge + UpgradeBanner.                                              |
 
 All enforcement happens **both server-side** (Server Actions check `subscriptions.plan` before executing) **and client-side** (UI shows/hides based on plan from session context). Server-side is authoritative.
 
@@ -1107,11 +1140,13 @@ Phase 4 section 11 left this as "bottom tab bar or hamburger". Decision:
 **Bottom tab bar on mobile (<768px).**
 
 Rationale:
+
 - Bottom tabs are more accessible — thumb-reachable, always visible, predictable.
 - Hamburger menus hide navigation and add cognitive load (against ND principles).
 - PerFi has 10 sidebar items — too many for a tab bar. Solution: show the 5 most-used as tabs, with a "More" tab for the rest.
 
 **Mobile tab bar:**
+
 ```
 [Dashboard]  [Transactions]  [Budgets]  [Cashflow]  [More ···]
 ```
@@ -1123,21 +1158,25 @@ On tablet (768–1023px): sidebar collapses to icon-only rail (icons visible, la
 ### 17.12 Error Pages and Global Error Handling
 
 **404 — Not Found** (`app/not-found.tsx`):
+
 - Friendly message: "Page not found. It may have been moved or doesn't exist."
 - Link: "Go to Dashboard" (if authenticated) or "Go to Home" (if not).
 - Same layout as the surface the user was in (marketing layout for public pages, app layout for app pages).
 
 **500 — Server Error** (`app/error.tsx` and `app/global-error.tsx`):
+
 - Message: "Something went wrong. We're looking into it."
 - "Try again" button (calls `reset()` to retry the failed component).
 - No technical details shown to the user.
 
 **Disabled account** (redirect target from middleware):
+
 - Route: `/disabled` (simple static page, no auth layout)
 - Message: "Your account has been disabled. Please contact support."
 - Link to contact page.
 
 **Offline / network error**:
+
 - Not a dedicated page. Forms retain state (section 7). Failed fetches show an inline retry prompt within the component that failed.
 
 ### 17.13 Loading State Pattern (Global)
@@ -1147,6 +1186,7 @@ Dashboard uses Suspense with per-card skeletons (section 11). The same pattern a
 **Pattern**: Every page that fetches data uses a `loading.tsx` file in its route directory (Next.js convention). This shows a skeleton that matches the page layout.
 
 **Skeleton rules**:
+
 - Skeletons match the shape of the content they replace (rectangles for text, circles for avatars, bars for charts).
 - Animate with a subtle pulse (`animate-pulse` in Tailwind). Respect `prefers-reduced-motion` — show static grey blocks instead.
 - Never show a full-page spinner. Always show the page chrome (sidebar, top bar) immediately and skeleton the content area.
@@ -1207,6 +1247,7 @@ When selecting a category in the quick-add transaction form, the dropdown includ
 Phase 2 section 9 specifies: "persistent banner 'Exploring demo data' with a 'Clear demo data' action."
 
 **Implementation**:
+
 - A `DemoBanner` component rendered at the top of the app layout, below the top bar, above the page content.
 - Only shown when `workspaces.is_demo = true` for the active workspace.
 - Design: subtle background (light amber or light blue), not full-width alert — sits within the content area.
@@ -1255,6 +1296,7 @@ Phase 4 has empty states, forms, and dashboard layout, but several key pages nee
 **Accounts page** (`/app/accounts`):
 
 Card grid showing each account:
+
 ```
 ┌─────────────────┐  ┌─────────────────┐
 │ Barclays Current │  │ Nationwide Sav. │
@@ -1263,6 +1305,7 @@ Card grid showing each account:
 │ [View →]         │  │ [View →]        │
 └─────────────────┘  └─────────────────┘
 ```
+
 Click → Account detail page: transaction list filtered to that account, balance at top.
 
 **Budgets page** (`/app/budgets`):
@@ -1270,6 +1313,7 @@ Click → Account detail page: transaction list filtered to that account, balanc
 Month selector at top: [← Feb] **March 2026** [Apr →]
 
 Category budget cards stacked vertically:
+
 ```
 Groceries          £218 / £300           73%
 ████████████████░░░░░░░
@@ -1278,6 +1322,7 @@ Eating Out         £36 / £80             45%
 Transport          £62 / £100            62%
 ████████████░░░░░░░░░░
 ```
+
 - Bar colour: teal when ≤80%, amber when 80–100%, muted red-brown when >100%
 - Click a category → shows transactions for that category this month
 - "Set budget" button next to categories without budgets
@@ -1287,18 +1332,21 @@ Transport          £62 / £100            62%
 Two sections: "Upcoming" and "All bills"
 
 Upcoming (next 14 days):
+
 ```
 Energy        3rd Apr    Direct debit    £85.00
 Netflix       20th Apr   Card            £10.99
 ```
 
 All bills: DataTable with name, amount, frequency, next due, payment method, active toggle.
+
 - `is_subscription` items show a "Sub" badge
 - Filter: Subscriptions only / All
 
 **Income page** (`/app/income`):
 
 Card per income source:
+
 ```
 ┌──────────────────────────────────────┐
 │ Salary — Acme Ltd           Employment│
@@ -1312,11 +1360,13 @@ Card per income source:
 │                         [Edit] [···] │
 └──────────────────────────────────────┘
 ```
+
 Benefits and employment income use the same card design — equal visual weight (Phase 1 principle).
 
 **Debt page** (`/app/debt`):
 
 Card per debt:
+
 ```
 ┌──────────────────────────────────────┐
 │ Tesco Credit Card                    │
@@ -1328,12 +1378,14 @@ Card per debt:
 │                         [Edit] [···] │
 └──────────────────────────────────────┘
 ```
+
 - Progress bar shows payoff progress (if linked to a financial goal)
 - If linked to a goal: "Linked to goal: Pay off credit card"
 
 **Analytics page** (`/app/analytics`):
 
 Free users see:
+
 ```
 Spending by Category (this month)
 [Donut chart: Groceries 35%, Transport 15%, ...]
@@ -1342,6 +1394,7 @@ Spending by Category (this month)
 ```
 
 Pro users see:
+
 ```
 [Period selector: This month / Last 3 months / Last 6 months / Custom]
 
@@ -1375,5 +1428,5 @@ Net Worth
 
 ---
 
-*Document version: Phase 4 v1.2 (updated after second audit)*
-*Created: 2026-03-30*
+_Document version: Phase 4 v1.2 (updated after second audit)_
+_Created: 2026-03-30_

@@ -8,20 +8,20 @@ Implementation is split into 6 build phases. Each phase results in a deployable,
 
 **Goal**: Deployable skeleton with auth, database, and one working route per surface.
 
-| Task | Detail |
-|------|--------|
-| Initialise Next.js project with App Router | Tailwind, TypeScript, ESLint, Prettier |
-| Set up Supabase project | Create project, configure auth settings, email templates |
-| Configure environment variables | `.env.local`, `.env.example`, Supabase keys, Stripe keys (test mode) |
-| Create all 17 database tables | SQL migrations in `supabase/migrations/` |
-| Set up RLS policies | Standard workspace membership pattern on all tables |
-| Create database triggers | On signup: create profile + subscription. On transaction CUD: update account balance. |
-| Set up auth | Supabase Auth with email+password, email verification, `@supabase/ssr` middleware |
-| Create Supabase client files | `lib/supabase/client.ts`, `server.ts`, `middleware.ts`, `admin.ts` |
-| Create root layout, middleware.ts | Auth guards, `is_disabled` check, onboarding redirect, admin role check |
-| Create route group layouts | `(marketing)`, `(auth)`, `app/`, `admin/` with placeholder pages |
-| Deploy to Cloudflare (or Vercel) | Verify Server Actions work. If Cloudflare fails, switch to Vercel now. |
-| Set up CI | Linting, type checking, axe-core accessibility checks |
+| Task                                       | Detail                                                                                |
+| ------------------------------------------ | ------------------------------------------------------------------------------------- |
+| Initialise Next.js project with App Router | Tailwind, TypeScript, ESLint, Prettier                                                |
+| Set up Supabase project                    | Create project, configure auth settings, email templates                              |
+| Configure environment variables            | `.env.local`, `.env.example`, Supabase keys, Stripe keys (test mode)                  |
+| Create all 17 database tables              | SQL migrations in `supabase/migrations/`                                              |
+| Set up RLS policies                        | Standard workspace membership pattern on all tables                                   |
+| Create database triggers                   | On signup: create profile + subscription. On transaction CUD: update account balance. |
+| Set up auth                                | Supabase Auth with email+password, email verification, `@supabase/ssr` middleware     |
+| Create Supabase client files               | `lib/supabase/client.ts`, `server.ts`, `middleware.ts`, `admin.ts`                    |
+| Create root layout, middleware.ts          | Auth guards, `is_disabled` check, onboarding redirect, admin role check               |
+| Create route group layouts                 | `(marketing)`, `(auth)`, `app/`, `admin/` with placeholder pages                      |
+| Deploy to Cloudflare (or Vercel)           | Verify Server Actions work. If Cloudflare fails, switch to Vercel now.                |
+| Set up CI                                  | Linting, type checking, axe-core accessibility checks                                 |
 
 **Exit criteria**: User can sign up, log in, see an empty dashboard, and be redirected correctly by middleware. Marketing home page renders. Admin route is protected.
 
@@ -29,18 +29,18 @@ Implementation is split into 6 build phases. Each phase results in a deployable,
 
 **Goal**: Public-facing site is live and capturing leads.
 
-| Task | Detail |
-|------|--------|
-| Landing page | Hero, problem, features, differentiators, pricing, trust, FAQ, final CTA |
-| Product preview | Tabbed screenshot showcase (4 tabs) |
-| Pricing page | Free vs Pro comparison table |
-| FAQ page | Accordion component, grouped by topic (Phase 2 section 10 questions) |
-| About page | Mission, founder story, product principles |
-| Contact page + API route | Form → `contact_submissions` table |
-| Waitlist page + API route | Form → `waitlist_entries` table, honeypot anti-spam |
-| Legal pages | Privacy policy, terms of service (draft content) |
-| Marketing header + footer | Navigation, CTAs, responsive |
-| SEO basics | Meta tags, Open Graph, sitemap, robots.txt |
+| Task                      | Detail                                                                   |
+| ------------------------- | ------------------------------------------------------------------------ |
+| Landing page              | Hero, problem, features, differentiators, pricing, trust, FAQ, final CTA |
+| Product preview           | Tabbed screenshot showcase (4 tabs)                                      |
+| Pricing page              | Free vs Pro comparison table                                             |
+| FAQ page                  | Accordion component, grouped by topic (Phase 2 section 10 questions)     |
+| About page                | Mission, founder story, product principles                               |
+| Contact page + API route  | Form → `contact_submissions` table                                       |
+| Waitlist page + API route | Form → `waitlist_entries` table, honeypot anti-spam                      |
+| Legal pages               | Privacy policy, terms of service (draft content)                         |
+| Marketing header + footer | Navigation, CTAs, responsive                                             |
+| SEO basics                | Meta tags, Open Graph, sitemap, robots.txt                               |
 
 **Exit criteria**: Marketing site is live, waitlist is capturing emails, contact form works, pricing is public. All marketing copy reviewed for compliance positioning (tracking/planning, not advice — see section 5).
 
@@ -48,22 +48,22 @@ Implementation is split into 6 build phases. Each phase results in a deployable,
 
 **Goal**: Users can create accounts, add transactions, and manage categories. The core CRUD loop works.
 
-| Task | Detail |
-|------|--------|
-| Onboarding flow | 5-step progressive flow (Phase 4 section 17.3) |
-| Demo data seed | Script to populate workspace with Phase 2 section 9 demo data |
-| Demo banner | `DemoBanner` component with "Clear demo data" action |
-| Guided tour | 4-step tooltip walkthrough for demo users |
-| App layout | Sidebar, top bar, workspace switcher, quick-add button, user menu |
-| Mobile layout | Bottom tab bar, responsive sidebar |
-| Accounts page | Card grid, add account form, account detail page |
-| Transactions page | List with date grouping, filters, search, load-more pagination |
-| Quick-add transaction | Slide-out panel from top bar |
-| Categories | Default seeding per workspace type, category management in Settings |
-| Dashboard | Total balance, account cards, recent transactions |
-| Empty states | All pages have empty state components |
-| Error pages | 404, 500, global error boundary |
-| Loading skeletons | Per-page skeleton components |
+| Task                  | Detail                                                              |
+| --------------------- | ------------------------------------------------------------------- |
+| Onboarding flow       | 5-step progressive flow (Phase 4 section 17.3)                      |
+| Demo data seed        | Script to populate workspace with Phase 2 section 9 demo data       |
+| Demo banner           | `DemoBanner` component with "Clear demo data" action                |
+| Guided tour           | 4-step tooltip walkthrough for demo users                           |
+| App layout            | Sidebar, top bar, workspace switcher, quick-add button, user menu   |
+| Mobile layout         | Bottom tab bar, responsive sidebar                                  |
+| Accounts page         | Card grid, add account form, account detail page                    |
+| Transactions page     | List with date grouping, filters, search, load-more pagination      |
+| Quick-add transaction | Slide-out panel from top bar                                        |
+| Categories            | Default seeding per workspace type, category management in Settings |
+| Dashboard             | Total balance, account cards, recent transactions                   |
+| Empty states          | All pages have empty state components                               |
+| Error pages           | 404, 500, global error boundary                                     |
+| Loading skeletons     | Per-page skeleton components                                        |
 
 **Exit criteria**: User can complete onboarding, explore demo data, create accounts, add transactions, manage categories, and view a working dashboard.
 
@@ -71,19 +71,19 @@ Implementation is split into 6 build phases. Each phase results in a deployable,
 
 **Goal**: All financial tracking features are functional.
 
-| Task | Detail |
-|------|--------|
-| Budgets page | Category budgets, progress bars, month selector, spent calculation |
-| Bills page | Add bill, upcoming section, all bills list, subscription badge |
-| Income page | Add source (employment/benefits/other), named UK benefit types, frequency, pay dates |
-| Goals page | Create savings/financial goals, type distinction, goal detail with contributions |
-| Debt page | Add debt, balance cards, linked to goals |
-| Cashflow calendar | Custom calendar grid, day dots, click-to-expand detail, projected balance |
-| Dashboard additions | Next pay day card, upcoming bills card, budget status card, goals progress card |
-| Pay date tracking | Cross-cutting: income page, dashboard, cashflow calendar |
-| Recurring date utility | `lib/utils/dates.ts` — project future dates from frequency + anchor |
-| Settings page | Profile, workspace settings, preferences, export, tour replay, account deletion |
-| CSV export | Server Action generating CSV, free vs pro gating |
+| Task                   | Detail                                                                               |
+| ---------------------- | ------------------------------------------------------------------------------------ |
+| Budgets page           | Category budgets, progress bars, month selector, spent calculation                   |
+| Bills page             | Add bill, upcoming section, all bills list, subscription badge                       |
+| Income page            | Add source (employment/benefits/other), named UK benefit types, frequency, pay dates |
+| Goals page             | Create savings/financial goals, type distinction, goal detail with contributions     |
+| Debt page              | Add debt, balance cards, linked to goals                                             |
+| Cashflow calendar      | Custom calendar grid, day dots, click-to-expand detail, projected balance            |
+| Dashboard additions    | Next pay day card, upcoming bills card, budget status card, goals progress card      |
+| Pay date tracking      | Cross-cutting: income page, dashboard, cashflow calendar                             |
+| Recurring date utility | `lib/utils/dates.ts` — project future dates from frequency + anchor                  |
+| Settings page          | Profile, workspace settings, preferences, export, tour replay, account deletion      |
+| CSV export             | Server Action generating CSV, free vs pro gating                                     |
 
 **Exit criteria**: All v1 financial features are functional. User can track a complete financial picture.
 
@@ -91,18 +91,18 @@ Implementation is split into 6 build phases. Each phase results in a deployable,
 
 **Goal**: Stripe billing works, plan limits are enforced, admin panel is operational.
 
-| Task | Detail |
-|------|--------|
-| Stripe integration | Checkout session creation, webhook handler (5 events), Customer Portal link |
-| Billing page | Upgrade, cancel, resume, payment status display |
-| Entitlement enforcement | All 9 plan limits checked server-side and client-side |
-| UpgradeBanner component | Inline banners at all gating points |
-| Admin dashboard | StatCards, signup chart, plan distribution |
-| Admin users | DataTable, search, filter, user detail, disable/enable, notes |
-| Admin waitlist | DataTable, search, bulk invite, export CSV |
-| Admin subscriptions | DataTable, summary row, Stripe Dashboard link |
-| Admin support | Notes list, contact submissions |
-| Admin system | Feature flags, maintenance mode |
+| Task                    | Detail                                                                      |
+| ----------------------- | --------------------------------------------------------------------------- |
+| Stripe integration      | Checkout session creation, webhook handler (5 events), Customer Portal link |
+| Billing page            | Upgrade, cancel, resume, payment status display                             |
+| Entitlement enforcement | All 9 plan limits checked server-side and client-side                       |
+| UpgradeBanner component | Inline banners at all gating points                                         |
+| Admin dashboard         | StatCards, signup chart, plan distribution                                  |
+| Admin users             | DataTable, search, filter, user detail, disable/enable, notes               |
+| Admin waitlist          | DataTable, search, bulk invite, export CSV                                  |
+| Admin subscriptions     | DataTable, summary row, Stripe Dashboard link                               |
+| Admin support           | Notes list, contact submissions                                             |
+| Admin system            | Feature flags, maintenance mode                                             |
 
 **Exit criteria**: Users can upgrade/downgrade, plan limits are enforced, admin can manage the product.
 
@@ -110,20 +110,20 @@ Implementation is split into 6 build phases. Each phase results in a deployable,
 
 **Goal**: Production-ready. Accessible. Launched.
 
-| Task | Detail |
-|------|--------|
-| Accessibility audit | axe-core full scan, keyboard navigation test, screen reader spot-check |
-| WCAG AA fixes | Fix any contrast, focus, label, or semantic issues found |
-| Undo support | Toast-based undo for single-item deletions |
-| Analytics page | Charts: spending by category, over time, income vs expenses. Free vs Pro layouts |
-| Performance pass | Lighthouse audit, code-split Recharts, image optimisation, font optimisation |
-| Responsive QA | Test all pages at mobile, tablet, desktop breakpoints |
-| Legal review | Privacy policy and terms of service final content |
-| Compliance check | Ensure all copy positions PerFi as tracking/planning, not advice |
-| Email templates | Customise Supabase Auth email templates (verification, reset, magic link) |
-| Production deployment | Environment variables, domain, SSL, Stripe live keys |
-| Monitoring | Error tracking (Sentry or similar), basic uptime monitoring |
-| Launch comms | Email waitlist, social media, launch day plan |
+| Task                  | Detail                                                                           |
+| --------------------- | -------------------------------------------------------------------------------- |
+| Accessibility audit   | axe-core full scan, keyboard navigation test, screen reader spot-check           |
+| WCAG AA fixes         | Fix any contrast, focus, label, or semantic issues found                         |
+| Undo support          | Toast-based undo for single-item deletions                                       |
+| Analytics page        | Charts: spending by category, over time, income vs expenses. Free vs Pro layouts |
+| Performance pass      | Lighthouse audit, code-split Recharts, image optimisation, font optimisation     |
+| Responsive QA         | Test all pages at mobile, tablet, desktop breakpoints                            |
+| Legal review          | Privacy policy and terms of service final content                                |
+| Compliance check      | Ensure all copy positions PerFi as tracking/planning, not advice                 |
+| Email templates       | Customise Supabase Auth email templates (verification, reset, magic link)        |
+| Production deployment | Environment variables, domain, SSL, Stripe live keys                             |
+| Monitoring            | Error tracking (Sentry or similar), basic uptime monitoring                      |
+| Launch comms          | Email waitlist, social media, launch day plan                                    |
 
 **Exit criteria**: Product is live, accessible, monitored, and accepting real users.
 
@@ -235,15 +235,15 @@ The leanest path is not "ship the least possible" — it is "ship the most value
 
 ### What can be cut for faster launch (if needed)
 
-| Feature | Impact of deferring | Risk |
-|---------|-------------------|------|
-| Analytics page (charts) | Low — users survive without trend charts for 2 weeks | Low |
-| Cashflow forecasting (Pro) | None — Pro feature, can add post-launch | None |
-| Net worth tracking (Pro) | None — Pro feature | None |
-| CSV export | Low — users can copy data manually briefly | Low |
-| Guided tour | Low — empty states guide users adequately | Low |
-| Financial goals (vs savings) | Medium — savings goals are the core; financial goals are a nice-to-have | Low |
-| Debt page | Medium — users can track debt as a credit card account | Medium — loses the dedicated tracking UX |
+| Feature                      | Impact of deferring                                                     | Risk                                     |
+| ---------------------------- | ----------------------------------------------------------------------- | ---------------------------------------- |
+| Analytics page (charts)      | Low — users survive without trend charts for 2 weeks                    | Low                                      |
+| Cashflow forecasting (Pro)   | None — Pro feature, can add post-launch                                 | None                                     |
+| Net worth tracking (Pro)     | None — Pro feature                                                      | None                                     |
+| CSV export                   | Low — users can copy data manually briefly                              | Low                                      |
+| Guided tour                  | Low — empty states guide users adequately                               | Low                                      |
+| Financial goals (vs savings) | Medium — savings goals are the core; financial goals are a nice-to-have | Low                                      |
+| Debt page                    | Medium — users can track debt as a credit card account                  | Medium — loses the dedicated tracking UX |
 
 **Do not cut**: Accounts, transactions, budgets, bills, income (incl. benefits), dashboard, onboarding, demo data. These are the core product.
 
@@ -283,6 +283,7 @@ Next.js App Router on Cloudflare Workers via `@cloudflare/next-on-pages` is func
 **PerFi is not a banking app, not an investment platform, and not an Open Banking product.** It does not move money, sync with bank APIs, or offer regulated financial advice. These are not temporary limitations — they are product principles. All copy, landing pages, and in-app messaging must reflect this.
 
 **PerFi must never position itself as financial advice.** All copy, onboarding, and product UI must be framed as:
+
 - Tracking
 - Planning
 - Organisation
@@ -290,6 +291,7 @@ Next.js App Router on Cloudflare Workers via `@cloudflare/next-on-pages` is func
 - General informational guidance
 
 It must never be framed as:
+
 - Financial advice
 - Regulated advice
 - Investment advice
@@ -297,6 +299,7 @@ It must never be framed as:
 - A regulated recommendation engine
 
 **Specific risks**:
+
 - Do not use phrases like "we recommend" or "you should" when referring to financial decisions
 - Do not provide debt payoff strategies (e.g. "pay off highest interest first") — only track progress
 - Do not suggest budget amounts — let users set their own
@@ -310,6 +313,7 @@ It must never be framed as:
 ### The cashflow calendar is harder than it looks
 
 The cashflow calendar is a custom component (not a charting library feature). It requires:
+
 - A CSS grid that handles months of varying length
 - Projecting future dates from frequency + anchor for every income source and bill
 - Calculating a running projected balance across each day
@@ -322,6 +326,7 @@ This is likely 2–4 days of focused work, not a 2-hour task. Plan accordingly.
 ### Stripe webhook handling has hidden complexity
 
 Stripe webhooks sound simple (receive JSON, update database) but in practice:
+
 - Webhook events can arrive out of order
 - The same event can be retried multiple times (must be idempotent)
 - `checkout.session.completed` must create or update a subscription, not duplicate it
@@ -335,6 +340,7 @@ Budget a full day for webhook handler implementation and testing.
 The standard RLS pattern (`workspace_id IN (SELECT workspace_id FROM workspace_members WHERE user_id = auth.uid())`) works well at v1 scale. But if a user has 5 workspaces and the transactions table grows to 100k+ rows, this subquery runs on every row access.
 
 **Not a v1 problem** — but be aware. If performance degrades later, options include:
+
 - Materialized views
 - Caching the user's workspace IDs in the JWT custom claims
 - Query-level workspace_id filtering (redundant with RLS, but reduces the rows RLS evaluates)
@@ -348,6 +354,7 @@ This is not complex but it is error-prone. Write it once carefully, test it thor
 ### Category seeding per workspace type
 
 When a workspace is created, default categories must be seeded based on workspace type (Personal vs Personal + Household). This is a database operation triggered by workspace creation — either a Postgres function or application logic in the onboarding Server Action. It needs to handle:
+
 - Two different category sets
 - Setting `is_default = true` on seeded categories
 - Not duplicating if onboarding is replayed
@@ -358,33 +365,33 @@ When a workspace is created, default categories must be seeded based on workspac
 
 ### Confirmed post-v1 (do not build)
 
-| Feature | Why postponed | When to revisit |
-|---------|---------------|-----------------|
-| Open Banking / bank sync | Core principle: manual-first | v2 or never — only if market demands it |
-| Third-party finance APIs | No external dependencies in v1 | v2 or never |
-| Payment initiation / money movement | Out of product scope; regulatory implications | Never — not the product |
-| OAuth (Google/Apple sign-in) | Adds complexity, minimal v1 benefit | v1.1 — easy to add via Supabase |
-| Dark mode | Design system supports it (CSS vars), but shipping it doubles visual QA | v1.1 — when design system is stable |
-| Notifications (email/push) | Requires infrastructure (email service, push registration) | v1.1 — high value for bill reminders |
-| Annual billing | Adds Stripe complexity (proration, plan switching) | v1.1 — when monthly billing is proven |
-| Partner invites / shared workspaces | Schema supports it, but collaboration UX is a full project | v2 |
-| Side Business workspace type | Needs different category sets, possibly tax-related features | v2 |
-| Mobile native apps | Web-first, responsive serves mobile users | v2 — only if demand is proven |
-| Receipt upload | Storage, OCR, or manual attachment — all add complexity | v2 |
-| Multi-currency | UK-first principle: GBP only | v2 |
-| AI features | Manual-first principle | v2 or never |
-| Audit logging | Schema supports it, but adds write overhead | v1.1 — when shared workspaces are added |
+| Feature                             | Why postponed                                                           | When to revisit                         |
+| ----------------------------------- | ----------------------------------------------------------------------- | --------------------------------------- |
+| Open Banking / bank sync            | Core principle: manual-first                                            | v2 or never — only if market demands it |
+| Third-party finance APIs            | No external dependencies in v1                                          | v2 or never                             |
+| Payment initiation / money movement | Out of product scope; regulatory implications                           | Never — not the product                 |
+| OAuth (Google/Apple sign-in)        | Adds complexity, minimal v1 benefit                                     | v1.1 — easy to add via Supabase         |
+| Dark mode                           | Design system supports it (CSS vars), but shipping it doubles visual QA | v1.1 — when design system is stable     |
+| Notifications (email/push)          | Requires infrastructure (email service, push registration)              | v1.1 — high value for bill reminders    |
+| Annual billing                      | Adds Stripe complexity (proration, plan switching)                      | v1.1 — when monthly billing is proven   |
+| Partner invites / shared workspaces | Schema supports it, but collaboration UX is a full project              | v2                                      |
+| Side Business workspace type        | Needs different category sets, possibly tax-related features            | v2                                      |
+| Mobile native apps                  | Web-first, responsive serves mobile users                               | v2 — only if demand is proven           |
+| Receipt upload                      | Storage, OCR, or manual attachment — all add complexity                 | v2                                      |
+| Multi-currency                      | UK-first principle: GBP only                                            | v2                                      |
+| AI features                         | Manual-first principle                                                  | v2 or never                             |
+| Audit logging                       | Schema supports it, but adds write overhead                             | v1.1 — when shared workspaces are added |
 
 ### Can ship 1–2 weeks after launch (fast-follows)
 
-| Feature | Why it can wait | Priority |
-|---------|----------------|----------|
-| Resend email integration | Manual waitlist invites work for launch | High — do within 2 weeks |
-| Waitlist confirmation emails | On-screen confirmation is sufficient at launch | High |
-| Analytics charts | Users need time to accumulate data anyway | Medium |
-| Undo support | Confirmation dialogs protect against accidents | Medium |
-| CSV export | Low urgency — users can screenshot or manually copy | Low |
-| CSV import (Pro) | Listed in pricing but not in any build phase — defer to post-launch | Medium |
+| Feature                      | Why it can wait                                                     | Priority                 |
+| ---------------------------- | ------------------------------------------------------------------- | ------------------------ |
+| Resend email integration     | Manual waitlist invites work for launch                             | High — do within 2 weeks |
+| Waitlist confirmation emails | On-screen confirmation is sufficient at launch                      | High                     |
+| Analytics charts             | Users need time to accumulate data anyway                           | Medium                   |
+| Undo support                 | Confirmation dialogs protect against accidents                      | Medium                   |
+| CSV export                   | Low urgency — users can screenshot or manually copy                 | Low                      |
+| CSV import (Pro)             | Listed in pricing but not in any build phase — defer to post-launch | Medium                   |
 
 ---
 
@@ -393,6 +400,7 @@ When a workspace is created, default categories must be seeded based on workspac
 ### Transactional email: Resend
 
 **Why Resend**:
+
 - Built for developers. Simple API. Excellent DX.
 - React Email for template building (fits the Next.js stack)
 - Generous free tier (100 emails/day, 3,000/month)
@@ -400,11 +408,13 @@ When a workspace is created, default categories must be seeded based on workspac
 - Good deliverability
 
 **What it handles**:
+
 - Waitlist confirmation emails
 - Waitlist invite emails (when admin sends invites)
 - Optional: custom signup welcome email
 
 **What it does NOT handle** (leave to Supabase Auth):
+
 - Email verification
 - Password reset
 - Magic link
@@ -418,6 +428,7 @@ Supabase Auth sends these via its built-in email service (or can be configured t
 For product updates, launch announcements, and ongoing waitlist nurture:
 
 **Option A: Buttondown** (recommended for lean start)
+
 - Simple, developer-friendly newsletter tool
 - Free for first 100 subscribers
 - Markdown-based emails
@@ -425,6 +436,7 @@ For product updates, launch announcements, and ongoing waitlist nurture:
 - Good for: launch announcement, monthly product updates, waitlist nurture
 
 **Option B: Loops** (recommended if lifecycle email matters)
+
 - Built for SaaS lifecycle email
 - Event-driven (can trigger on signup, upgrade, etc.)
 - Free for first 1,000 contacts
@@ -464,6 +476,7 @@ Marketing emails      →  Buttondown
 Cloudflare Pages/Workers is a capable platform, but deploying Next.js App Router with Server Actions, middleware, and SSR on Cloudflare introduces friction that a solo founder should not spend time debugging. The `@cloudflare/next-on-pages` adapter works but has documented limitations around Node.js API compatibility, Server Action edge cases, and middleware behaviour.
 
 **Vercel is the path of least resistance for Next.js:**
+
 - Zero-config deployment for Next.js App Router
 - Server Actions, middleware, SSR all work natively
 - Built-in analytics, logging, and preview deployments
@@ -515,13 +528,13 @@ Domain             →  Registrar of choice
 
 Across Phases 1–5, the following has been fully specified:
 
-| Area | Document | Key contents |
-|------|----------|-------------|
-| **Product definition** | Phase 1 | Positioning, audience, differentiators, principles, v1 scope, risks, copy |
-| **Information architecture** | Phase 2 | 3 surfaces, 29 pages, 13 user flows, pricing tiers, onboarding, demo data, FAQ |
-| **Data model and security** | Phase 3 | 17 tables, RLS policies, auth flow, Stripe webhooks, entitlements, benefits schema |
-| **Frontend architecture** | Phase 4 | Repo structure, components, data fetching, forms, charts, accessibility, all page UX |
-| **Roadmap and deployment** | Phase 5 | 6 build phases, deployment stack, email tooling, risks, launch path |
+| Area                         | Document | Key contents                                                                         |
+| ---------------------------- | -------- | ------------------------------------------------------------------------------------ |
+| **Product definition**       | Phase 1  | Positioning, audience, differentiators, principles, v1 scope, risks, copy            |
+| **Information architecture** | Phase 2  | 3 surfaces, 29 pages, 13 user flows, pricing tiers, onboarding, demo data, FAQ       |
+| **Data model and security**  | Phase 3  | 17 tables, RLS policies, auth flow, Stripe webhooks, entitlements, benefits schema   |
+| **Frontend architecture**    | Phase 4  | Repo structure, components, data fetching, forms, charts, accessibility, all page UX |
+| **Roadmap and deployment**   | Phase 5  | 6 build phases, deployment stack, email tooling, risks, launch path                  |
 
 ### The source of truth for implementation
 
@@ -625,6 +638,7 @@ Phase 3 defines `icon text` on categories. Phase 4 category management shows col
 Phase 3 defines `goals.status` with values `active`, `completed`, `abandoned`. Phase 4 goal detail page shows progress and contributions but no mechanism to mark a goal as completed or abandoned.
 
 **Fix**: Add to the goal detail page (`/app/goals/[id]`):
+
 - When a savings goal reaches 100% of target, show a "Mark as completed" button with a celebratory message ("You did it!").
 - In the `[···]` menu on any goal card or detail page, include: "Mark as completed" and "Abandon goal".
 - Completed goals move to a "Completed" section at the bottom of the goals list (collapsed by default).
@@ -637,6 +651,7 @@ This is part of Build Phase D (Goals page).
 Phase 3 defines `interest_rate numeric(5,2)` as nullable. Phase 4 debt page display shows "Interest: 19.9% APR" but the debt form validation (Phase 4 section 7) does not mention interest rate.
 
 **Fix**: Add to the debt form (Build Phase D):
+
 - Field: "Annual interest rate (APR)" — numeric input, optional, suffix "% APR"
 - Validation: if provided, must be between 0 and 100
 - Displayed on the debt card as "Interest: X.X% APR" (or hidden if not set)
@@ -646,6 +661,7 @@ Phase 3 defines `interest_rate numeric(5,2)` as nullable. Phase 4 debt page disp
 Phase 4 section 15 describes the Support admin page as "List of users with admin notes." Phase 4 section 16 says contact form submissions are reviewed from the Support section. This conflates two concerns.
 
 **Clarification**: The Admin Support page has two tabs:
+
 - **Contact submissions**: Table of `contact_submissions` (name, email, message, date, status). Admin can mark as read/responded, add notes.
 - **User notes**: Table of users who have admin notes, with note history. Admin can add new notes.
 

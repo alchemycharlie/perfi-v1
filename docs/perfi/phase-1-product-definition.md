@@ -35,13 +35,13 @@ Unlike Open Banking aggregators or US-centric budgeting tools, PerFi is built fo
 
 ### Primary segments
 
-| Segment | Description | Key needs |
-|---------|-------------|-----------|
-| **UK young professionals** | 22–35, employed, tech-native, want to budget and save | Simple budgeting, savings goals, cashflow visibility |
-| **UK families and households** | Managing household budgets, bills, childcare costs | Bill tracking, direct debit dates, pay-date awareness |
-| **Neurodivergent users** | ADHD, autism, dyslexia — underserved by cluttered finance apps | Low cognitive load, predictable UI, progressive disclosure, calm design |
-| **Benefits-receiving individuals** | UC, PIP, child benefit, carer's allowance recipients | Benefits as income types, irregular payment tracking, no judgement |
-| **Privacy-conscious users** | People who do not want to connect bank accounts to apps | Manual-first, no Open Banking requirement, local control |
+| Segment                            | Description                                                    | Key needs                                                               |
+| ---------------------------------- | -------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| **UK young professionals**         | 22–35, employed, tech-native, want to budget and save          | Simple budgeting, savings goals, cashflow visibility                    |
+| **UK families and households**     | Managing household budgets, bills, childcare costs             | Bill tracking, direct debit dates, pay-date awareness                   |
+| **Neurodivergent users**           | ADHD, autism, dyslexia — underserved by cluttered finance apps | Low cognitive load, predictable UI, progressive disclosure, calm design |
+| **Benefits-receiving individuals** | UC, PIP, child benefit, carer's allowance recipients           | Benefits as income types, irregular payment tracking, no judgement      |
+| **Privacy-conscious users**        | People who do not want to connect bank accounts to apps        | Manual-first, no Open Banking requirement, local control                |
 
 ### Secondary segments (post-v1 growth)
 
@@ -249,19 +249,19 @@ Neurodiversity-conscious design is not a separate mode or a toggle. It is the de
 
 The following are explicitly excluded from v1:
 
-| Feature | Reason |
-|---------|--------|
-| Open Banking / bank sync | Manual-first principle; API complexity; trust concerns |
-| Third-party finance APIs | Scope control; no external dependencies in v1 |
-| Payment initiation / money movement | Out of product scope; regulatory implications |
-| Receipt upload | Nice-to-have but not core; adds storage and OCR complexity |
-| Multi-currency | UK-first principle; GBP only in v1 |
-| Partner invites / shared family editing | Social features add significant complexity; post-v1 |
-| Regulated financial advice | Legal and compliance risk; firmly out of scope |
-| AI-driven finance automation | Scope creep risk; manual-first principle |
-| Mobile native apps | Web-first in v1; responsive design serves mobile users |
-| Notifications / reminders | Adds infrastructure complexity; consider for v1.1 |
-| Dark mode | Desirable but not v1 critical; design for it but ship later |
+| Feature                                 | Reason                                                      |
+| --------------------------------------- | ----------------------------------------------------------- |
+| Open Banking / bank sync                | Manual-first principle; API complexity; trust concerns      |
+| Third-party finance APIs                | Scope control; no external dependencies in v1               |
+| Payment initiation / money movement     | Out of product scope; regulatory implications               |
+| Receipt upload                          | Nice-to-have but not core; adds storage and OCR complexity  |
+| Multi-currency                          | UK-first principle; GBP only in v1                          |
+| Partner invites / shared family editing | Social features add significant complexity; post-v1         |
+| Regulated financial advice              | Legal and compliance risk; firmly out of scope              |
+| AI-driven finance automation            | Scope creep risk; manual-first principle                    |
+| Mobile native apps                      | Web-first in v1; responsive design serves mobile users      |
+| Notifications / reminders               | Adds infrastructure complexity; consider for v1.1           |
+| Dark mode                               | Desirable but not v1 critical; design for it but ship later |
 
 ---
 
@@ -286,14 +286,14 @@ These are acknowledged opportunities for future versions, listed here to confirm
 
 ### Risks
 
-| Risk | Severity | Mitigation |
-|------|----------|------------|
-| **Manual entry friction** — users may find manual entry tedious and churn | High | Excellent UX for quick entry; recurring transaction templates; demo data to show value fast |
-| **"Why not just use a spreadsheet?"** — perceived value gap | Medium | Cashflow calendar, visualisations, goal tracking, and mobile-friendly responsive design provide clear value over spreadsheets |
-| **Benefits tracking sensitivity** — users may feel uncomfortable tracking benefits | Medium | Non-judgemental language; benefits treated with equal dignity; optional — users are never required to categorise income as benefits |
-| **Accessibility claims without delivery** — marketing accessibility without meeting standards damages trust | High | WCAG 2.1 AA compliance tested before launch; accessibility audit as part of release criteria |
-| **Admin panel scope creep** — "as fully featured as practical" is vague | Medium | Define admin MVP clearly in Phase 2; prioritise user management, waitlist, and subscription visibility |
-| **Pricing tier balance** — free tier too generous kills conversion; too restrictive kills adoption | Medium | Monitor usage patterns post-launch; be prepared to adjust tier boundaries |
+| Risk                                                                                                        | Severity | Mitigation                                                                                                                          |
+| ----------------------------------------------------------------------------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| **Manual entry friction** — users may find manual entry tedious and churn                                   | High     | Excellent UX for quick entry; recurring transaction templates; demo data to show value fast                                         |
+| **"Why not just use a spreadsheet?"** — perceived value gap                                                 | Medium   | Cashflow calendar, visualisations, goal tracking, and mobile-friendly responsive design provide clear value over spreadsheets       |
+| **Benefits tracking sensitivity** — users may feel uncomfortable tracking benefits                          | Medium   | Non-judgemental language; benefits treated with equal dignity; optional — users are never required to categorise income as benefits |
+| **Accessibility claims without delivery** — marketing accessibility without meeting standards damages trust | High     | WCAG 2.1 AA compliance tested before launch; accessibility audit as part of release criteria                                        |
+| **Admin panel scope creep** — "as fully featured as practical" is vague                                     | Medium   | Define admin MVP clearly in Phase 2; prioritise user management, waitlist, and subscription visibility                              |
+| **Pricing tier balance** — free tier too generous kills conversion; too restrictive kills adoption          | Medium   | Monitor usage patterns post-launch; be prepared to adjust tier boundaries                                                           |
 
 ### Scope traps to avoid
 
@@ -329,5 +329,5 @@ These are acknowledged opportunities for future versions, listed here to confirm
 
 ---
 
-*Document version: Phase 1 v1.0*
-*Created: 2026-03-30*
+_Document version: Phase 1 v1.0_
+_Created: 2026-03-30_

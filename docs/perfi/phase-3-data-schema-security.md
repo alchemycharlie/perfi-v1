@@ -24,14 +24,14 @@ The "new user environments per account" requirement translates to: **each user's
 
 ### What lives outside workspaces
 
-| Entity | Scope | Reason |
-|--------|-------|--------|
-| `users` (Supabase auth) | Global | Auth identity, managed by Supabase Auth |
-| `profiles` | Global (per user) | Display name, preferences, onboarding status |
-| `subscriptions` | Global (per user) | Stripe subscription status, plan tier |
-| `workspace_members` | Join table | Maps users to workspaces with roles |
-| `waitlist_entries` | Global | Pre-signup, no user association |
-| `contact_submissions` | Global | Support/contact form submissions |
+| Entity                  | Scope             | Reason                                       |
+| ----------------------- | ----------------- | -------------------------------------------- |
+| `users` (Supabase auth) | Global            | Auth identity, managed by Supabase Auth      |
+| `profiles`              | Global (per user) | Display name, preferences, onboarding status |
+| `subscriptions`         | Global (per user) | Stripe subscription status, plan tier        |
+| `workspace_members`     | Join table        | Maps users to workspaces with roles          |
+| `waitlist_entries`      | Global            | Pre-signup, no user association              |
+| `contact_submissions`   | Global            | Support/contact form submissions             |
 
 ### What lives inside workspaces
 
@@ -54,6 +54,7 @@ Workspace → contains all financial data
 ### v1 simplification
 
 In v1:
+
 - Every user gets exactly 1 workspace on signup (Free) or up to 5 (Pro)
 - Every workspace has exactly 1 member: the owner
 - The only role is `owner`
@@ -62,6 +63,7 @@ In v1:
 ### Post-v1 expansion path
 
 The schema supports future states without migration:
+
 - Add `member` and `viewer` roles to `workspace_members`
 - Add an invite flow that creates `workspace_members` entries
 - RLS policies already check membership — they do not assume single-owner
@@ -89,11 +91,11 @@ This happens at the database level via RLS. The application layer does not need 
 
 Use Postgres schemas to separate concerns:
 
-| Schema | Purpose |
-|--------|---------|
-| `auth` | Supabase Auth (managed, do not modify) |
-| `public` | Application tables, RLS-protected |
-| `admin` | Admin-only views and functions (not exposed via Supabase client) |
+| Schema   | Purpose                                                          |
+| -------- | ---------------------------------------------------------------- |
+| `auth`   | Supabase Auth (managed, do not modify)                           |
+| `public` | Application tables, RLS-protected                                |
+| `admin`  | Admin-only views and functions (not exposed via Supabase client) |
 
 All application tables live in `public`. Admin operations use server-side Supabase clients with the `service_role` key, bypassing RLS.
 
@@ -171,17 +173,17 @@ auth.users (Supabase managed)
 
 ### `profiles`
 
-| Column | Type | Notes |
-|--------|------|-------|
-| `id` | uuid PK | Same as `auth.users.id` (1:1 link) |
-| `display_name` | text | Set during onboarding |
-| `onboarding_completed` | boolean | Default false |
-| `onboarding_step` | smallint | Track progress if user abandons mid-flow |
-| `preferences` | jsonb | Theme prefs, UI settings, tour state — flexible bag. Includes `has_seen_tour: boolean` for the in-app walkthrough (Phase 2 section 9). |
-| `role` | text | `user` or `admin`. Default `user` |
-| `is_disabled` | boolean | Default false. Set by admin to block login |
-| `created_at` | timestamptz | |
-| `updated_at` | timestamptz | |
+| Column                 | Type        | Notes                                                                                                                                  |
+| ---------------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`                   | uuid PK     | Same as `auth.users.id` (1:1 link)                                                                                                     |
+| `display_name`         | text        | Set during onboarding                                                                                                                  |
+| `onboarding_completed` | boolean     | Default false                                                                                                                          |
+| `onboarding_step`      | smallint    | Track progress if user abandons mid-flow                                                                                               |
+| `preferences`          | jsonb       | Theme prefs, UI settings, tour state — flexible bag. Includes `has_seen_tour: boolean` for the in-app walkthrough (Phase 2 section 9). |
+| `role`                 | text        | `user` or `admin`. Default `user`                                                                                                      |
+| `is_disabled`          | boolean     | Default false. Set by admin to block login                                                                                             |
+| `created_at`           | timestamptz |                                                                                                                                        |
+| `updated_at`           | timestamptz |                                                                                                                                        |
 
 **RLS**: Users can read/update only their own profile (`id = auth.uid()`). Admins can read all via service_role. `is_disabled` is checked in middleware to block access for disabled accounts.
 
@@ -189,19 +191,19 @@ auth.users (Supabase managed)
 
 ### `subscriptions`
 
-| Column | Type | Notes |
-|--------|------|-------|
-| `id` | uuid PK | |
-| `user_id` | uuid FK → profiles.id | Unique — 1:1 with user |
-| `stripe_customer_id` | text | Stripe customer ID |
-| `stripe_subscription_id` | text | Nullable — null if on Free |
-| `plan` | text | `free` or `pro` |
-| `status` | text | `active`, `cancelled`, `past_due`, `expired` |
-| `current_period_start` | timestamptz | |
-| `current_period_end` | timestamptz | |
-| `cancel_at_period_end` | boolean | User requested cancellation |
-| `created_at` | timestamptz | |
-| `updated_at` | timestamptz | |
+| Column                   | Type                  | Notes                                        |
+| ------------------------ | --------------------- | -------------------------------------------- |
+| `id`                     | uuid PK               |                                              |
+| `user_id`                | uuid FK → profiles.id | Unique — 1:1 with user                       |
+| `stripe_customer_id`     | text                  | Stripe customer ID                           |
+| `stripe_subscription_id` | text                  | Nullable — null if on Free                   |
+| `plan`                   | text                  | `free` or `pro`                              |
+| `status`                 | text                  | `active`, `cancelled`, `past_due`, `expired` |
+| `current_period_start`   | timestamptz           |                                              |
+| `current_period_end`     | timestamptz           |                                              |
+| `cancel_at_period_end`   | boolean               | User requested cancellation                  |
+| `created_at`             | timestamptz           |                                              |
+| `updated_at`             | timestamptz           |                                              |
 
 **RLS**: Users can read only their own subscription. Updates come from Stripe webhooks via service_role.
 
@@ -209,15 +211,15 @@ auth.users (Supabase managed)
 
 ### `workspaces`
 
-| Column | Type | Notes |
-|--------|------|-------|
-| `id` | uuid PK | |
-| `name` | text | e.g. "My Finances", "Household" |
-| `type` | text | `personal` or `personal_household` |
-| `owner_id` | uuid FK → profiles.id | The user who created the workspace |
-| `is_demo` | boolean | True if populated with demo data |
-| `created_at` | timestamptz | |
-| `updated_at` | timestamptz | |
+| Column       | Type                  | Notes                              |
+| ------------ | --------------------- | ---------------------------------- |
+| `id`         | uuid PK               |                                    |
+| `name`       | text                  | e.g. "My Finances", "Household"    |
+| `type`       | text                  | `personal` or `personal_household` |
+| `owner_id`   | uuid FK → profiles.id | The user who created the workspace |
+| `is_demo`    | boolean               | True if populated with demo data   |
+| `created_at` | timestamptz           |                                    |
+| `updated_at` | timestamptz           |                                    |
 
 **RLS**: Accessible only through workspace_members lookup.
 
@@ -225,13 +227,13 @@ auth.users (Supabase managed)
 
 ### `workspace_members`
 
-| Column | Type | Notes |
-|--------|------|-------|
-| `id` | uuid PK | |
-| `workspace_id` | uuid FK → workspaces.id | |
-| `user_id` | uuid FK → profiles.id | |
-| `role` | text | `owner` in v1. Future: `member`, `viewer` |
-| `created_at` | timestamptz | |
+| Column         | Type                    | Notes                                     |
+| -------------- | ----------------------- | ----------------------------------------- |
+| `id`           | uuid PK                 |                                           |
+| `workspace_id` | uuid FK → workspaces.id |                                           |
+| `user_id`      | uuid FK → profiles.id   |                                           |
+| `role`         | text                    | `owner` in v1. Future: `member`, `viewer` |
+| `created_at`   | timestamptz             |                                           |
 
 **Unique constraint**: `(workspace_id, user_id)` — a user can only be in a workspace once.
 
@@ -241,17 +243,17 @@ auth.users (Supabase managed)
 
 ### `accounts`
 
-| Column | Type | Notes |
-|--------|------|-------|
-| `id` | uuid PK | |
-| `workspace_id` | uuid FK → workspaces.id | |
-| `name` | text | e.g. "Barclays Current" |
-| `type` | text | `current`, `savings`, `credit_card`, `cash`, `investments` |
-| `balance` | numeric(12,2) | Current balance in GBP. Updated on transaction changes |
-| `is_active` | boolean | Default true. Can archive accounts |
-| `sort_order` | smallint | User-defined display order |
-| `created_at` | timestamptz | |
-| `updated_at` | timestamptz | |
+| Column         | Type                    | Notes                                                      |
+| -------------- | ----------------------- | ---------------------------------------------------------- |
+| `id`           | uuid PK                 |                                                            |
+| `workspace_id` | uuid FK → workspaces.id |                                                            |
+| `name`         | text                    | e.g. "Barclays Current"                                    |
+| `type`         | text                    | `current`, `savings`, `credit_card`, `cash`, `investments` |
+| `balance`      | numeric(12,2)           | Current balance in GBP. Updated on transaction changes     |
+| `is_active`    | boolean                 | Default true. Can archive accounts                         |
+| `sort_order`   | smallint                | User-defined display order                                 |
+| `created_at`   | timestamptz             |                                                            |
+| `updated_at`   | timestamptz             |                                                            |
 
 **RLS**: `workspace_id` must be in user's workspace memberships.
 
@@ -259,17 +261,17 @@ auth.users (Supabase managed)
 
 ### `categories`
 
-| Column | Type | Notes |
-|--------|------|-------|
-| `id` | uuid PK | |
-| `workspace_id` | uuid FK → workspaces.id | |
-| `name` | text | e.g. "Groceries", "Transport" |
-| `type` | text | `expense`, `income`, `transfer` |
-| `icon` | text | Optional icon identifier |
-| `colour` | text | Optional hex colour |
-| `is_default` | boolean | True for system-generated defaults |
-| `sort_order` | smallint | |
-| `created_at` | timestamptz | |
+| Column         | Type                    | Notes                              |
+| -------------- | ----------------------- | ---------------------------------- |
+| `id`           | uuid PK                 |                                    |
+| `workspace_id` | uuid FK → workspaces.id |                                    |
+| `name`         | text                    | e.g. "Groceries", "Transport"      |
+| `type`         | text                    | `expense`, `income`, `transfer`    |
+| `icon`         | text                    | Optional icon identifier           |
+| `colour`       | text                    | Optional hex colour                |
+| `is_default`   | boolean                 | True for system-generated defaults |
+| `sort_order`   | smallint                |                                    |
+| `created_at`   | timestamptz             |                                    |
 
 **Notes**: Default categories are seeded when a workspace is created (based on workspace type per Phase 2 section 7). Users can add, rename, reorder, and delete custom categories.
 
@@ -277,21 +279,21 @@ auth.users (Supabase managed)
 
 ### `transactions`
 
-| Column | Type | Notes |
-|--------|------|-------|
-| `id` | uuid PK | |
-| `workspace_id` | uuid FK → workspaces.id | Denormalised for RLS performance |
-| `account_id` | uuid FK → accounts.id | |
-| `category_id` | uuid FK → categories.id | Nullable |
-| `type` | text | `expense`, `income`, `transfer` |
-| `amount` | numeric(12,2) | Always positive. Type determines direction |
-| `description` | text | Payee or description |
-| `date` | date | Transaction date |
-| `notes` | text | Optional user notes |
-| `is_recurring` | boolean | True if generated from a bill template |
-| `bill_id` | uuid FK → bills.id | Nullable — links to originating bill |
-| `created_at` | timestamptz | |
-| `updated_at` | timestamptz | |
+| Column         | Type                    | Notes                                      |
+| -------------- | ----------------------- | ------------------------------------------ |
+| `id`           | uuid PK                 |                                            |
+| `workspace_id` | uuid FK → workspaces.id | Denormalised for RLS performance           |
+| `account_id`   | uuid FK → accounts.id   |                                            |
+| `category_id`  | uuid FK → categories.id | Nullable                                   |
+| `type`         | text                    | `expense`, `income`, `transfer`            |
+| `amount`       | numeric(12,2)           | Always positive. Type determines direction |
+| `description`  | text                    | Payee or description                       |
+| `date`         | date                    | Transaction date                           |
+| `notes`        | text                    | Optional user notes                        |
+| `is_recurring` | boolean                 | True if generated from a bill template     |
+| `bill_id`      | uuid FK → bills.id      | Nullable — links to originating bill       |
+| `created_at`   | timestamptz             |                                            |
+| `updated_at`   | timestamptz             |                                            |
 
 **Notes**: `workspace_id` is denormalised (could be derived from account → workspace) for RLS performance. Every RLS check needs `workspace_id` directly on the row to avoid joins in policy evaluation.
 
@@ -301,20 +303,20 @@ auth.users (Supabase managed)
 
 ### `income_sources`
 
-| Column | Type | Notes |
-|--------|------|-------|
-| `id` | uuid PK | |
-| `workspace_id` | uuid FK → workspaces.id | |
-| `name` | text | e.g. "Salary — Acme Ltd", "Universal Credit" |
-| `type` | text | `employment`, `benefit`, `other` |
-| `benefit_type` | text | Nullable. `universal_credit`, `pip`, `child_benefit`, `carers_allowance`, `esa`, `housing_benefit`, `council_tax_reduction`, `other` |
-| `amount` | numeric(12,2) | Expected amount per period |
-| `frequency` | text | `weekly`, `fortnightly`, `four_weekly`, `monthly` |
-| `next_pay_date` | date | Next expected payment date |
-| `account_id` | uuid FK → accounts.id | Nullable — which account it pays into |
-| `is_active` | boolean | Default true |
-| `created_at` | timestamptz | |
-| `updated_at` | timestamptz | |
+| Column          | Type                    | Notes                                                                                                                                |
+| --------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `id`            | uuid PK                 |                                                                                                                                      |
+| `workspace_id`  | uuid FK → workspaces.id |                                                                                                                                      |
+| `name`          | text                    | e.g. "Salary — Acme Ltd", "Universal Credit"                                                                                         |
+| `type`          | text                    | `employment`, `benefit`, `other`                                                                                                     |
+| `benefit_type`  | text                    | Nullable. `universal_credit`, `pip`, `child_benefit`, `carers_allowance`, `esa`, `housing_benefit`, `council_tax_reduction`, `other` |
+| `amount`        | numeric(12,2)           | Expected amount per period                                                                                                           |
+| `frequency`     | text                    | `weekly`, `fortnightly`, `four_weekly`, `monthly`                                                                                    |
+| `next_pay_date` | date                    | Next expected payment date                                                                                                           |
+| `account_id`    | uuid FK → accounts.id   | Nullable — which account it pays into                                                                                                |
+| `is_active`     | boolean                 | Default true                                                                                                                         |
+| `created_at`    | timestamptz             |                                                                                                                                      |
+| `updated_at`    | timestamptz             |                                                                                                                                      |
 
 **Notes**: `benefit_type` is only relevant when `type = 'benefit'`. This is the schema representation of Phase 1's benefits-aware income tracking. Benefits sit alongside employment income in the same table — no separate "benefits" table — reflecting the "no judgement, equal dignity" principle.
 
@@ -322,22 +324,22 @@ auth.users (Supabase managed)
 
 ### `bills`
 
-| Column | Type | Notes |
-|--------|------|-------|
-| `id` | uuid PK | |
-| `workspace_id` | uuid FK → workspaces.id | |
-| `name` | text | e.g. "Netflix", "Council Tax" |
-| `amount` | numeric(12,2) | Expected amount |
-| `frequency` | text | `weekly`, `fortnightly`, `four_weekly`, `monthly`, `annually` |
-| `next_due_date` | date | |
-| `payment_method` | text | `direct_debit`, `standing_order`, `card`, `manual` |
-| `account_id` | uuid FK → accounts.id | Which account pays this bill |
-| `category_id` | uuid FK → categories.id | Nullable |
-| `is_subscription` | boolean | True for subscriptions (Netflix, Spotify, etc.) |
-| `is_active` | boolean | Default true |
-| `notes` | text | |
-| `created_at` | timestamptz | |
-| `updated_at` | timestamptz | |
+| Column            | Type                    | Notes                                                         |
+| ----------------- | ----------------------- | ------------------------------------------------------------- |
+| `id`              | uuid PK                 |                                                               |
+| `workspace_id`    | uuid FK → workspaces.id |                                                               |
+| `name`            | text                    | e.g. "Netflix", "Council Tax"                                 |
+| `amount`          | numeric(12,2)           | Expected amount                                               |
+| `frequency`       | text                    | `weekly`, `fortnightly`, `four_weekly`, `monthly`, `annually` |
+| `next_due_date`   | date                    |                                                               |
+| `payment_method`  | text                    | `direct_debit`, `standing_order`, `card`, `manual`            |
+| `account_id`      | uuid FK → accounts.id   | Which account pays this bill                                  |
+| `category_id`     | uuid FK → categories.id | Nullable                                                      |
+| `is_subscription` | boolean                 | True for subscriptions (Netflix, Spotify, etc.)               |
+| `is_active`       | boolean                 | Default true                                                  |
+| `notes`           | text                    |                                                               |
+| `created_at`      | timestamptz             |                                                               |
+| `updated_at`      | timestamptz             |                                                               |
 
 **Notes**: Bills and subscriptions live in the same table (per Phase 2 resolution). The `is_subscription` flag allows filtering. `payment_method` supports direct debit date tracking — if method is `direct_debit`, the `next_due_date` is the direct debit collection date.
 
@@ -345,15 +347,15 @@ auth.users (Supabase managed)
 
 ### `budgets`
 
-| Column | Type | Notes |
-|--------|------|-------|
-| `id` | uuid PK | |
-| `workspace_id` | uuid FK → workspaces.id | |
-| `category_id` | uuid FK → categories.id | One budget per category per period |
-| `amount` | numeric(12,2) | Monthly budget limit |
-| `period` | text | `monthly` in v1. Future: `weekly`, `annual` |
-| `created_at` | timestamptz | |
-| `updated_at` | timestamptz | |
+| Column         | Type                    | Notes                                       |
+| -------------- | ----------------------- | ------------------------------------------- |
+| `id`           | uuid PK                 |                                             |
+| `workspace_id` | uuid FK → workspaces.id |                                             |
+| `category_id`  | uuid FK → categories.id | One budget per category per period          |
+| `amount`       | numeric(12,2)           | Monthly budget limit                        |
+| `period`       | text                    | `monthly` in v1. Future: `weekly`, `annual` |
+| `created_at`   | timestamptz             |                                             |
+| `updated_at`   | timestamptz             |                                             |
 
 **Unique constraint**: `(workspace_id, category_id, period)` — no duplicate budgets for the same category.
 
@@ -363,34 +365,34 @@ auth.users (Supabase managed)
 
 ### `goals`
 
-| Column | Type | Notes |
-|--------|------|-------|
-| `id` | uuid PK | |
-| `workspace_id` | uuid FK → workspaces.id | |
-| `name` | text | e.g. "Holiday Fund", "Pay off credit card" |
-| `type` | text | `savings` or `financial` |
-| `target_amount` | numeric(12,2) | For savings goals: target to save. For financial: target balance (e.g. £0 for debt payoff) |
-| `current_amount` | numeric(12,2) | For savings goals: amount saved so far. Default 0 |
-| `target_date` | date | Nullable — optional deadline |
-| `debt_id` | uuid FK → debts.id | Nullable — links financial goals to a debt |
-| `category_id` | uuid FK → categories.id | Nullable — links financial goals to a budget category (e.g. "reduce eating out") |
-| `status` | text | `active`, `completed`, `abandoned` |
-| `created_at` | timestamptz | |
-| `updated_at` | timestamptz | |
+| Column           | Type                    | Notes                                                                                      |
+| ---------------- | ----------------------- | ------------------------------------------------------------------------------------------ |
+| `id`             | uuid PK                 |                                                                                            |
+| `workspace_id`   | uuid FK → workspaces.id |                                                                                            |
+| `name`           | text                    | e.g. "Holiday Fund", "Pay off credit card"                                                 |
+| `type`           | text                    | `savings` or `financial`                                                                   |
+| `target_amount`  | numeric(12,2)           | For savings goals: target to save. For financial: target balance (e.g. £0 for debt payoff) |
+| `current_amount` | numeric(12,2)           | For savings goals: amount saved so far. Default 0                                          |
+| `target_date`    | date                    | Nullable — optional deadline                                                               |
+| `debt_id`        | uuid FK → debts.id      | Nullable — links financial goals to a debt                                                 |
+| `category_id`    | uuid FK → categories.id | Nullable — links financial goals to a budget category (e.g. "reduce eating out")           |
+| `status`         | text                    | `active`, `completed`, `abandoned`                                                         |
+| `created_at`     | timestamptz             |                                                                                            |
+| `updated_at`     | timestamptz             |                                                                                            |
 
 ---
 
 ### `goal_contributions`
 
-| Column | Type | Notes |
-|--------|------|-------|
-| `id` | uuid PK | |
-| `goal_id` | uuid FK → goals.id | |
+| Column         | Type                    | Notes                |
+| -------------- | ----------------------- | -------------------- |
+| `id`           | uuid PK                 |                      |
+| `goal_id`      | uuid FK → goals.id      |                      |
 | `workspace_id` | uuid FK → workspaces.id | Denormalised for RLS |
-| `amount` | numeric(12,2) | Contribution amount |
-| `date` | date | |
-| `notes` | text | |
-| `created_at` | timestamptz | |
+| `amount`       | numeric(12,2)           | Contribution amount  |
+| `date`         | date                    |                      |
+| `notes`        | text                    |                      |
+| `created_at`   | timestamptz             |                      |
 
 **Notes**: When a user logs a contribution, `goals.current_amount` is updated. Contributions provide a history trail.
 
@@ -398,33 +400,33 @@ auth.users (Supabase managed)
 
 ### `debts`
 
-| Column | Type | Notes |
-|--------|------|-------|
-| `id` | uuid PK | |
-| `workspace_id` | uuid FK → workspaces.id | |
-| `name` | text | e.g. "Tesco Credit Card", "Student Loan" |
-| `account_id` | uuid FK → accounts.id | Nullable — links to a credit card or loan account |
-| `balance` | numeric(12,2) | Current outstanding balance |
-| `minimum_payment` | numeric(12,2) | Minimum monthly payment |
-| `interest_rate` | numeric(5,2) | Annual interest rate as percentage. Nullable |
-| `next_payment_date` | date | |
-| `is_active` | boolean | Default true |
-| `created_at` | timestamptz | |
-| `updated_at` | timestamptz | |
+| Column              | Type                    | Notes                                             |
+| ------------------- | ----------------------- | ------------------------------------------------- |
+| `id`                | uuid PK                 |                                                   |
+| `workspace_id`      | uuid FK → workspaces.id |                                                   |
+| `name`              | text                    | e.g. "Tesco Credit Card", "Student Loan"          |
+| `account_id`        | uuid FK → accounts.id   | Nullable — links to a credit card or loan account |
+| `balance`           | numeric(12,2)           | Current outstanding balance                       |
+| `minimum_payment`   | numeric(12,2)           | Minimum monthly payment                           |
+| `interest_rate`     | numeric(5,2)            | Annual interest rate as percentage. Nullable      |
+| `next_payment_date` | date                    |                                                   |
+| `is_active`         | boolean                 | Default true                                      |
+| `created_at`        | timestamptz             |                                                   |
+| `updated_at`        | timestamptz             |                                                   |
 
 ---
 
 ### `waitlist_entries`
 
-| Column | Type | Notes |
-|--------|------|-------|
-| `id` | uuid PK | |
-| `email` | text | Unique |
-| `interests` | text[] | Array of interest tags |
-| `status` | text | `pending`, `invited`, `converted` |
-| `invited_at` | timestamptz | Nullable |
-| `converted_at` | timestamptz | Nullable |
-| `created_at` | timestamptz | |
+| Column         | Type        | Notes                             |
+| -------------- | ----------- | --------------------------------- |
+| `id`           | uuid PK     |                                   |
+| `email`        | text        | Unique                            |
+| `interests`    | text[]      | Array of interest tags            |
+| `status`       | text        | `pending`, `invited`, `converted` |
+| `invited_at`   | timestamptz | Nullable                          |
+| `converted_at` | timestamptz | Nullable                          |
+| `created_at`   | timestamptz |                                   |
 
 **RLS**: No RLS — this table is accessed only via service_role (admin operations and API routes).
 
@@ -432,15 +434,15 @@ auth.users (Supabase managed)
 
 ### `contact_submissions`
 
-| Column | Type | Notes |
-|--------|------|-------|
-| `id` | uuid PK | |
-| `email` | text | |
-| `name` | text | |
-| `message` | text | |
-| `status` | text | `new`, `read`, `responded` |
-| `admin_notes` | text | |
-| `created_at` | timestamptz | |
+| Column        | Type        | Notes                      |
+| ------------- | ----------- | -------------------------- |
+| `id`          | uuid PK     |                            |
+| `email`       | text        |                            |
+| `name`        | text        |                            |
+| `message`     | text        |                            |
+| `status`      | text        | `new`, `read`, `responded` |
+| `admin_notes` | text        |                            |
+| `created_at`  | timestamptz |                            |
 
 **RLS**: No RLS — service_role only.
 
@@ -448,13 +450,13 @@ auth.users (Supabase managed)
 
 ### `admin_notes`
 
-| Column | Type | Notes |
-|--------|------|-------|
-| `id` | uuid PK | |
-| `user_id` | uuid FK → profiles.id | The user this note is about |
-| `author_id` | uuid FK → profiles.id | The admin who wrote it |
-| `content` | text | |
-| `created_at` | timestamptz | |
+| Column       | Type                  | Notes                       |
+| ------------ | --------------------- | --------------------------- |
+| `id`         | uuid PK               |                             |
+| `user_id`    | uuid FK → profiles.id | The user this note is about |
+| `author_id`  | uuid FK → profiles.id | The admin who wrote it      |
+| `content`    | text                  |                             |
+| `created_at` | timestamptz           |                             |
 
 **RLS**: No RLS — service_role only.
 
@@ -462,12 +464,12 @@ auth.users (Supabase managed)
 
 ### `feature_flags`
 
-| Column | Type | Notes |
-|--------|------|-------|
-| `id` | uuid PK | |
-| `key` | text | Unique. e.g. `maintenance_mode`, `signups_enabled` |
-| `value` | jsonb | Flexible value |
-| `updated_at` | timestamptz | |
+| Column       | Type        | Notes                                              |
+| ------------ | ----------- | -------------------------------------------------- |
+| `id`         | uuid PK     |                                                    |
+| `key`        | text        | Unique. e.g. `maintenance_mode`, `signups_enabled` |
+| `value`      | jsonb       | Flexible value                                     |
+| `updated_at` | timestamptz |                                                    |
 
 **RLS**: No RLS — service_role only. Can be cached in-memory on the server.
 
@@ -477,18 +479,18 @@ auth.users (Supabase managed)
 
 ### Application roles
 
-| Role | Scope | Capabilities |
-|------|-------|-------------|
-| `user` | Default for all signups | Full CRUD on own workspaces and data within them. Manage own profile and subscription. No access to other users' data or admin surfaces. |
+| Role    | Scope                                | Capabilities                                                                                                                                                            |
+| ------- | ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `user`  | Default for all signups              | Full CRUD on own workspaces and data within them. Manage own profile and subscription. No access to other users' data or admin surfaces.                                |
 | `admin` | Assigned manually in `profiles.role` | Everything a user can do, plus: access admin panel, read all users/workspaces/subscriptions via service_role, manage waitlist, write admin notes, toggle feature flags. |
 
 ### Workspace roles (within `workspace_members`)
 
-| Role | v1 behaviour | Post-v1 expansion |
-|------|-------------|-------------------|
-| `owner` | Full CRUD on all data in the workspace. Can delete the workspace. Only role in v1. | Retains full control. Can invite/remove members. |
-| `member` | Not used in v1 | Full CRUD on workspace data, cannot delete workspace or manage members |
-| `viewer` | Not used in v1 | Read-only access to workspace data |
+| Role     | v1 behaviour                                                                       | Post-v1 expansion                                                      |
+| -------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| `owner`  | Full CRUD on all data in the workspace. Can delete the workspace. Only role in v1. | Retains full control. Can invite/remove members.                       |
+| `member` | Not used in v1                                                                     | Full CRUD on workspace data, cannot delete workspace or manage members |
+| `viewer` | Not used in v1                                                                     | Read-only access to workspace data                                     |
 
 ### Role assignment
 
@@ -527,18 +529,18 @@ Admin access uses **two mechanisms** depending on the operation:
 
 ### What admins can do
 
-| Action | Implementation |
-|--------|---------------|
-| View all users | `profiles` + `subscriptions` via service_role |
-| Disable/enable a user | Set `is_disabled` flag on profile (blocks login via middleware check) |
-| View all waitlist entries | `waitlist_entries` via service_role |
-| Send waitlist invites | Update status + trigger email (manual or via email service) |
-| Bulk invite from waitlist | Same, batched |
-| View subscriptions | `subscriptions` via service_role |
-| Add support notes | Insert into `admin_notes` via service_role |
-| Toggle feature flags | Update `feature_flags` via service_role |
-| Toggle maintenance mode | Feature flag: `maintenance_mode = true` |
-| View aggregate metrics | Aggregate queries on profiles, subscriptions, workspace_members |
+| Action                    | Implementation                                                        |
+| ------------------------- | --------------------------------------------------------------------- |
+| View all users            | `profiles` + `subscriptions` via service_role                         |
+| Disable/enable a user     | Set `is_disabled` flag on profile (blocks login via middleware check) |
+| View all waitlist entries | `waitlist_entries` via service_role                                   |
+| Send waitlist invites     | Update status + trigger email (manual or via email service)           |
+| Bulk invite from waitlist | Same, batched                                                         |
+| View subscriptions        | `subscriptions` via service_role                                      |
+| Add support notes         | Insert into `admin_notes` via service_role                            |
+| Toggle feature flags      | Update `feature_flags` via service_role                               |
+| Toggle maintenance mode   | Feature flag: `maintenance_mode = true`                               |
+| View aggregate metrics    | Aggregate queries on profiles, subscriptions, workspace_members       |
 
 ### What admins cannot do
 
@@ -556,11 +558,11 @@ Supabase Auth handles all authentication. No custom auth implementation.
 
 ### Auth methods (v1)
 
-| Method | Priority | Notes |
-|--------|----------|-------|
-| **Email + password** | Primary | Standard signup/login. Email verification required. |
-| **Magic link** | Secondary | Optional passwordless login via email link. Low friction for returning users. |
-| **OAuth** | Deferred | Google/Apple sign-in considered for post-v1. Adds complexity. |
+| Method               | Priority  | Notes                                                                         |
+| -------------------- | --------- | ----------------------------------------------------------------------------- |
+| **Email + password** | Primary   | Standard signup/login. Email verification required.                           |
+| **Magic link**       | Secondary | Optional passwordless login via email link. Low friction for returning users. |
+| **OAuth**            | Deferred  | Google/Apple sign-in considered for post-v1. Adds complexity.                 |
 
 ### Auth flow
 
@@ -776,6 +778,7 @@ RLS is still **enabled** on these tables (defence in depth) with **no policies**
 ### Testing RLS
 
 Before launch, RLS must be verified:
+
 1. Confirm every table has RLS enabled
 2. Confirm no table is accidentally accessible without policies
 3. Test cross-workspace access: User A should never see User B's data
@@ -788,30 +791,30 @@ Before launch, RLS must be verified:
 
 ### Data privacy
 
-| Requirement | Implementation |
-|-------------|---------------|
-| **User data isolation** | RLS on every table. No cross-user data leakage possible at the database level. |
-| **No unnecessary data collection** | Signup collects email + password only. Onboarding collects display name + finance preferences. No phone, address, date of birth, or government IDs. |
-| **Data export** | CSV export available (basic on Free, full on Pro). Users can export their data at any time. |
-| **Account deletion** | Users can delete their account from Settings. This triggers a cascade delete: profile → workspace_members → workspaces → all workspace data. Supabase Auth user is also deleted. |
-| **GDPR right to erasure** | Account deletion satisfies this. Hard deletes (no soft delete) mean data is actually gone. |
-| **No third-party data sharing** | PerFi does not sell, share, or send user financial data to third parties. Stripe receives only payment information, not financial tracking data. |
-| **Cookie policy** | Only essential cookies: auth session (httpOnly, secure). No analytics cookies in v1. No third-party tracking. |
+| Requirement                        | Implementation                                                                                                                                                                   |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **User data isolation**            | RLS on every table. No cross-user data leakage possible at the database level.                                                                                                   |
+| **No unnecessary data collection** | Signup collects email + password only. Onboarding collects display name + finance preferences. No phone, address, date of birth, or government IDs.                              |
+| **Data export**                    | CSV export available (basic on Free, full on Pro). Users can export their data at any time.                                                                                      |
+| **Account deletion**               | Users can delete their account from Settings. This triggers a cascade delete: profile → workspace_members → workspaces → all workspace data. Supabase Auth user is also deleted. |
+| **GDPR right to erasure**          | Account deletion satisfies this. Hard deletes (no soft delete) mean data is actually gone.                                                                                       |
+| **No third-party data sharing**    | PerFi does not sell, share, or send user financial data to third parties. Stripe receives only payment information, not financial tracking data.                                 |
+| **Cookie policy**                  | Only essential cookies: auth session (httpOnly, secure). No analytics cookies in v1. No third-party tracking.                                                                    |
 
 ### Security measures
 
-| Measure | Implementation |
-|---------|---------------|
-| **Authentication** | Supabase Auth with email verification. Passwords hashed by Supabase (bcrypt). |
-| **Session security** | JWTs in httpOnly cookies. No localStorage tokens. Refresh token rotation. |
-| **HTTPS** | Enforced via Cloudflare. All traffic encrypted in transit. |
-| **RLS everywhere** | Database-level access control. Even if application code has a bug, RLS prevents data leakage. |
-| **Service role key protection** | Never exposed to the client. Used only in server-side API routes and server components. Stored as environment variable. |
-| **Input validation** | Server-side validation on all API routes. Client-side validation for UX, not for security. Use Zod schemas for type-safe validation. |
-| **SQL injection prevention** | Supabase client uses parameterised queries. No raw SQL from user input. |
-| **CSRF protection** | Cookie-based auth with SameSite=Lax. Supabase handles CSRF for auth endpoints. |
-| **Rate limiting** | Supabase Auth has built-in rate limiting for auth endpoints. Additional rate limiting on public API routes (waitlist, contact form) via Cloudflare or middleware. |
-| **Environment variables** | All secrets (Supabase keys, Stripe keys) in environment variables. Never committed to the repo. Use `.env.local` for development, Cloudflare environment variables for production. |
+| Measure                         | Implementation                                                                                                                                                                     |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Authentication**              | Supabase Auth with email verification. Passwords hashed by Supabase (bcrypt).                                                                                                      |
+| **Session security**            | JWTs in httpOnly cookies. No localStorage tokens. Refresh token rotation.                                                                                                          |
+| **HTTPS**                       | Enforced via Cloudflare. All traffic encrypted in transit.                                                                                                                         |
+| **RLS everywhere**              | Database-level access control. Even if application code has a bug, RLS prevents data leakage.                                                                                      |
+| **Service role key protection** | Never exposed to the client. Used only in server-side API routes and server components. Stored as environment variable.                                                            |
+| **Input validation**            | Server-side validation on all API routes. Client-side validation for UX, not for security. Use Zod schemas for type-safe validation.                                               |
+| **SQL injection prevention**    | Supabase client uses parameterised queries. No raw SQL from user input.                                                                                                            |
+| **CSRF protection**             | Cookie-based auth with SameSite=Lax. Supabase handles CSRF for auth endpoints.                                                                                                     |
+| **Rate limiting**               | Supabase Auth has built-in rate limiting for auth endpoints. Additional rate limiting on public API routes (waitlist, contact form) via Cloudflare or middleware.                  |
+| **Environment variables**       | All secrets (Supabase keys, Stripe keys) in environment variables. Never committed to the repo. Use `.env.local` for development, Cloudflare environment variables for production. |
 
 ### What is explicitly out of scope for v1 security
 
@@ -841,13 +844,13 @@ v1 does not include audit logging. This is a deliberate scope decision — audit
 
 The schema is designed to support shared workspaces without migration:
 
-| Current state (v1) | Future state |
-|--------------------|-------------|
-| `workspace_members` has only `owner` rows | Add `member` and `viewer` rows |
-| One user per workspace | Multiple users per workspace |
-| RLS checks membership, not ownership | Same — already works for multiple members |
-| No invite mechanism | Add `workspace_invites` table |
-| No role-based CRUD restrictions | Add role checks: `viewer` = read-only, `member` = read/write, `owner` = full control |
+| Current state (v1)                        | Future state                                                                         |
+| ----------------------------------------- | ------------------------------------------------------------------------------------ |
+| `workspace_members` has only `owner` rows | Add `member` and `viewer` rows                                                       |
+| One user per workspace                    | Multiple users per workspace                                                         |
+| RLS checks membership, not ownership      | Same — already works for multiple members                                            |
+| No invite mechanism                       | Add `workspace_invites` table                                                        |
+| No role-based CRUD restrictions           | Add role checks: `viewer` = read-only, `member` = read/write, `owner` = full control |
 
 **What would need to change:**
 
@@ -884,13 +887,13 @@ income_sources
 
 ### Design decisions
 
-| Decision | Rationale |
-|----------|-----------|
-| Same table as employment | No structural separation = no UX separation. Benefits are income. |
-| `benefit_type` as a nullable column | Only relevant for benefits. Avoids a join table while keeping named types queryable. |
-| Named benefit types as enum values | Enables reporting ("How much of my income comes from UC?"), supports UK-specific filtering, and seeds the onboarding checkbox list. |
-| `other` benefit type | Covers edge cases without requiring schema changes for every benefit type. |
-| Per-source frequency and next pay date | Benefits have varying payment schedules (UC is monthly, child benefit is four-weekly). Each source tracks its own schedule. |
+| Decision                               | Rationale                                                                                                                           |
+| -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Same table as employment               | No structural separation = no UX separation. Benefits are income.                                                                   |
+| `benefit_type` as a nullable column    | Only relevant for benefits. Avoids a join table while keeping named types queryable.                                                |
+| Named benefit types as enum values     | Enables reporting ("How much of my income comes from UC?"), supports UK-specific filtering, and seeds the onboarding checkbox list. |
+| `other` benefit type                   | Covers edge cases without requiring schema changes for every benefit type.                                                          |
+| Per-source frequency and next pay date | Benefits have varying payment schedules (UC is monthly, child benefit is four-weekly). Each source tracks its own schedule.         |
 
 ### Querying patterns
 
@@ -923,25 +926,25 @@ User cancels → Stripe webhook updates status and cancel_at_period_end
 
 The `subscriptions` table stores the Supabase-side mirror of Stripe's state:
 
-| Field | Source | Notes |
-|-------|--------|-------|
-| `stripe_customer_id` | Created on first upgrade | One Stripe customer per user |
-| `stripe_subscription_id` | Created on upgrade | Null for Free users |
-| `plan` | Derived from Stripe price | `free` or `pro` |
-| `status` | From Stripe webhook | `active`, `cancelled`, `past_due`, `expired` |
-| `current_period_start` | From Stripe webhook | Start of current billing period |
-| `current_period_end` | From Stripe webhook | End of current billing period |
-| `cancel_at_period_end` | From Stripe webhook | True if user requested cancellation |
+| Field                    | Source                    | Notes                                        |
+| ------------------------ | ------------------------- | -------------------------------------------- |
+| `stripe_customer_id`     | Created on first upgrade  | One Stripe customer per user                 |
+| `stripe_subscription_id` | Created on upgrade        | Null for Free users                          |
+| `plan`                   | Derived from Stripe price | `free` or `pro`                              |
+| `status`                 | From Stripe webhook       | `active`, `cancelled`, `past_due`, `expired` |
+| `current_period_start`   | From Stripe webhook       | Start of current billing period              |
+| `current_period_end`     | From Stripe webhook       | End of current billing period                |
+| `cancel_at_period_end`   | From Stripe webhook       | True if user requested cancellation          |
 
 ### Webhook events to handle
 
-| Stripe event | Action |
-|--------------|--------|
-| `checkout.session.completed` | Create/update subscription row. Set plan to `pro`, status to `active`. Store Stripe IDs. |
-| `customer.subscription.updated` | Update status, period dates, cancellation flags. |
-| `customer.subscription.deleted` | Set plan to `free`, status to `expired`. Clear Stripe subscription ID. |
-| `invoice.payment_failed` | Set status to `past_due`. |
-| `invoice.paid` | Set status back to `active` if was `past_due`. |
+| Stripe event                    | Action                                                                                   |
+| ------------------------------- | ---------------------------------------------------------------------------------------- |
+| `checkout.session.completed`    | Create/update subscription row. Set plan to `pro`, status to `active`. Store Stripe IDs. |
+| `customer.subscription.updated` | Update status, period dates, cancellation flags.                                         |
+| `customer.subscription.deleted` | Set plan to `free`, status to `expired`. Clear Stripe subscription ID.                   |
+| `invoice.payment_failed`        | Set status to `past_due`.                                                                |
+| `invoice.paid`                  | Set status back to `active` if was `past_due`.                                           |
 
 ### Webhook security
 
@@ -959,6 +962,7 @@ function canAccessFeature(plan: string, feature: string): boolean
 ```
 
 Checked in two places:
+
 1. **Server-side**: API routes and server components check the user's plan before returning Pro-gated data
 2. **Client-side**: UI hides or shows upgrade prompts based on plan (from session context)
 
@@ -966,23 +970,24 @@ The server-side check is authoritative. The client-side check is for UX only.
 
 ### Entitlement rules (from Phase 2 pricing table)
 
-| Check | Logic |
-|-------|-------|
-| Account limit | Free: count of accounts in workspace ≤ 3. Pro: unlimited |
-| Budget limit | Free: count of budgets in workspace ≤ 5. Pro: unlimited |
-| Goal limit | Free: count of goals in workspace ≤ 2. Pro: unlimited |
-| Workspace limit | Free: count of workspace_members for user ≤ 1. Pro: ≤ 5 |
-| Advanced analytics | Pro only |
-| Cashflow forecasting | Pro only |
-| Net worth tracking | Pro only |
-| CSV import | Pro only |
-| CSV export (full) | Pro: all data. Free: transactions only |
+| Check                | Logic                                                    |
+| -------------------- | -------------------------------------------------------- |
+| Account limit        | Free: count of accounts in workspace ≤ 3. Pro: unlimited |
+| Budget limit         | Free: count of budgets in workspace ≤ 5. Pro: unlimited  |
+| Goal limit           | Free: count of goals in workspace ≤ 2. Pro: unlimited    |
+| Workspace limit      | Free: count of workspace_members for user ≤ 1. Pro: ≤ 5  |
+| Advanced analytics   | Pro only                                                 |
+| Cashflow forecasting | Pro only                                                 |
+| Net worth tracking   | Pro only                                                 |
+| CSV import           | Pro only                                                 |
+| CSV export (full)    | Pro: all data. Free: transactions only                   |
 
 These checks run as application logic, not RLS. RLS ensures data isolation; entitlements ensure plan limits. They are separate concerns.
 
 ### Downgrade handling
 
 When a user's subscription expires or is cancelled:
+
 1. Stripe webhook updates `subscriptions.plan` to `free`
 2. Existing data is **not deleted**. The user keeps all their accounts, transactions, etc.
 3. Pro features become read-only or inaccessible:
@@ -996,29 +1001,29 @@ When a user's subscription expires or is cancelled:
 
 ## Summary: Complete Table List
 
-| Table | Workspace-scoped | RLS | Notes |
-|-------|-----------------|-----|-------|
-| `profiles` | No | Yes (user = self) | 1:1 with auth.users |
-| `subscriptions` | No | Yes (user = self) | Stripe mirror |
-| `workspaces` | N/A (is the scope) | Yes (member check) | |
-| `workspace_members` | N/A (is the join) | Yes (user = self) | |
-| `accounts` | Yes | Yes (workspace) | |
-| `categories` | Yes | Yes (workspace) | |
-| `transactions` | Yes | Yes (workspace) | High volume — indexed |
-| `income_sources` | Yes | Yes (workspace) | Benefits + employment |
-| `bills` | Yes | Yes (workspace) | Includes subscriptions |
-| `budgets` | Yes | Yes (workspace) | |
-| `goals` | Yes | Yes (workspace) | Savings + financial |
-| `goal_contributions` | Yes | Yes (workspace) | |
-| `debts` | Yes | Yes (workspace) | |
-| `waitlist_entries` | No | Enabled, no policies | Service_role only |
-| `contact_submissions` | No | Enabled, no policies | Service_role only |
-| `admin_notes` | No | Enabled, no policies | Service_role only |
-| `feature_flags` | No | Enabled, no policies | Service_role only |
+| Table                 | Workspace-scoped   | RLS                  | Notes                  |
+| --------------------- | ------------------ | -------------------- | ---------------------- |
+| `profiles`            | No                 | Yes (user = self)    | 1:1 with auth.users    |
+| `subscriptions`       | No                 | Yes (user = self)    | Stripe mirror          |
+| `workspaces`          | N/A (is the scope) | Yes (member check)   |                        |
+| `workspace_members`   | N/A (is the join)  | Yes (user = self)    |                        |
+| `accounts`            | Yes                | Yes (workspace)      |                        |
+| `categories`          | Yes                | Yes (workspace)      |                        |
+| `transactions`        | Yes                | Yes (workspace)      | High volume — indexed  |
+| `income_sources`      | Yes                | Yes (workspace)      | Benefits + employment  |
+| `bills`               | Yes                | Yes (workspace)      | Includes subscriptions |
+| `budgets`             | Yes                | Yes (workspace)      |                        |
+| `goals`               | Yes                | Yes (workspace)      | Savings + financial    |
+| `goal_contributions`  | Yes                | Yes (workspace)      |                        |
+| `debts`               | Yes                | Yes (workspace)      |                        |
+| `waitlist_entries`    | No                 | Enabled, no policies | Service_role only      |
+| `contact_submissions` | No                 | Enabled, no policies | Service_role only      |
+| `admin_notes`         | No                 | Enabled, no policies | Service_role only      |
+| `feature_flags`       | No                 | Enabled, no policies | Service_role only      |
 
 **Total: 17 tables.** Manageable for a solo founder. Clean growth path for shared workspaces, audit logging, and additional workspace types.
 
 ---
 
-*Document version: Phase 3 v1.0*
-*Created: 2026-03-30*
+_Document version: Phase 3 v1.0_
+_Created: 2026-03-30_

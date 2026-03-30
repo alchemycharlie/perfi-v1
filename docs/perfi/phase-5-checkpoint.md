@@ -25,6 +25,7 @@
 ## Final master plan
 
 `final-master-plan.md` consolidates all 5 phases into a single implementation reference covering:
+
 - Product summary, principles, and audience
 - Tech stack
 - Full 17-table schema summary
@@ -57,14 +58,14 @@
 
 ## Planning pack completeness
 
-| Document | Status | Pages |
-|----------|--------|-------|
-| Phase 1 — Product definition | Complete | Product, scope, principles, positioning |
-| Phase 2 — IA, flows, pricing | Complete | 29 pages, 13 flows, pricing tiers |
-| Phase 3 — Data, schema, security | Complete | 17 tables, RLS, auth, Stripe |
-| Phase 4 — Frontend, UX, admin | Complete | Architecture, all page UX, accessibility |
-| Phase 5 — Roadmap, handoff | Complete | Build order, deployment, risks |
-| Final master plan | Complete | Consolidated reference |
-| Working notes | Complete | All questions resolved or documented |
+| Document                         | Status   | Pages                                    |
+| -------------------------------- | -------- | ---------------------------------------- |
+| Phase 1 — Product definition     | Complete | Product, scope, principles, positioning  |
+| Phase 2 — IA, flows, pricing     | Complete | 29 pages, 13 flows, pricing tiers        |
+| Phase 3 — Data, schema, security | Complete | 17 tables, RLS, auth, Stripe             |
+| Phase 4 — Frontend, UX, admin    | Complete | Architecture, all page UX, accessibility |
+| Phase 5 — Roadmap, handoff       | Complete | Build order, deployment, risks           |
+| Final master plan                | Complete | Consolidated reference                   |
+| Working notes                    | Complete | All questions resolved or documented     |
 
 **The planning pack is ready for implementation.**

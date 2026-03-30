@@ -28,29 +28,32 @@ It is **not** a banking app, investment platform, Open Banking product, or finan
 
 ## Target Users
 
-| Segment | Key needs |
-|---------|-----------|
-| UK young professionals | Simple budgeting, savings goals, cashflow |
-| UK families/households | Bill tracking, direct debits, pay dates |
-| Neurodivergent users | Low cognitive load, predictable UI, calm design |
-| Benefits-receiving individuals | Benefits as income, irregular payment tracking |
-| Privacy-conscious users | Manual-first, no bank connections |
+| Segment                        | Key needs                                       |
+| ------------------------------ | ----------------------------------------------- |
+| UK young professionals         | Simple budgeting, savings goals, cashflow       |
+| UK families/households         | Bill tracking, direct debits, pay dates         |
+| Neurodivergent users           | Low cognitive load, predictable UI, calm design |
+| Benefits-receiving individuals | Benefits as income, irregular payment tracking  |
+| Privacy-conscious users        | Manual-first, no bank connections               |
 
 ---
 
 ## Three Product Surfaces
 
 ### 1. Public Marketing Site
+
 - Landing page, pricing, FAQ, about, contact, waitlist, legal
 - SEO-optimised, static rendering
 - Tabbed interactive product preview
 
 ### 2. Authenticated App
+
 - 15 pages: Dashboard, Accounts, Account detail, Transactions, Budgets, Bills, Cashflow, Goals, Goal detail, Income, Analytics, Debt, Settings, Billing, Onboarding
 - Sidebar + top bar navigation
 - Mobile: bottom tab bar (Dashboard, Transactions, Budgets, Cashflow, More)
 
 ### 3. Internal Admin
+
 - 7 pages: Dashboard, Users, User detail, Waitlist, Subscriptions, Support, System
 - service_role access, dense functional UI
 
@@ -58,28 +61,29 @@ It is **not** a banking app, investment platform, Open Banking product, or finan
 
 ## Tech Stack
 
-| Layer | Choice |
-|-------|--------|
-| Framework | Next.js App Router (TypeScript) |
-| Styling | Tailwind CSS + CSS variables for design tokens |
-| Components | Radix UI primitives + Tailwind (shadcn/ui patterns) |
-| Database | Supabase Postgres with Row Level Security |
-| Auth | Supabase Auth (email+password, magic link) |
-| Payments | Stripe (Checkout, webhooks, Customer Portal) |
-| Hosting | Vercel (changed from Cloudflare in Phase 5 — less friction for Next.js App Router) |
-| DNS | Cloudflare |
-| Transactional email | Resend |
-| Marketing email | Buttondown |
-| Error tracking | Sentry |
-| Charts | Recharts |
-| Validation | Zod |
-| Typeface | Inter |
+| Layer               | Choice                                                                             |
+| ------------------- | ---------------------------------------------------------------------------------- |
+| Framework           | Next.js App Router (TypeScript)                                                    |
+| Styling             | Tailwind CSS + CSS variables for design tokens                                     |
+| Components          | Radix UI primitives + Tailwind (shadcn/ui patterns)                                |
+| Database            | Supabase Postgres with Row Level Security                                          |
+| Auth                | Supabase Auth (email+password, magic link)                                         |
+| Payments            | Stripe (Checkout, webhooks, Customer Portal)                                       |
+| Hosting             | Vercel (changed from Cloudflare in Phase 5 — less friction for Next.js App Router) |
+| DNS                 | Cloudflare                                                                         |
+| Transactional email | Resend                                                                             |
+| Marketing email     | Buttondown                                                                         |
+| Error tracking      | Sentry                                                                             |
+| Charts              | Recharts                                                                           |
+| Validation          | Zod                                                                                |
+| Typeface            | Inter                                                                              |
 
 ---
 
 ## Database Schema (17 tables)
 
 ### Global (not workspace-scoped)
+
 - `profiles` — display name, role, onboarding status, preferences (incl. `has_seen_tour`), `is_disabled`
 - `subscriptions` — Stripe mirror: customer ID, subscription ID, plan, status, billing dates
 - `waitlist_entries` — email, interests, status
@@ -88,10 +92,12 @@ It is **not** a banking app, investment platform, Open Banking product, or finan
 - `feature_flags` — key-value toggles
 
 ### Workspace infrastructure
+
 - `workspaces` — name, type (personal/personal_household), owner, is_demo flag
 - `workspace_members` — user-workspace join with role (owner in v1)
 
 ### Workspace-scoped (all have workspace_id + RLS)
+
 - `accounts` — name, type, balance, sort order
 - `categories` — name, type (expense/income/transfer), icon, colour, is_default
 - `transactions` — amount, description, date, type, account, category, bill link
@@ -103,6 +109,7 @@ It is **not** a banking app, investment platform, Open Banking product, or finan
 - `debts` — name, balance, minimum payment, interest rate, next payment date
 
 ### Key schema decisions
+
 - UUIDs everywhere
 - Hard deletes (no soft delete)
 - Timestamps (created_at, updated_at) on every table
@@ -128,17 +135,17 @@ It is **not** a banking app, investment platform, Open Banking product, or finan
 
 ## Pricing and Entitlements
 
-| | Free | Pro (£4.99/month) |
-|---|---|---|
-| Accounts | ≤ 3 | Unlimited |
-| Budgets | ≤ 5 | Unlimited |
-| Goals | ≤ 2 | Unlimited |
-| Workspaces | 1 | ≤ 5 |
-| Analytics | Basic | Advanced + trends + net worth |
-| Cashflow forecasting | — | Yes |
-| CSV import | — | Yes |
-| CSV export | Transactions only | All data |
-| All other features | Yes | Yes |
+|                      | Free              | Pro (£4.99/month)             |
+| -------------------- | ----------------- | ----------------------------- |
+| Accounts             | ≤ 3               | Unlimited                     |
+| Budgets              | ≤ 5               | Unlimited                     |
+| Goals                | ≤ 2               | Unlimited                     |
+| Workspaces           | 1                 | ≤ 5                           |
+| Analytics            | Basic             | Advanced + trends + net worth |
+| Cashflow forecasting | —                 | Yes                           |
+| CSV import           | —                 | Yes                           |
+| CSV export           | Transactions only | All data                      |
+| All other features   | Yes               | Yes                           |
 
 Enforcement: server-side (authoritative) + client-side (UX). Soft gates with inline UpgradeBanner, not blocking modals.
 
@@ -199,14 +206,14 @@ Demo banner: persistent until user clears demo data.
 
 ## Build Order
 
-| Phase | What | Duration |
-|-------|------|----------|
-| A | Foundation: project setup, database, auth, deploy | 1–2 weeks |
-| B | Marketing site + waitlist (can overlap with C) | 1–2 weeks |
-| C | Core app: accounts, transactions, categories, dashboard | 2–3 weeks |
-| D | Full features: budgets, bills, income, goals, debt, cashflow | 2–3 weeks |
-| E | Payments + entitlements + admin panel | 1–2 weeks |
-| F | Polish, accessibility, legal, launch | 1–2 weeks |
+| Phase | What                                                         | Duration  |
+| ----- | ------------------------------------------------------------ | --------- |
+| A     | Foundation: project setup, database, auth, deploy            | 1–2 weeks |
+| B     | Marketing site + waitlist (can overlap with C)               | 1–2 weeks |
+| C     | Core app: accounts, transactions, categories, dashboard      | 2–3 weeks |
+| D     | Full features: budgets, bills, income, goals, debt, cashflow | 2–3 weeks |
+| E     | Payments + entitlements + admin panel                        | 1–2 weeks |
+| F     | Polish, accessibility, legal, launch                         | 1–2 weeks |
 
 **Total: 10–14 weeks** (solo founder, full-time). Realistically 16–20 weeks with design, copy, and marketing work.
 
@@ -214,15 +221,15 @@ Demo banner: persistent until user clears demo data.
 
 ## Deployment Stack
 
-| Service | Purpose | Cost at launch |
-|---------|---------|---------------|
-| Vercel | Hosting (Next.js) | Free |
-| Supabase | Database, auth, RLS | Free (Pro $25/month later) |
-| Stripe | Payments | Per-transaction only |
-| Cloudflare | DNS | Free |
-| Resend | Transactional email | Free (100/day) |
-| Buttondown | Marketing email | Free (100 subscribers) |
-| Sentry | Error tracking | Free tier |
+| Service    | Purpose             | Cost at launch             |
+| ---------- | ------------------- | -------------------------- |
+| Vercel     | Hosting (Next.js)   | Free                       |
+| Supabase   | Database, auth, RLS | Free (Pro $25/month later) |
+| Stripe     | Payments            | Per-transaction only       |
+| Cloudflare | DNS                 | Free                       |
+| Resend     | Transactional email | Free (100/day)             |
+| Buttondown | Marketing email     | Free (100 subscribers)     |
+| Sentry     | Error tracking      | Free tier                  |
 
 ---
 
@@ -231,6 +238,7 @@ Demo banner: persistent until user clears demo data.
 PerFi is **not** a banking app, investment platform, or Open Banking product. It does not move money, sync with bank APIs, or offer regulated financial advice. These are product principles, not temporary limitations.
 
 PerFi is positioned as a **tracking and planning tool**. All copy must avoid:
+
 - "We recommend" or "you should" for financial decisions
 - Debt payoff strategies or prioritisation advice
 - Budget amount suggestions
@@ -243,30 +251,30 @@ Footer and terms must include: "PerFi is a tracking and planning tool. It does n
 
 ## Post-v1 Roadmap (High Level)
 
-| Priority | Feature |
-|----------|---------|
-| v1.1 | Resend email integration, dark mode, notifications (bill reminders), annual billing, recurring transaction templates, Setup assistant (re-onboarding), bill category auto-suggestion, account reordering, category icon picker |
-| v1.2 | OAuth (Google/Apple), audit logging, advanced reporting |
-| v2 | Shared workspaces, partner invites, Side Business workspace type |
-| Later | Open Banking (optional), mobile native apps, receipt upload, multi-currency, API access for power users, irregular income tools (freelancer/gig) |
+| Priority | Feature                                                                                                                                                                                                                        |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| v1.1     | Resend email integration, dark mode, notifications (bill reminders), annual billing, recurring transaction templates, Setup assistant (re-onboarding), bill category auto-suggestion, account reordering, category icon picker |
+| v1.2     | OAuth (Google/Apple), audit logging, advanced reporting                                                                                                                                                                        |
+| v2       | Shared workspaces, partner invites, Side Business workspace type                                                                                                                                                               |
+| Later    | Open Banking (optional), mobile native apps, receipt upload, multi-currency, API access for power users, irregular income tools (freelancer/gig)                                                                               |
 
 ---
 
 ## Document Index
 
-| File | Contents |
-|------|----------|
-| `phase-1-product-definition.md` | Product positioning, principles, audience, scope, risks, copy |
-| `phase-2-ia-flows-pricing.md` | IA, routes, user flows, pricing, onboarding, demo, landing page |
-| `phase-3-data-schema-security.md` | Schema (17 tables), RLS, auth, admin, Stripe, benefits |
-| `phase-4-frontend-ux-admin.md` | Architecture, components, UX, accessibility, all page designs |
-| `phase-5-roadmap-handoff.md` | Build order, risks, deployment, email tools, launch path, errata |
-| `final-master-plan.md` | This file — consolidated reference |
-| `working-notes.md` | Progress log, open/resolved questions |
-| `phase-[1-5]-checkpoint.md` | Per-phase summaries and audit results |
+| File                              | Contents                                                         |
+| --------------------------------- | ---------------------------------------------------------------- |
+| `phase-1-product-definition.md`   | Product positioning, principles, audience, scope, risks, copy    |
+| `phase-2-ia-flows-pricing.md`     | IA, routes, user flows, pricing, onboarding, demo, landing page  |
+| `phase-3-data-schema-security.md` | Schema (17 tables), RLS, auth, admin, Stripe, benefits           |
+| `phase-4-frontend-ux-admin.md`    | Architecture, components, UX, accessibility, all page designs    |
+| `phase-5-roadmap-handoff.md`      | Build order, risks, deployment, email tools, launch path, errata |
+| `final-master-plan.md`            | This file — consolidated reference                               |
+| `working-notes.md`                | Progress log, open/resolved questions                            |
+| `phase-[1-5]-checkpoint.md`       | Per-phase summaries and audit results                            |
 
 ---
 
-*This plan is ready for implementation.*
+_This plan is ready for implementation._
 
-*Created: 2026-03-30*
+_Created: 2026-03-30_
