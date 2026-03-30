@@ -9,8 +9,8 @@ This document tracks implementation progress across all build phases.
 | Phase | Name                                                          | Status      | Date Started | Date Completed |
 | ----- | ------------------------------------------------------------- | ----------- | ------------ | -------------- |
 | 1     | Project Setup, Repo Hardening, Delivery Foundation            | Complete    | 2026-03-30   | 2026-03-30     |
-| 2     | Database, Auth, Middleware                                    | Not started | —            | —              |
-| 3     | Marketing Site + Waitlist                                     | Not started | —            | —              |
+| 2     | Public Marketing Site Shell                                   | Complete    | 2026-03-30   | 2026-03-30     |
+| 3     | Database, Auth, Middleware                                    | Not started | —            | —              |
 | 4     | Core App (Accounts, Transactions, Dashboard)                  | Not started | —            | —              |
 | 5     | Full Features (Budgets, Bills, Income, Goals, Debt, Cashflow) | Not started | —            | —              |
 | 6     | Payments, Entitlements, Admin                                 | Not started | —            | —              |
@@ -68,3 +68,21 @@ Post-audit corrections:
 - Removed leftover `create-next-app` SVGs from `public/`
 - Removed empty `styles/` directory (not in Phase 4 plan)
 - Total route count: 36 (was 29, now matches full Phase 2 IA)
+
+### 2026-03-30 — Implementation Phase 2: Marketing Site Shell
+
+- Built shared UI components: Button (5 variants, 3 sizes), Input, Badge
+- Built shared Logo component
+- Built MarketingHeader: sticky, desktop nav, mobile hamburger, Sign In + Get Started CTAs
+- Built MarketingFooter: 4-column layout, compliance disclaimer
+- Built homepage: hero, problem statement, 4 feature cards, 3 differentiators, pricing preview table, trust section, final CTA
+- Built pricing page: Free + Pro plan cards, 16-row comparison table, pricing FAQ
+- Built FAQ page: 4 grouped accordions (17 Q&As from Phase 2 planning)
+- Built about page: mission, founder story, 5 product principles
+- Built contact page: form with name/email/message, response time note
+- Built waitlist page: email capture, 5 interest checkboxes, honeypot anti-spam
+- Built legal pages: privacy policy (8 sections), terms of service (9 sections)
+- Built reusable CTASection component used at bottom of every page
+- Updated marketing layout to use real header/footer components
+- All forms are client-side only (backend wiring deferred to Phase 3)
+- Verified: TypeScript passes, ESLint passes, production build succeeds (all 36 routes)
