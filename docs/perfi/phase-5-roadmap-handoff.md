@@ -18,7 +18,7 @@ Implementation is split into 6 build phases. Each phase results in a deployable,
 | Create database triggers | On signup: create profile + subscription. On transaction CUD: update account balance. |
 | Set up auth | Supabase Auth with email+password, email verification, `@supabase/ssr` middleware |
 | Create Supabase client files | `lib/supabase/client.ts`, `server.ts`, `middleware.ts`, `admin.ts` |
-| Create root layout, middleware.ts | Auth guards, onboarding redirect, admin role check |
+| Create root layout, middleware.ts | Auth guards, `is_disabled` check, onboarding redirect, admin role check |
 | Create route group layouts | `(marketing)`, `(auth)`, `app/`, `admin/` with placeholder pages |
 | Deploy to Cloudflare (or Vercel) | Verify Server Actions work. If Cloudflare fails, switch to Vercel now. |
 | Set up CI | Linting, type checking, axe-core accessibility checks |
@@ -42,7 +42,7 @@ Implementation is split into 6 build phases. Each phase results in a deployable,
 | Marketing header + footer | Navigation, CTAs, responsive |
 | SEO basics | Meta tags, Open Graph, sitemap, robots.txt |
 
-**Exit criteria**: Marketing site is live, waitlist is capturing emails, contact form works, pricing is public.
+**Exit criteria**: Marketing site is live, waitlist is capturing emails, contact form works, pricing is public. All marketing copy reviewed for compliance positioning (tracking/planning, not advice — see section 5).
 
 ### Build Phase C: Core App — Accounts, Transactions, Categories (Estimated: 2–3 weeks)
 
@@ -280,6 +280,8 @@ Next.js App Router on Cloudflare Workers via `@cloudflare/next-on-pages` is func
 
 ### Compliance caveats
 
+**PerFi is not a banking app, not an investment platform, and not an Open Banking product.** It does not move money, sync with bank APIs, or offer regulated financial advice. These are not temporary limitations — they are product principles. All copy, landing pages, and in-app messaging must reflect this.
+
 **PerFi must never position itself as financial advice.** All copy, onboarding, and product UI must be framed as:
 - Tracking
 - Planning
@@ -359,6 +361,8 @@ When a workspace is created, default categories must be seeded based on workspac
 | Feature | Why postponed | When to revisit |
 |---------|---------------|-----------------|
 | Open Banking / bank sync | Core principle: manual-first | v2 or never — only if market demands it |
+| Third-party finance APIs | No external dependencies in v1 | v2 or never |
+| Payment initiation / money movement | Out of product scope; regulatory implications | Never — not the product |
 | OAuth (Google/Apple sign-in) | Adds complexity, minimal v1 benefit | v1.1 — easy to add via Supabase |
 | Dark mode | Design system supports it (CSS vars), but shipping it doubles visual QA | v1.1 — when design system is stable |
 | Notifications (email/push) | Requires infrastructure (email service, push registration) | v1.1 — high value for bill reminders |
@@ -380,6 +384,7 @@ When a workspace is created, default categories must be seeded based on workspac
 | Analytics charts | Users need time to accumulate data anyway | Medium |
 | Undo support | Confirmation dialogs protect against accidents | Medium |
 | CSV export | Low urgency — users can screenshot or manually copy | Low |
+| CSV import (Pro) | Listed in pricing but not in any build phase — defer to post-launch | Medium |
 
 ---
 

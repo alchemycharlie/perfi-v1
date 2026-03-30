@@ -66,7 +66,7 @@ It is **not** a banking app, investment platform, Open Banking product, or finan
 | Database | Supabase Postgres with Row Level Security |
 | Auth | Supabase Auth (email+password, magic link) |
 | Payments | Stripe (Checkout, webhooks, Customer Portal) |
-| Hosting | Vercel |
+| Hosting | Vercel (changed from Cloudflare in Phase 5 — less friction for Next.js App Router) |
 | DNS | Cloudflare |
 | Transactional email | Resend |
 | Marketing email | Buttondown |
@@ -109,6 +109,7 @@ It is **not** a banking app, investment platform, Open Banking product, or finan
 - workspace_id denormalised on transactions and goal_contributions for RLS performance
 - Benefits in same table as employment income (nullable benefit_type)
 - Budget spent calculated at query time (no stored value)
+- Signup triggers: auto-create profile + subscription on new auth.users row
 - Account balance updated via Postgres trigger on transaction changes
 
 ---
@@ -227,6 +228,8 @@ Demo banner: persistent until user clears demo data.
 
 ## Compliance Positioning
 
+PerFi is **not** a banking app, investment platform, or Open Banking product. It does not move money, sync with bank APIs, or offer regulated financial advice. These are product principles, not temporary limitations.
+
 PerFi is positioned as a **tracking and planning tool**. All copy must avoid:
 - "We recommend" or "you should" for financial decisions
 - Debt payoff strategies or prioritisation advice
@@ -245,7 +248,7 @@ Footer and terms must include: "PerFi is a tracking and planning tool. It does n
 | v1.1 | Resend email integration, dark mode, notifications (bill reminders), annual billing |
 | v1.2 | OAuth (Google/Apple), audit logging, advanced reporting |
 | v2 | Shared workspaces, partner invites, Side Business workspace type |
-| Later | Open Banking (optional), mobile native apps, receipt upload, multi-currency |
+| Later | Open Banking (optional), mobile native apps, receipt upload, multi-currency, API access for power users, irregular income tools (freelancer/gig) |
 
 ---
 
