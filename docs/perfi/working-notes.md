@@ -88,3 +88,13 @@
 - Charting: Recharts (SVG, accessible, SSR-friendly).
 - Landing page preview: tabbed approach for v1, upgradeable to scroll-based later.
 - Waitlist invites: manual for v1, Resend integration as fast-follow.
+- CSV export UX: in Settings, Free = transactions only, Pro = all data types.
+- Undo: toast-based for single-item deletions (5-second window).
+- Onboarding UX: 5-step flow fully designed in Phase 4 section 17.3.
+- Workspace switcher: dropdown in top bar with workspace list + create action.
+- Settings/billing: sections defined, Stripe Customer Portal for payment management.
+- Goals UX distinction: type selector on creation, type badges in list, different progress display.
+- Cashflow calendar: day cells with dots, click-to-expand detail, sparkline, mobile list fallback.
+- Auth: httpOnly cookies, signup triggers, middleware checks all referenced from Phase 3.
+- Stripe: upgrade via Checkout, cancel via API, webhook handler for 5 events.
+- Entitlements: all 9 limits mapped to specific UI enforcement points with UpgradeBanner.

@@ -909,5 +909,196 @@ When the admin sends invites from the admin panel:
 
 ---
 
-*Document version: Phase 4 v1.0*
+## 17. Supplementary Sections (Gap Fixes from Cross-Phase Audit)
+
+The following sections were added after auditing Phase 4 against Phases 1–3 to close identified gaps.
+
+### 17.1 CSV Export UX
+
+Phase 1 lists CSV export as a v1 feature. Phase 2 defines the tier split (Free: transactions only, Pro: all data).
+
+**Location**: Settings → Export Data (a section within the Settings page, not a separate page).
+
+**UX**:
+- Heading: "Export your data"
+- Description: "Download your financial data as a CSV file."
+- For Free users: single button "Export transactions" — downloads a CSV of all transactions in the active workspace.
+- For Pro users: dropdown with options: "Transactions", "Accounts", "Budgets", "Bills", "Goals", "Income sources", "All data" (combined). Each downloads the corresponding CSV.
+- Free users see a small note: "Upgrade to Pro to export all data types."
+- Export triggers a Server Action that queries the database and returns a CSV file via a streamed response.
+- No background job needed — CSV generation is fast for v1 data volumes.
+
+### 17.2 Undo Support
+
+Phase 1 section 9 specifies "Undo support where possible." Phase 4 section 9.5 covered confirmation for destructive actions but did not address undo.
+
+**Approach**: Toast-based undo for single-item deletions.
+
+- When a user deletes a transaction, bill, goal, or other single entity, the item is removed from the UI immediately (optimistic update).
+- A toast appears at the bottom: "Transaction deleted. [Undo]"
+- Toast stays for 5 seconds. If "Undo" is clicked, the delete Server Action is reversed (re-insert the item).
+- If the toast expires, the delete is permanent.
+- Implementation: the delete Server Action soft-holds the deletion for 5 seconds using a client-side timer. The actual database DELETE fires after the undo window closes, or fires immediately and the undo re-inserts.
+- **Simpler v1 approach**: Delete immediately, store the deleted item in client-side state for 5 seconds. Undo re-inserts via a create Server Action. This avoids complex server-side hold logic.
+- Undo is only for single-item deletions. Bulk actions (e.g. clear demo data) use confirmation dialogs without undo.
+
+### 17.3 Onboarding Flow UX
+
+Phase 2 section 8 defines a 5-step onboarding flow. This section provides the UX specification.
+
+**Layout**: Each step is a centred card (same layout as auth pages). Progress indicator at top: "Step 2 of 5" with a thin progress bar.
+
+**Step-by-step UX**:
+
+| Step | Screen | UX detail |
+|------|--------|-----------|
+| 1. Welcome | "What should we call you?" | Single text input for display name. Pre-focused. Placeholder: "Your name". Below: "Skip" link (defaults to "User"). Primary CTA: "Continue". |
+| 2. Workspace | "How will you use PerFi?" | Two large selectable cards: "Personal" (icon: single person, description: "Track your own finances") and "Personal + Household" (icon: house, description: "Track personal and household spending together"). Click to select, then "Continue". Skip defaults to Personal. |
+| 3. Income | "What's your main income?" | Amount: CurrencyInput with bracket selector (e.g. "£0–£1,000", "£1,000–£2,000", "£2,000–£3,000", "£3,000+", or exact amount toggle). Pay frequency: segmented control (Weekly / Fortnightly / Four-weekly / Monthly). Next pay date: date picker defaulting to next occurrence. All optional. "Skip" link skips income setup. |
+| 4. Benefits | "Do you receive benefits income?" | Yes/No toggle. If Yes: checkboxes for UC, PIP, Child Benefit, Carer's Allowance, ESA, Housing Benefit, Council Tax Reduction, Other. Optional amount and frequency per selected type. All optional. "Skip" link skips benefits. |
+| 5. Start mode | "How would you like to start?" | Two large selectable cards: "Explore with demo data" (description: "See PerFi in action with sample data. You can clear it anytime.") and "Start fresh" (description: "Begin with a blank workspace and add your own data."). Must choose one — no skip. |
+
+**Transitions**: Cards slide left-to-right between steps (or instant if `prefers-reduced-motion`). Back arrow in top-left to go to previous step.
+
+### 17.4 Workspace Switcher and User Menu UX
+
+**Workspace switcher** (top bar, left side):
+- Shows the active workspace name as a dropdown trigger (e.g. "My Finances ▾")
+- Click opens a dropdown listing all workspaces the user is a member of
+- Each item shows workspace name and type badge (Personal / Household)
+- Click a workspace to switch — sets the active workspace in React context and localStorage, revalidates the current page
+- At the bottom of the dropdown: "+ Create workspace" (if under plan limit) or "Upgrade to create more" (if at limit)
+- Free users see only 1 workspace. Pro users see up to 5.
+
+**User avatar menu** (top bar, right side):
+- Shows the user's avatar (initials on a coloured circle) or display name
+- Click opens a dropdown:
+  - **Settings** → `/app/settings`
+  - **Billing** → `/app/settings/billing`
+  - **Help** → Opens a simple help panel or links to FAQ
+  - Separator
+  - **Sign out** → Signs out via Supabase Auth, redirects to `/login`
+
+### 17.5 Settings and Billing Pages UX
+
+**Settings page** (`/app/settings`):
+
+Sections, each expandable or visible as a vertical stack:
+
+| Section | Fields | Actions |
+|---------|--------|---------|
+| **Profile** | Display name (editable inline), email (read-only, with "Change email" link) | Save |
+| **Workspace** | Active workspace name (editable), type (read-only), default categories (manage list) | Save |
+| **Preferences** | Reduce motion toggle, date format preference | Save |
+| **Export** | Export data section (see 17.1) | Export buttons |
+| **Tour** | "Replay the PerFi tour" link | Resets `has_seen_tour` and redirects to dashboard |
+| **Danger zone** | "Delete my account" — red text, requires confirmation dialog ("Type DELETE to confirm") | Delete |
+
+**Billing page** (`/app/settings/billing`):
+
+| State | Display |
+|-------|---------|
+| **Free plan** | "You're on the Free plan." Feature comparison card showing what Pro unlocks. CTA: "Upgrade to Pro — £4.99/month" → Opens Stripe Checkout. |
+| **Pro plan (active)** | "You're on Pro. Next billing date: [date]." Payment method summary (last 4 digits). Actions: "Manage payment method" (→ Stripe Customer Portal), "Cancel subscription". |
+| **Pro plan (cancelling)** | "Your Pro plan ends on [date]. You'll keep access until then." CTA: "Resume subscription" (→ reactivates via Stripe). |
+| **Pro plan (past due)** | "Your payment failed. Please update your payment method." CTA: "Update payment" (→ Stripe Customer Portal). |
+
+### 17.6 Financial Goals vs Savings Goals — UX Distinction
+
+The Goals page (`/app/goals`) shows both types with clear visual distinction:
+
+**Goal creation flow**:
+- Click "Create goal" → modal or form with type selector:
+  - **"Save toward something"** (savings goal) — fields: Name, Target amount, Target date (optional)
+  - **"Reach a financial target"** (financial goal) — fields: Name, Target description, Link to debt (optional dropdown), Link to budget category (optional dropdown), Target date (optional)
+
+**Goals list**:
+- Each goal card shows a type badge: "Savings" (teal) or "Financial" (amber)
+- Savings goals show a progress bar: £620 / £1,500 (41%)
+- Financial goals show progress differently depending on link:
+  - Linked to debt: shows debt balance decreasing toward £0
+  - Linked to budget category: shows current month spending vs target
+  - Unlinked: shows manual progress updates
+
+### 17.7 Cashflow Calendar — Detailed UX
+
+**Layout**: Month view, 7-column CSS grid (Mon–Sun), 5–6 rows.
+
+**Day cells**:
+- Date number in top-left
+- Coloured dots for events:
+  - Income (teal dot) — pay dates from `income_sources`
+  - Bills (amber dot) — due dates from `bills`
+  - Manual transactions on that date (grey dot, if past)
+- Click a day → expands an inline detail panel below the calendar row showing all events for that day:
+  - "Salary — £2,400 (income)"
+  - "Council Tax — £145 (direct debit)"
+  - Running balance after that day: "Projected balance: £1,342"
+
+**Navigation**: ← Previous month | "March 2026" | Next month →. "Today" button snaps to current month.
+
+**Projected balance line**: Below the calendar grid, a simple horizontal sparkline showing projected balance across the month — rising on income days, falling on bill/expense days. This is a lightweight visualisation, not a full chart.
+
+**Responsive**:
+- Desktop: full month grid
+- Mobile: list view — days stacked vertically, showing only days with events. "Show all days" toggle.
+
+**Empty state**: "Not enough data yet. Add some accounts, income sources, and bills to see your cashflow calendar." (from section 12)
+
+### 17.8 Auth Implementation Reference
+
+Phase 4 defers to Phase 3 section 8 for auth implementation details. For clarity, the key points are:
+
+- **Session handling**: `@supabase/ssr` package. JWT stored in httpOnly cookie, not localStorage. Refresh tokens rotated automatically.
+- **Signup triggers**: Postgres triggers on `auth.users` insert create `profiles` (with `role = 'user'`, `onboarding_completed = false`) and `subscriptions` (with `plan = 'free'`, `status = 'active'`). No workspace created until onboarding step 2.
+- **Email verification**: Required before first login. Supabase Auth sends verification email automatically.
+- **Magic link**: Available as alternative login method. Supabase Auth handles the flow.
+- **Middleware checks**: Session validation, `profiles.is_disabled` check (block disabled users), `profiles.onboarding_completed` check (redirect to `/app/onboarding` if false and not already there), `profiles.role` check for `/admin/*` routes.
+
+### 17.9 Stripe Integration Reference
+
+Phase 4 defers to Phase 3 section 14 for Stripe implementation details. For clarity, the key frontend touchpoints are:
+
+**Upgrade flow**:
+1. User clicks "Upgrade to Pro" (from UpgradeBanner, billing page, or pricing)
+2. Server Action creates a Stripe Checkout Session with the user's email and the Pro price ID
+3. User is redirected to Stripe Checkout (hosted by Stripe, not embedded)
+4. On success, Stripe sends `checkout.session.completed` webhook → `/api/webhooks/stripe`
+5. Webhook handler (using `service_role`) updates `subscriptions` table: sets `plan = 'pro'`, `status = 'active'`, stores Stripe IDs
+6. User is redirected back to PerFi with updated subscription
+
+**Cancel flow**:
+1. User clicks "Cancel subscription" on billing page
+2. Server Action calls Stripe API to set `cancel_at_period_end = true`
+3. Stripe sends `customer.subscription.updated` webhook
+4. Webhook handler updates `subscriptions.cancel_at_period_end = true`
+5. UI shows "Your Pro plan ends on [date]"
+
+**Webhook handler** (`/api/webhooks/stripe`):
+- Verifies Stripe signature using webhook signing secret
+- Handles events: `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.payment_failed`, `invoice.paid`
+- All updates via `service_role` client
+- Idempotent — safe to retry
+
+### 17.10 Entitlement Enforcement Map
+
+Maps Phase 3 entitlement rules to specific UI enforcement points:
+
+| Plan limit | Where enforced | UX behaviour |
+|------------|---------------|--------------|
+| **Accounts ≤ 3** (Free) | Account creation form / "Add account" action | Check count before showing form. If at limit, show UpgradeBanner inline instead of form. |
+| **Budgets ≤ 5** (Free) | Budget creation / "Set budget" action | Same pattern — inline UpgradeBanner. |
+| **Goals ≤ 2** (Free) | Goal creation / "Create goal" action | Same pattern. |
+| **Workspaces ≤ 1** (Free) | Workspace switcher "Create workspace" | Greyed out with tooltip: "Upgrade to Pro for multiple workspaces." |
+| **Advanced analytics** (Pro only) | Analytics page | Free users see basic spending-by-category chart. Below it: UpgradeBanner with "Unlock trends, net worth tracking, and more with Pro." |
+| **Cashflow forecasting** (Pro only) | Cashflow page, below the calendar | Free users see the calendar with current/past data. Forecasting section shows UpgradeBanner. |
+| **Net worth tracking** (Pro only) | Analytics page, net worth section | Section shows UpgradeBanner for Free users. |
+| **CSV import** (Pro only) | Settings → Import section (not built in v1 but gated) | If accessed, show UpgradeBanner. |
+| **CSV export (full)** (Pro only) | Settings → Export section | Free users see "Export transactions" only. Other options show Pro badge + UpgradeBanner. |
+
+All enforcement happens **both server-side** (Server Actions check `subscriptions.plan` before executing) **and client-side** (UI shows/hides based on plan from session context). Server-side is authoritative.
+
+---
+
+*Document version: Phase 4 v1.1 (updated after cross-phase audit)*
 *Created: 2026-03-30*

@@ -26,6 +26,17 @@
 14. Interactive preview — Granola-style scroll showcase + simpler tabbed fallback for v1
 15. Admin panel UX — 6 admin pages with UX specs, dense-but-scannable design philosophy
 16. Email capture and contact — waitlist form, contact form, anti-spam, auth emails, invite email strategy
+17. Supplementary sections (10 gap fixes from cross-phase audit):
+    - 17.1 CSV export UX
+    - 17.2 Undo support (toast-based for single-item deletions)
+    - 17.3 Onboarding 5-step flow UX
+    - 17.4 Workspace switcher and user menu UX
+    - 17.5 Settings and billing pages UX
+    - 17.6 Financial goals vs savings goals UX distinction
+    - 17.7 Cashflow calendar detailed UX
+    - 17.8 Auth implementation reference (from Phase 3)
+    - 17.9 Stripe integration reference (from Phase 3)
+    - 17.10 Entitlement enforcement map (9 limits mapped to UI)
 
 ## Key decisions made
 
@@ -48,6 +59,21 @@
 - **Server Actions on Cloudflare**: Server Actions require a server runtime. Cloudflare Workers support this, but edge cases (large file uploads, long-running actions) may hit limits. For v1 scope this should be fine.
 - **No email service in v1**: Waitlist confirmation emails are not sent automatically. This could reduce trust ("did my signup work?"). Mitigated by the on-screen confirmation message. Should be a fast-follow.
 - **Dashboard card count**: 7 cards may be too many for mobile. On mobile, consider collapsing Budget Status and Goals Progress into a single "Overview" expandable section.
+
+## Gaps found and fixed in cross-phase audit
+
+| Gap | Source | Fix |
+|-----|--------|-----|
+| CSV export — no UX | Phase 1 v1 scope | Added section 17.1: export in Settings, Free = transactions, Pro = all |
+| Undo support — only confirmation, no undo | Phase 1 section 9 | Added section 17.2: toast-based undo for single-item deletions |
+| Onboarding — no UX detail | Phase 2 section 8 | Added section 17.3: full 5-step UX with fields and layout |
+| Workspace switcher / user menu — not designed | Phase 2 section 2 | Added section 17.4: dropdown UX for both |
+| Settings and billing pages — no UX | Phase 2 page inventory | Added section 17.5: settings sections, billing states |
+| Financial vs savings goals — no UX distinction | Phase 2 section 5.13 | Added section 17.6: creation flow, type badges, progress display |
+| Cashflow calendar — minimal UX | Phase 2 section 5 | Added section 17.7: day cells, dots, detail panel, sparkline, responsive |
+| Auth details — not referenced | Phase 3 section 8 | Added section 17.8: httpOnly cookies, signup triggers, middleware checks |
+| Stripe integration — not detailed | Phase 3 section 14 | Added section 17.9: upgrade/cancel flows, webhook handler |
+| Entitlements — not mapped to UI | Phase 3 section 14 | Added section 17.10: all 9 limits mapped to specific UI enforcement points |
 
 ## Readiness for Phase 5
 
