@@ -49,6 +49,7 @@
 Phase 1 provides a stable foundation for Phase 2 (Information Architecture, User Flows, and Pricing). All scope boundaries, principles, and positioning are defined. No blockers.
 
 Phase 2 should cover:
+
 - Information architecture for all three surfaces (marketing, app, admin)
 - Core user flows (onboarding, transaction entry, budgeting, goals, cashflow)
 - Pricing tier feature breakdown

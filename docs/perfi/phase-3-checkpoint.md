@@ -18,7 +18,7 @@
 6. Roles and permissions — application roles (user/admin) + workspace roles (owner/member/viewer)
 7. Admin access model — service_role for admin ops, no direct financial data access
 8. Auth approach — Supabase Auth, email+password, magic link, httpOnly cookies, DB triggers on signup
-9. Protected route model — middleware strategy for /app/*, /admin/*, /api/*
+9. Protected route model — middleware strategy for /app/_, /admin/_, /api/\*
 10. Row Level Security strategy — standard policy pattern for all workspace-scoped tables
 11. Privacy and security essentials — data isolation, GDPR, input validation, session security
 12. Auditability and future shared workspace support — no audit in v1, schema ready for sharing
@@ -63,6 +63,7 @@
 Phase 3 provides the complete data foundation for Phase 4 (Frontend, UX, Admin). All tables, relationships, auth flows, RLS policies, and access patterns are defined. No blockers.
 
 Phase 4 should cover:
+
 - Component architecture and design system
 - Page-by-page UI specifications
 - Admin panel UI design

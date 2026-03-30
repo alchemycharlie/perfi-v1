@@ -56,6 +56,7 @@
 Phase 2 provides the structural foundation for Phase 3 (Data Schema and Security). All routes, pages, features, and entitlements are defined. No blockers.
 
 Phase 3 should cover:
+
 - Database schema design
 - Data models for all entities (users, workspaces, accounts, transactions, budgets, bills, goals, income, subscriptions)
 - Authentication and authorisation model

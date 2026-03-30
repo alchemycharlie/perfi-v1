@@ -6,15 +6,15 @@ The marketing site is a static, SEO-optimised surface. It exists to explain the 
 
 ### Page inventory
 
-| Page | Purpose | Key content |
-|------|---------|-------------|
-| **Home** `/` | Hero, value proposition, product preview, social proof, CTA | Headline, subheadline, feature highlights, interactive preview, waitlist/signup CTA |
-| **Pricing** `/pricing` | Transparent tier comparison | Free vs Pro comparison table, FAQ about billing, CTA to sign up |
-| **FAQ** `/faq` | Address objections and common questions | Grouped by topic: product, pricing, data/privacy, accessibility |
-| **About** `/about` | Build trust, tell the story | Mission, founder story, product principles |
-| **Contact** `/contact` | Support pathway | Contact form or email, expected response time |
-| **Waitlist** `/waitlist` | Pre-launch lead capture | Email capture, optional "what interests you" checkboxes |
-| **Legal** `/legal/privacy` `/legal/terms` | Compliance | Privacy policy, terms of service |
+| Page                                      | Purpose                                                     | Key content                                                                         |
+| ----------------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| **Home** `/`                              | Hero, value proposition, product preview, social proof, CTA | Headline, subheadline, feature highlights, interactive preview, waitlist/signup CTA |
+| **Pricing** `/pricing`                    | Transparent tier comparison                                 | Free vs Pro comparison table, FAQ about billing, CTA to sign up                     |
+| **FAQ** `/faq`                            | Address objections and common questions                     | Grouped by topic: product, pricing, data/privacy, accessibility                     |
+| **About** `/about`                        | Build trust, tell the story                                 | Mission, founder story, product principles                                          |
+| **Contact** `/contact`                    | Support pathway                                             | Contact form or email, expected response time                                       |
+| **Waitlist** `/waitlist`                  | Pre-launch lead capture                                     | Email capture, optional "what interests you" checkboxes                             |
+| **Legal** `/legal/privacy` `/legal/terms` | Compliance                                                  | Privacy policy, terms of service                                                    |
 
 ### Navigation structure
 
@@ -61,6 +61,7 @@ Analytics        [Pro badge if locked]
 ```
 
 User avatar menu contains:
+
 - Settings
 - Workspace settings
 - Subscription & billing
@@ -69,23 +70,23 @@ User avatar menu contains:
 
 ### Page inventory — App
 
-| Page | Route | Purpose |
-|------|-------|---------|
-| **Dashboard** | `/app/dashboard` | At-a-glance summary: balances, recent transactions, upcoming bills, budget status, goals progress |
-| **Accounts** | `/app/accounts` | List all accounts; click into account detail |
-| **Account detail** | `/app/accounts/[id]` | Transactions for that account, balance history |
-| **Transactions** | `/app/transactions` | Full transaction list with filters, search, add new |
-| **Budgets** | `/app/budgets` | Category budgets, progress bars, month selector |
-| **Bills & Subscriptions** | `/app/bills` | Recurring bills, direct debits, subscriptions with due dates |
-| **Cashflow** | `/app/cashflow` | Calendar view of income (incl. pay dates), expenses, and bills; projected balance |
-| **Goals** | `/app/goals` | Savings goals (save toward a target) and financial goals (pay off debt, reduce spending) with progress tracking |
-| **Goal detail** | `/app/goals/[id]` | Individual goal detail and contribution history |
-| **Income** | `/app/income` | All income sources: employment, benefits, other. Per-source frequency and next pay date |
-| **Analytics** | `/app/analytics` | Charts, trends, spending breakdown, net worth (Pro) |
-| **Debt** | `/app/debt` | Debt balances, minimum payments, payoff progress |
-| **Settings** | `/app/settings` | Profile, preferences, display name, workspace settings |
-| **Billing** | `/app/settings/billing` | Subscription status, upgrade/downgrade, payment method |
-| **Onboarding** | `/app/onboarding` | Progressive onboarding flow (shown post-signup) |
+| Page                      | Route                   | Purpose                                                                                                         |
+| ------------------------- | ----------------------- | --------------------------------------------------------------------------------------------------------------- |
+| **Dashboard**             | `/app/dashboard`        | At-a-glance summary: balances, recent transactions, upcoming bills, budget status, goals progress               |
+| **Accounts**              | `/app/accounts`         | List all accounts; click into account detail                                                                    |
+| **Account detail**        | `/app/accounts/[id]`    | Transactions for that account, balance history                                                                  |
+| **Transactions**          | `/app/transactions`     | Full transaction list with filters, search, add new                                                             |
+| **Budgets**               | `/app/budgets`          | Category budgets, progress bars, month selector                                                                 |
+| **Bills & Subscriptions** | `/app/bills`            | Recurring bills, direct debits, subscriptions with due dates                                                    |
+| **Cashflow**              | `/app/cashflow`         | Calendar view of income (incl. pay dates), expenses, and bills; projected balance                               |
+| **Goals**                 | `/app/goals`            | Savings goals (save toward a target) and financial goals (pay off debt, reduce spending) with progress tracking |
+| **Goal detail**           | `/app/goals/[id]`       | Individual goal detail and contribution history                                                                 |
+| **Income**                | `/app/income`           | All income sources: employment, benefits, other. Per-source frequency and next pay date                         |
+| **Analytics**             | `/app/analytics`        | Charts, trends, spending breakdown, net worth (Pro)                                                             |
+| **Debt**                  | `/app/debt`             | Debt balances, minimum payments, payoff progress                                                                |
+| **Settings**              | `/app/settings`         | Profile, preferences, display name, workspace settings                                                          |
+| **Billing**               | `/app/settings/billing` | Subscription status, upgrade/downgrade, payment method                                                          |
+| **Onboarding**            | `/app/onboarding`       | Progressive onboarding flow (shown post-signup)                                                                 |
 
 ### Design principles for app IA
 
@@ -114,15 +115,15 @@ System
 
 ### Page inventory — Admin
 
-| Page | Route | Purpose |
-|------|-------|---------|
-| **Admin Dashboard** | `/admin` | Key metrics: total users, active users, waitlist count, subscription breakdown, recent signups |
-| **Users** | `/admin/users` | User list with search, filter by plan/status. Click into user detail |
-| **User detail** | `/admin/users/[id]` | User profile, subscription status, workspace count, account count, support notes |
-| **Waitlist** | `/admin/waitlist` | Waitlist entries with date, email, status (pending/invited/converted). Bulk invite action |
-| **Subscriptions** | `/admin/subscriptions` | Subscription list: active, cancelled, expired. Revenue summary |
-| **Support** | `/admin/support` | Support tickets or flagged users. Basic queue |
-| **System** | `/admin/system` | Feature flags, maintenance mode toggle, basic health checks |
+| Page                | Route                  | Purpose                                                                                        |
+| ------------------- | ---------------------- | ---------------------------------------------------------------------------------------------- |
+| **Admin Dashboard** | `/admin`               | Key metrics: total users, active users, waitlist count, subscription breakdown, recent signups |
+| **Users**           | `/admin/users`         | User list with search, filter by plan/status. Click into user detail                           |
+| **User detail**     | `/admin/users/[id]`    | User profile, subscription status, workspace count, account count, support notes               |
+| **Waitlist**        | `/admin/waitlist`      | Waitlist entries with date, email, status (pending/invited/converted). Bulk invite action      |
+| **Subscriptions**   | `/admin/subscriptions` | Subscription list: active, cancelled, expired. Revenue summary                                 |
+| **Support**         | `/admin/support`       | Support tickets or flagged users. Basic queue                                                  |
+| **System**          | `/admin/system`        | Feature flags, maintenance mode toggle, basic health checks                                    |
 
 ### Admin MVP scope (resolving Phase 1 open question)
 
@@ -290,6 +291,7 @@ Post-signup → `/app/onboarding`
 ```
 
 **Design notes**:
+
 - Each step is a single focused screen with one question
 - Progress indicator shows current step (e.g. "Step 2 of 5")
 - "Skip" link visible on every step
@@ -454,24 +456,24 @@ Both types appear on `/app/goals`, with a type indicator. Creating a goal offers
 
 ### Tier structure
 
-| | **Free** | **Pro** — £4.99/month |
-|---|---|---|
-| **Accounts** | Up to 3 | Unlimited |
-| **Transactions** | Unlimited | Unlimited |
-| **Budgets** | Up to 5 categories | Unlimited categories |
-| **Bills tracking** | Unlimited | Unlimited |
-| **Goals** (savings + financial) | Up to 2 | Unlimited |
-| **Debt tracking** | Yes | Yes |
-| **Income tracking** | Yes (all types incl. benefits) | Yes |
-| **Cashflow calendar** | Yes | Yes |
-| **Dashboard** | Yes | Yes |
-| **Subscription tracking** | Yes | Yes |
-| **Workspaces** | 1 | Up to 5 |
-| **Analytics & trends** | Basic (spending by category) | Advanced (trends, net worth, forecasting) |
-| **Cashflow forecasting** | — | Yes |
-| **Net worth tracking** | — | Yes |
-| **CSV import** | — | Yes |
-| **CSV export** | Yes (basic) | Yes (full) |
+|                                 | **Free**                       | **Pro** — £4.99/month                     |
+| ------------------------------- | ------------------------------ | ----------------------------------------- |
+| **Accounts**                    | Up to 3                        | Unlimited                                 |
+| **Transactions**                | Unlimited                      | Unlimited                                 |
+| **Budgets**                     | Up to 5 categories             | Unlimited categories                      |
+| **Bills tracking**              | Unlimited                      | Unlimited                                 |
+| **Goals** (savings + financial) | Up to 2                        | Unlimited                                 |
+| **Debt tracking**               | Yes                            | Yes                                       |
+| **Income tracking**             | Yes (all types incl. benefits) | Yes                                       |
+| **Cashflow calendar**           | Yes                            | Yes                                       |
+| **Dashboard**                   | Yes                            | Yes                                       |
+| **Subscription tracking**       | Yes                            | Yes                                       |
+| **Workspaces**                  | 1                              | Up to 5                                   |
+| **Analytics & trends**          | Basic (spending by category)   | Advanced (trends, net worth, forecasting) |
+| **Cashflow forecasting**        | —                              | Yes                                       |
+| **Net worth tracking**          | —                              | Yes                                       |
+| **CSV import**                  | —                              | Yes                                       |
+| **CSV export**                  | Yes (basic)                    | Yes (full)                                |
 
 ### Gating philosophy
 
@@ -482,15 +484,15 @@ Both types appear on `/app/goals`, with a type indicator. Creating a goal offers
 
 ### What triggers upgrade prompts
 
-| Trigger | Message |
-|---------|---------|
-| Creating 4th account | "Free plans support up to 3 accounts. Upgrade to Pro for unlimited." |
-| Creating 6th budget category | "Free plans support up to 5 budget categories. Upgrade to Pro for unlimited." |
-| Creating 3rd goal (savings or financial) | "Free plans support up to 2 goals. Upgrade to Pro for unlimited." |
-| Creating 2nd workspace | "Multiple workspaces are a Pro feature." |
-| Accessing Analytics (advanced) | "Advanced analytics, trends, and net worth tracking are Pro features." |
-| Accessing Cashflow forecasting | "Cashflow forecasting is a Pro feature." |
-| Attempting CSV import | "CSV import is a Pro feature." |
+| Trigger                                  | Message                                                                       |
+| ---------------------------------------- | ----------------------------------------------------------------------------- |
+| Creating 4th account                     | "Free plans support up to 3 accounts. Upgrade to Pro for unlimited."          |
+| Creating 6th budget category             | "Free plans support up to 5 budget categories. Upgrade to Pro for unlimited." |
+| Creating 3rd goal (savings or financial) | "Free plans support up to 2 goals. Upgrade to Pro for unlimited."             |
+| Creating 2nd workspace                   | "Multiple workspaces are a Pro feature."                                      |
+| Accessing Analytics (advanced)           | "Advanced analytics, trends, and net worth tracking are Pro features."        |
+| Accessing Cashflow forecasting           | "Cashflow forecasting is a Pro feature."                                      |
+| Attempting CSV import                    | "CSV import is a Pro feature."                                                |
 
 ### Revenue model notes
 
@@ -506,10 +508,10 @@ Both types appear on `/app/goals`, with a type indicator. Creating a goal offers
 
 ### v1 workspace types
 
-| Type | Description | Default categories | Availability |
-|------|-------------|--------------------|--------------|
-| **Personal** | Individual finance tracking | Standard personal categories (Groceries, Transport, Eating Out, Entertainment, Shopping, Health, Utilities, Rent/Mortgage, Other) | Free + Pro |
-| **Personal + Household** | Combined personal and household tracking | Personal categories plus: Childcare, School, Groceries — Household, Home Maintenance, Family Activities | Free + Pro |
+| Type                     | Description                              | Default categories                                                                                                                | Availability |
+| ------------------------ | ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| **Personal**             | Individual finance tracking              | Standard personal categories (Groceries, Transport, Eating Out, Entertainment, Shopping, Health, Utilities, Rent/Mortgage, Other) | Free + Pro   |
+| **Personal + Household** | Combined personal and household tracking | Personal categories plus: Childcare, School, Groceries — Household, Home Maintenance, Family Activities                           | Free + Pro   |
 
 ### Workspace rules
 
@@ -542,13 +544,13 @@ These are deferred. The workspace model is designed to accommodate them later wi
 
 ### Onboarding flow
 
-| Step | Screen | Field(s) | Required? | Skip behaviour |
-|------|--------|----------|-----------|----------------|
-| 1 | Welcome | Display name | Encouraged | Defaults to "User" |
-| 2 | Workspace | Workspace type: Personal / Personal + Household | Encouraged | Defaults to Personal |
-| 3 | Income | Income amount or range (bracket selector), pay frequency, next pay date | Optional | Skips income setup; user can add later |
-| 4 | Benefits | "Do you receive benefits income?" → If yes: select named UK types (UC, PIP, Child Benefit, Carer's Allowance, ESA, Housing Benefit, Council Tax Reduction, Other) with optional amounts and frequency | Optional | Skips benefits; user can add later |
-| 5 | Start mode | Demo data / Blank workspace | Required (must choose one) | N/A — this step determines initial state |
+| Step | Screen     | Field(s)                                                                                                                                                                                              | Required?                  | Skip behaviour                           |
+| ---- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- | ---------------------------------------- |
+| 1    | Welcome    | Display name                                                                                                                                                                                          | Encouraged                 | Defaults to "User"                       |
+| 2    | Workspace  | Workspace type: Personal / Personal + Household                                                                                                                                                       | Encouraged                 | Defaults to Personal                     |
+| 3    | Income     | Income amount or range (bracket selector), pay frequency, next pay date                                                                                                                               | Optional                   | Skips income setup; user can add later   |
+| 4    | Benefits   | "Do you receive benefits income?" → If yes: select named UK types (UC, PIP, Child Benefit, Carer's Allowance, ESA, Housing Benefit, Council Tax Reduction, Other) with optional amounts and frequency | Optional                   | Skips benefits; user can add later       |
+| 5    | Start mode | Demo data / Blank workspace                                                                                                                                                                           | Required (must choose one) | N/A — this step determines initial state |
 
 ### Post-onboarding state
 
@@ -569,6 +571,7 @@ Users can access a "Setup assistant" from Settings that replays the onboarding s
 ### Purpose
 
 The demo environment serves two audiences:
+
 1. **New users who skipped onboarding** — gives them something to explore immediately
 2. **Marketing site visitors** — the product preview on the landing page shows what the demo looks like
 
@@ -577,15 +580,18 @@ The demo environment serves two audiences:
 The demo workspace is pre-populated with realistic UK-centric data:
 
 **Accounts (3)**:
+
 - Barclays Current — £1,847.32
 - Nationwide Savings — £3,200.00
 - Tesco Credit Card — -£412.67
 
 **Income sources (2)**:
+
 - Employment: £2,400/month (25th of each month)
 - Child Benefit: £96.00/four-weekly
 
 **Transactions (~30)**: Spread across 2 months, realistic mix:
+
 - Groceries (Tesco, Sainsbury's, Aldi)
 - Transport (TfL, fuel)
 - Bills (Council Tax, energy, water, broadband)
@@ -595,6 +601,7 @@ The demo workspace is pre-populated with realistic UK-centric data:
 - Transfers between accounts
 
 **Recurring bills (5)**:
+
 - Rent — £950/month, 1st
 - Council Tax — £145/month, 15th (10-month cycle)
 - Energy — £85/month, direct debit, 3rd
@@ -602,15 +609,18 @@ The demo workspace is pre-populated with realistic UK-centric data:
 - Netflix — £10.99/month, 20th
 
 **Budgets (4)**:
+
 - Groceries — £300/month
 - Eating Out — £80/month
 - Transport — £100/month
 - Entertainment — £50/month
 
 **Debt tracking (1)**:
+
 - Tesco Credit Card — balance £412.67, minimum payment £25/month, target payoff: 12 months
 
 **Goals (2)**:
+
 - Savings goal: "Holiday Fund" — target £1,500, saved £620
 - Financial goal: "Pay off credit card" — linked to Tesco Credit Card debt, target £0 balance by March 2027
 
@@ -635,6 +645,7 @@ Implementation: lightweight tooltip-based tour (e.g. a step-through overlay). No
 ### Product preview (marketing site)
 
 The landing page includes a **static product preview** — not the live demo, but curated screenshots or an animated walkthrough showing:
+
 1. The dashboard with account balances and budget progress
 2. The quick-add transaction flow
 3. The cashflow calendar with upcoming bills highlighted
@@ -649,16 +660,16 @@ This is a visual aid, not an interactive demo. It builds confidence before signu
 
 The landing page follows a proven SaaS conversion structure, adapted for PerFi's calm, accessible brand:
 
-| Section | Content | Purpose |
-|---------|---------|---------|
-| **Hero** | Headline + subheadline + CTA + product preview image | Capture attention, communicate value, show the product |
-| **Problem statement** | "Managing money shouldn't feel this hard" — brief pain points | Empathy, resonance |
-| **Solution** | 3–4 feature highlights with icons and one-line descriptions | Show what PerFi does |
-| **Product preview** | Animated walkthrough or screenshot carousel | Visualise the experience |
-| **Differentiators** | "Built for the UK", "Benefits-aware", "Designed for everyone" | Why PerFi, not alternatives |
-| **Pricing teaser** | "Free to start. Pro for £4.99/month." + link to pricing page | Transparency, reduce friction |
-| **Trust signals** | Accessibility commitment, data privacy messaging, "No bank connections needed" | Build confidence |
-| **Final CTA** | "Ready to take control?" + signup/waitlist button | Convert |
+| Section               | Content                                                                        | Purpose                                                |
+| --------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------ |
+| **Hero**              | Headline + subheadline + CTA + product preview image                           | Capture attention, communicate value, show the product |
+| **Problem statement** | "Managing money shouldn't feel this hard" — brief pain points                  | Empathy, resonance                                     |
+| **Solution**          | 3–4 feature highlights with icons and one-line descriptions                    | Show what PerFi does                                   |
+| **Product preview**   | Animated walkthrough or screenshot carousel                                    | Visualise the experience                               |
+| **Differentiators**   | "Built for the UK", "Benefits-aware", "Designed for everyone"                  | Why PerFi, not alternatives                            |
+| **Pricing teaser**    | "Free to start. Pro for £4.99/month." + link to pricing page                   | Transparency, reduce friction                          |
+| **Trust signals**     | Accessibility commitment, data privacy messaging, "No bank connections needed" | Build confidence                                       |
+| **Final CTA**         | "Ready to take control?" + signup/waitlist button                              | Convert                                                |
 
 ### Conversion principles
 
@@ -673,6 +684,7 @@ The landing page follows a proven SaaS conversion structure, adapted for PerFi's
 FAQ is structured in groups to reduce cognitive load and help users find answers quickly:
 
 **Product**
+
 - What is PerFi?
 - How is PerFi different from other budgeting apps?
 - Do I need to connect my bank account?
@@ -680,6 +692,7 @@ FAQ is structured in groups to reduce cognitive load and help users find answers
 - Can I track benefits income?
 
 **Pricing & Billing**
+
 - Is PerFi free?
 - What do I get on the free plan?
 - What does Pro include?
@@ -687,12 +700,14 @@ FAQ is structured in groups to reduce cognitive load and help users find answers
 - Is there a free trial of Pro?
 
 **Data & Privacy**
+
 - Where is my data stored?
 - Do you sell my data?
 - Can I export my data?
 - Can I delete my account and all data?
 
 **Accessibility**
+
 - Is PerFi accessible?
 - What accessibility standards does PerFi meet?
 - Is PerFi designed for neurodivergent users?
@@ -711,11 +726,12 @@ The waitlist serves as the primary conversion mechanism before the product launc
 ### Post-launch transition
 
 Once the product is live:
+
 - Waitlist page redirects to signup (or is replaced with a signup CTA)
 - Waitlist admin section remains for managing any unconverted entries
 - "Join waitlist" CTAs across the site switch to "Get Started"
 
 ---
 
-*Document version: Phase 2 v1.0*
-*Created: 2026-03-30*
+_Document version: Phase 2 v1.0_
+_Created: 2026-03-30_

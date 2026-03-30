@@ -1,0 +1,74 @@
+@import 'tailwindcss';
+
+/*
+ * PerFi Design Tokens
+ * Source: Phase 4 — Section 4 (Tailwind and Design System Direction)
+ *
+ * Colour philosophy:
+ * - No aggressive red/green for financial indicators
+ * - Muted organic teal-green accent
+ * - High contrast text (WCAG AA 4.5:1 minimum)
+ * - CSS variables for future dark mode support
+ */
+
+:root {
+  /* Backgrounds */
+  --color-bg-primary: 255 255 255;
+  --color-bg-secondary: 248 248 248;
+  --color-bg-tertiary: 240 240 240;
+
+  /* Text */
+  --color-text-primary: 23 23 23;
+  --color-text-secondary: 100 100 100;
+  --color-text-muted: 160 160 160;
+
+  /* Accent — muted teal-green */
+  --color-accent: 56 120 100;
+  --color-accent-hover: 45 100 82;
+
+  /* Semantic */
+  --color-success: 34 139 84;
+  --color-warning: 200 140 30;
+  --color-danger: 180 50 50;
+
+  /* Borders */
+  --color-border: 230 230 230;
+
+  /* Radii */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+}
+
+@theme inline {
+  --color-bg-primary: rgb(var(--color-bg-primary));
+  --color-bg-secondary: rgb(var(--color-bg-secondary));
+  --color-bg-tertiary: rgb(var(--color-bg-tertiary));
+  --color-text-primary: rgb(var(--color-text-primary));
+  --color-text-secondary: rgb(var(--color-text-secondary));
+  --color-text-muted: rgb(var(--color-text-muted));
+  --color-accent: rgb(var(--color-accent));
+  --color-accent-hover: rgb(var(--color-accent-hover));
+  --color-success: rgb(var(--color-success));
+  --color-warning: rgb(var(--color-warning));
+  --color-danger: rgb(var(--color-danger));
+  --color-border: rgb(var(--color-border));
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background: rgb(var(--color-bg-primary));
+  color: rgb(var(--color-text-primary));
+  font-family: var(--font-sans);
+}
+
+/*
+ * Typography: Tabular numbers for all financial figures.
+ * Phase 4 Section 4: "font-variant-numeric: tabular-nums for all financial figures"
+ */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}

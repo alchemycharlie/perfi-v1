@@ -68,30 +68,31 @@
 
 ## Gaps found and fixed in cross-phase audit
 
-| Gap | Source | Fix |
-|-----|--------|-----|
-| CSV export — no UX | Phase 1 v1 scope | Added section 17.1: export in Settings, Free = transactions, Pro = all |
-| Undo support — only confirmation, no undo | Phase 1 section 9 | Added section 17.2: toast-based undo for single-item deletions |
-| Onboarding — no UX detail | Phase 2 section 8 | Added section 17.3: full 5-step UX with fields and layout |
-| Workspace switcher / user menu — not designed | Phase 2 section 2 | Added section 17.4: dropdown UX for both |
-| Settings and billing pages — no UX | Phase 2 page inventory | Added section 17.5: settings sections, billing states |
-| Financial vs savings goals — no UX distinction | Phase 2 section 5.13 | Added section 17.6: creation flow, type badges, progress display |
-| Cashflow calendar — minimal UX | Phase 2 section 5 | Added section 17.7: day cells, dots, detail panel, sparkline, responsive |
-| Auth details — not referenced | Phase 3 section 8 | Added section 17.8: httpOnly cookies, signup triggers, middleware checks |
-| Stripe integration — not detailed | Phase 3 section 14 | Added section 17.9: upgrade/cancel flows, webhook handler |
-| Entitlements — not mapped to UI | Phase 3 section 14 | Added section 17.10: all 9 limits mapped to specific UI enforcement points |
-| Mobile nav — undecided | Phase 4 section 11 | Added section 17.11: bottom tab bar (5 tabs + More) |
-| Error/404/500 pages — missing | Cross-cutting | Added section 17.12: not-found, error, disabled account, offline |
-| Loading state pattern — dashboard only | Cross-cutting | Added section 17.13: per-page skeleton specs |
-| Category management — no UX | Phase 3 categories table | Added section 17.14: settings section + inline add in forms |
-| Demo data banner — not designed | Phase 2 section 9 | Added section 17.15: DemoBanner component with clear action |
-| Page "with data" UX — missing for 8 pages | Phase 2 page inventory | Added section 17.16: transactions (filters/search/pagination), accounts, budgets, bills, income, debt, analytics (free vs pro), goal detail |
+| Gap                                            | Source                   | Fix                                                                                                                                         |
+| ---------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| CSV export — no UX                             | Phase 1 v1 scope         | Added section 17.1: export in Settings, Free = transactions, Pro = all                                                                      |
+| Undo support — only confirmation, no undo      | Phase 1 section 9        | Added section 17.2: toast-based undo for single-item deletions                                                                              |
+| Onboarding — no UX detail                      | Phase 2 section 8        | Added section 17.3: full 5-step UX with fields and layout                                                                                   |
+| Workspace switcher / user menu — not designed  | Phase 2 section 2        | Added section 17.4: dropdown UX for both                                                                                                    |
+| Settings and billing pages — no UX             | Phase 2 page inventory   | Added section 17.5: settings sections, billing states                                                                                       |
+| Financial vs savings goals — no UX distinction | Phase 2 section 5.13     | Added section 17.6: creation flow, type badges, progress display                                                                            |
+| Cashflow calendar — minimal UX                 | Phase 2 section 5        | Added section 17.7: day cells, dots, detail panel, sparkline, responsive                                                                    |
+| Auth details — not referenced                  | Phase 3 section 8        | Added section 17.8: httpOnly cookies, signup triggers, middleware checks                                                                    |
+| Stripe integration — not detailed              | Phase 3 section 14       | Added section 17.9: upgrade/cancel flows, webhook handler                                                                                   |
+| Entitlements — not mapped to UI                | Phase 3 section 14       | Added section 17.10: all 9 limits mapped to specific UI enforcement points                                                                  |
+| Mobile nav — undecided                         | Phase 4 section 11       | Added section 17.11: bottom tab bar (5 tabs + More)                                                                                         |
+| Error/404/500 pages — missing                  | Cross-cutting            | Added section 17.12: not-found, error, disabled account, offline                                                                            |
+| Loading state pattern — dashboard only         | Cross-cutting            | Added section 17.13: per-page skeleton specs                                                                                                |
+| Category management — no UX                    | Phase 3 categories table | Added section 17.14: settings section + inline add in forms                                                                                 |
+| Demo data banner — not designed                | Phase 2 section 9        | Added section 17.15: DemoBanner component with clear action                                                                                 |
+| Page "with data" UX — missing for 8 pages      | Phase 2 page inventory   | Added section 17.16: transactions (filters/search/pagination), accounts, budgets, bills, income, debt, analytics (free vs pro), goal detail |
 
 ## Readiness for Phase 5
 
 Phase 4 provides the complete frontend blueprint. All architecture, UX patterns, component strategy, and page-level designs are defined. No blockers.
 
 Phase 5 should cover:
+
 - Implementation roadmap and build order
 - Sprint/milestone planning
 - Technical dependencies and setup tasks
