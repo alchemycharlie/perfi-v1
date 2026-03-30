@@ -34,18 +34,39 @@
 | 2026-03-30 | 3     | Stripe subscription model            | Done     |
 | 2026-03-30 | 3     | Checkpoint summary written           | Done     |
 | 2026-03-30 | 3     | Phase 3 committed                    | Done     |
+| 2026-03-30 | 4     | Next.js App Router architecture      | Done     |
+| 2026-03-30 | 4     | Unified repo structure               | Done     |
+| 2026-03-30 | 4     | Route groups and layouts             | Done     |
+| 2026-03-30 | 4     | Tailwind and design system           | Done     |
+| 2026-03-30 | 4     | Shared component strategy            | Done     |
+| 2026-03-30 | 4     | Data fetching and mutation           | Done     |
+| 2026-03-30 | 4     | Forms strategy                       | Done     |
+| 2026-03-30 | 4     | Charting and visualisation           | Done     |
+| 2026-03-30 | 4     | Neurodiversity-aware UX              | Done     |
+| 2026-03-30 | 4     | Accessibility principles             | Done     |
+| 2026-03-30 | 4     | Dashboard UX approach                | Done     |
+| 2026-03-30 | 4     | Empty states and walkthrough         | Done     |
+| 2026-03-30 | 4     | Landing page structure               | Done     |
+| 2026-03-30 | 4     | Interactive preview ideas            | Done     |
+| 2026-03-30 | 4     | Admin panel UX                       | Done     |
+| 2026-03-30 | 4     | Email capture and contact forms      | Done     |
+| 2026-03-30 | 4     | Checkpoint summary written           | Done     |
+| 2026-03-30 | 4     | Phase 4 committed                    | Done     |
 
 ## Open questions for future phases
 
 - "Features" marketing nav link: currently an anchor scroll. May become a dedicated page post-v1.
-- Dark mode: design system should support it from the start even if not shipped in v1.
+- Dark mode: CSS variables are in place (Phase 4). Ship dark mode post-v1.
 - Notifications: high value for bill/pay date reminders — revisit for v1.1.
 - Annual billing plan: deferred from v1. Consider for v1.1 or v2.
 - Transaction balance updates: recommend DB trigger on transactions to update accounts.balance. Document in Phase 5.
 - Budget spent calculation: application logic filtering transactions by calendar month. Document approach in Phase 5.
 - Users with zero workspaces: middleware redirects to onboarding, but app must handle gracefully.
-- Recurring date calculation: next_pay_date and next_due_date are single dates. App logic needed to project future occurrences for cashflow calendar. Document as utility in Phase 5.
-- MRR for admin dashboard: calculated at query time from active Pro subscriptions. No schema field needed at v1 scale.
+- Recurring date calculation: utility function in lib/utils/dates.ts. Document in Phase 5.
+- Cloudflare + Server Actions: must verify compatibility before committing. Fallback: Vercel.
+- Recharts code-splitting: dynamic import on Analytics and Dashboard to avoid loading on marketing pages.
+- Mobile dashboard density: 7 cards may be too many. Consider collapsing some on small screens.
+- Email service for waitlist confirmations: fast-follow with Resend integration.
 
 ## Resolved questions
 
@@ -61,3 +82,9 @@
 - Soft delete: no soft deletes in v1 — hard delete with cascades.
 - profiles.is_disabled: added to schema, checked in middleware.
 - Tour tracking: profiles.preferences jsonb includes has_seen_tour key.
+- MRR for admin dashboard: calculated at query time from active Pro subscriptions.
+- Component library: Radix UI + Tailwind + shadcn patterns (owned, not dependency).
+- State management: no library — Server Components + React context.
+- Charting: Recharts (SVG, accessible, SSR-friendly).
+- Landing page preview: tabbed approach for v1, upgradeable to scroll-based later.
+- Waitlist invites: manual for v1, Resend integration as fast-follow.
