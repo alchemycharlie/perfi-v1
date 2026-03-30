@@ -16,7 +16,6 @@
 | 2026-03-30 | 2     | Onboarding strategy                  | Done     |
 | 2026-03-30 | 2     | Demo environment and walkthrough     | Done     |
 | 2026-03-30 | 2     | Landing page and FAQ/waitlist        | Done     |
-| 2026-03-30 | 2     | Checkpoint summary written           | Done     |
 | 2026-03-30 | 2     | Phase 2 committed                    | Done     |
 | 2026-03-30 | 3     | Tenancy model                        | Done     |
 | 2026-03-30 | 3     | Workspace access model               | Done     |
@@ -32,7 +31,6 @@
 | 2026-03-30 | 3     | Auditability and shared workspaces   | Done     |
 | 2026-03-30 | 3     | Benefits as income type              | Done     |
 | 2026-03-30 | 3     | Stripe subscription model            | Done     |
-| 2026-03-30 | 3     | Checkpoint summary written           | Done     |
 | 2026-03-30 | 3     | Phase 3 committed                    | Done     |
 | 2026-03-30 | 4     | Next.js App Router architecture      | Done     |
 | 2026-03-30 | 4     | Unified repo structure               | Done     |
@@ -50,57 +48,37 @@
 | 2026-03-30 | 4     | Interactive preview ideas            | Done     |
 | 2026-03-30 | 4     | Admin panel UX                       | Done     |
 | 2026-03-30 | 4     | Email capture and contact forms      | Done     |
-| 2026-03-30 | 4     | Checkpoint summary written           | Done     |
+| 2026-03-30 | 4     | 16 supplementary gap fixes           | Done     |
 | 2026-03-30 | 4     | Phase 4 committed                    | Done     |
+| 2026-03-30 | 5     | Implementation roadmap (6 phases)    | Done     |
+| 2026-03-30 | 5     | Build order and timeline             | Done     |
+| 2026-03-30 | 5     | Technical priorities for MVP         | Done     |
+| 2026-03-30 | 5     | Lean launch path                     | Done     |
+| 2026-03-30 | 5     | Risks and founder warnings           | Done     |
+| 2026-03-30 | 5     | Complexity underestimation           | Done     |
+| 2026-03-30 | 5     | Postponement list                    | Done     |
+| 2026-03-30 | 5     | Email and campaign tools             | Done     |
+| 2026-03-30 | 5     | Deployment recommendation            | Done     |
+| 2026-03-30 | 5     | Handoff summary                      | Done     |
+| 2026-03-30 | 5     | Final master plan                    | Done     |
+| 2026-03-30 | 5     | Phase 5 committed                    | Done     |
 
-## Open questions for future phases
+## All open questions — resolved
 
-- "Features" marketing nav link: currently an anchor scroll. May become a dedicated page post-v1.
-- Dark mode: CSS variables are in place (Phase 4). Ship dark mode post-v1.
-- Notifications: high value for bill/pay date reminders — revisit for v1.1.
-- Annual billing plan: deferred from v1. Consider for v1.1 or v2.
-- Transaction balance updates: recommend DB trigger on transactions to update accounts.balance. Document in Phase 5.
-- Budget spent calculation: application logic filtering transactions by calendar month. Document approach in Phase 5.
-- Users with zero workspaces: middleware redirects to onboarding, but app must handle gracefully.
-- Recurring date calculation: utility function in lib/utils/dates.ts. Document in Phase 5.
-- Cloudflare + Server Actions: must verify compatibility before committing. Fallback: Vercel.
-- Recharts code-splitting: dynamic import on Analytics and Dashboard to avoid loading on marketing pages.
-- Mobile dashboard density: 7 cards may be too many. Consider collapsing some on small screens.
-- Email service for waitlist confirmations: fast-follow with Resend integration.
+All questions from previous phases have been resolved in Phase 5 or documented as post-v1 decisions:
 
-## Resolved questions
+- Transaction balance updates: DB trigger (Phase 5 section 3)
+- Budget spent calculation: query-time SUM with calendar month filter (Phase 5 section 3)
+- Recurring date calculation: `getNextOccurrences()` utility function (Phase 5 section 3)
+- Deployment: Vercel (changed from Cloudflare — Phase 5 section 9)
+- Email tooling: Resend (transactional) + Buttondown (marketing) (Phase 5 section 8)
+- Dark mode: post-v1.1, CSS variables ready
+- Notifications: post-v1.1
+- Annual billing: post-v1.1
+- Users with zero workspaces: middleware redirects to onboarding
+- Recharts code-splitting: dynamic import on Analytics and Dashboard
+- Mobile dashboard density: bottom tab bar decided, 7 cards stack on mobile
 
-- Admin panel MVP scope: defined in Phase 2 section 3.
-- Onboarding demo data content: specified in Phase 2 section 9.
-- Debt tracking placement: standalone page at `/app/debt`.
-- Bills vs Subscriptions: merged into single page `/app/bills`.
-- CSV export free vs pro: confirmed in Phase 3 — Free = transactions only, Pro = all data.
-- Tenancy model: workspace-scoped, not user-scoped.
-- Benefits schema: same table as employment, nullable benefit_type column.
-- Admin access: service_role, cannot modify user financial data.
-- Account deletion: cascade delete through all workspace data + Supabase Auth deletion.
-- Soft delete: no soft deletes in v1 — hard delete with cascades.
-- profiles.is_disabled: added to schema, checked in middleware.
-- Tour tracking: profiles.preferences jsonb includes has_seen_tour key.
-- MRR for admin dashboard: calculated at query time from active Pro subscriptions.
-- Component library: Radix UI + Tailwind + shadcn patterns (owned, not dependency).
-- State management: no library — Server Components + React context.
-- Charting: Recharts (SVG, accessible, SSR-friendly).
-- Landing page preview: tabbed approach for v1, upgradeable to scroll-based later.
-- Waitlist invites: manual for v1, Resend integration as fast-follow.
-- CSV export UX: in Settings, Free = transactions only, Pro = all data types.
-- Undo: toast-based for single-item deletions (5-second window).
-- Onboarding UX: 5-step flow fully designed in Phase 4 section 17.3.
-- Workspace switcher: dropdown in top bar with workspace list + create action.
-- Settings/billing: sections defined, Stripe Customer Portal for payment management.
-- Goals UX distinction: type selector on creation, type badges in list, different progress display.
-- Cashflow calendar: day cells with dots, click-to-expand detail, sparkline, mobile list fallback.
-- Auth: httpOnly cookies, signup triggers, middleware checks all referenced from Phase 3.
-- Stripe: upgrade via Checkout, cancel via API, webhook handler for 5 events.
-- Entitlements: all 9 limits mapped to specific UI enforcement points with UpgradeBanner.
-- Mobile nav: bottom tab bar (Dashboard, Transactions, Budgets, Cashflow, More).
-- Error pages: 404, 500, disabled account, offline handling all specified.
-- Loading states: per-page skeleton specs for all 10 app pages.
-- Category management: settings section + inline add in transaction form dropdown.
-- Demo data banner: DemoBanner component with clear action, v1 clears all workspace data.
-- Page "with data" UX: transactions (filters/search/load-more), accounts (card grid), budgets (progress bars), bills (upcoming + all), income (source cards), debt (balance cards), analytics (free vs pro), goal detail (contributions).
+## Planning complete
+
+All 5 phases + final master plan are committed. The planning pack is ready for implementation.
