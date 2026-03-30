@@ -14,7 +14,7 @@
 2. Information architecture — authenticated app (15 pages, sidebar nav, design principles)
 3. Information architecture — internal admin area (7 pages, MVP scope defined)
 4. Proposed route structure — full Next.js App Router tree with 4 layout groups
-5. User flows — 11 flows covering visitor-to-signup, onboarding, core usage, upgrade, and admin
+5. User flows — 13 flows covering visitor-to-signup, onboarding, core usage, pay date tracking, goals distinction, upgrade, and admin
 6. Pricing and feature gating — Free vs Pro tier table, gating philosophy, upgrade triggers
 7. Workspace model — Personal and Personal + Household in v1, expansion path
 8. Onboarding strategy — 5-step flow, skip behaviour, re-onboarding
@@ -38,9 +38,13 @@
 - **Admin panel scope**: Now concretely defined (see section 3)
 - **Onboarding demo data content**: Now specified (see section 9)
 
-## Contradictions and risks found
+## Contradictions and risks found (and resolved)
 
-- **Debt tracking missing from sidebar nav**: Phase 1 lists debt tracking as in-scope, but it could be absorbed into Accounts (credit cards show debt) or kept as its own section. **Resolution**: Kept as its own page `/app/debt` in the route structure — it has distinct value for users managing multiple debts.
+- **Debt tracking missing from sidebar nav**: Phase 1 lists debt tracking as in-scope, but it was missing from the Phase 2 sidebar nav. **Resolved**: Added "Debt" to sidebar nav between Goals and Income.
+- **Pay date tracking underspecified**: Phase 1 lists "pay date tracking" as a core feature. Phase 2 initially only captured pay frequency in onboarding. **Resolved**: Added section 5.12 describing pay date tracking as a cross-cutting feature surfacing on Dashboard, Income page, and Cashflow calendar.
+- **Financial goals vs savings goals conflated**: Phase 1 lists both separately. Phase 2 initially treated them as one thing. **Resolved**: Added section 5.13 distinguishing savings goals (save toward a target) from financial goals (achieve an outcome like debt payoff or spending reduction). Both live on the same Goals page.
+- **Named UK benefit types missing from onboarding**: Phase 1 specifies UC, PIP, child benefit, carer's allowance, ESA, housing benefit, council tax reduction. Phase 2 onboarding just said "select types". **Resolved**: Onboarding step 4 now lists all named benefit types.
+- **Demo data had no debt example**: Phase 1 includes debt tracking in scope. Demo data had a credit card but no explicit debt tracking entry. **Resolved**: Added debt tracking entry and a financial goal (debt payoff) to demo data.
 - **CSV export "basic" vs "full"**: The free/pro split needs definition. **Recommendation**: Free exports transactions only; Pro exports all data (accounts, budgets, goals, bills).
 - **"Features" in marketing nav**: The header includes "Features" but there is no dedicated `/features` page in the page inventory. **Resolution**: "Features" scrolls to the feature highlights section on the home page (anchor link), or can become a dedicated page later if needed.
 - **Subscription tracking vs Bills**: These overlap. **Resolution**: Bills & Subscriptions is a single page at `/app/bills`. Subscriptions are just recurring bills marked as subscriptions.

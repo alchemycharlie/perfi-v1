@@ -49,6 +49,7 @@ Budgets
 Bills & Subscriptions
 Cashflow
 Goals
+Debt
 Income
 Analytics        [Pro badge if locked]
 ```
@@ -76,10 +77,10 @@ User avatar menu contains:
 | **Transactions** | `/app/transactions` | Full transaction list with filters, search, add new |
 | **Budgets** | `/app/budgets` | Category budgets, progress bars, month selector |
 | **Bills & Subscriptions** | `/app/bills` | Recurring bills, direct debits, subscriptions with due dates |
-| **Cashflow** | `/app/cashflow` | Calendar view of income and expenses; projected balance |
-| **Goals** | `/app/goals` | Savings goals and financial goals with progress tracking |
+| **Cashflow** | `/app/cashflow` | Calendar view of income (incl. pay dates), expenses, and bills; projected balance |
+| **Goals** | `/app/goals` | Savings goals (save toward a target) and financial goals (pay off debt, reduce spending) with progress tracking |
 | **Goal detail** | `/app/goals/[id]` | Individual goal detail and contribution history |
-| **Income** | `/app/income` | All income sources: employment, benefits, other. Per-source frequency |
+| **Income** | `/app/income` | All income sources: employment, benefits, other. Per-source frequency and next pay date |
 | **Analytics** | `/app/analytics` | Charts, trends, spending breakdown, net worth (Pro) |
 | **Debt** | `/app/debt` | Debt balances, minimum payments, payoff progress |
 | **Settings** | `/app/settings` | Profile, preferences, display name, workspace settings |
@@ -281,9 +282,9 @@ Landing page (or Pricing page) → Clicks "Get Started" CTA
 Post-signup → `/app/onboarding`
   Step 1: Welcome + "What should we call you?" (display name)
   Step 2: Workspace type — Personal or Personal + Household
-  Step 3: Income setup — amount/range, pay frequency
+  Step 3: Income setup — amount/range, pay frequency, next pay date
   Step 4: "Do you receive benefits income?" → Yes/No
-    If Yes → Select benefit types (checkboxes, optional amounts)
+    If Yes → Select benefit types: Universal Credit, PIP, Child Benefit, Carer's Allowance, ESA, Housing Benefit, Council Tax Reduction, Other (checkboxes, optional amounts and frequency per type)
   Step 5: "How would you like to start?" → Demo data / Blank workspace
   → Complete → Redirect to `/app/dashboard`
 ```
@@ -305,7 +306,7 @@ Post-signup → `/app/onboarding`
     → [Start fresh]             →  Creates blank workspace → Dashboard (with empty states)
 ```
 
-**Demo data includes**: 1 current account, 1 savings account, 1 credit card. ~30 sample transactions across 2 months. 3 recurring bills. 2 budget categories. 1 savings goal. 1 employment income source.
+**Demo data includes**: 1 current account, 1 savings account, 1 credit card. ~30 sample transactions across 2 months. 5 recurring bills. 4 budget categories. 1 savings goal, 1 financial goal (debt payoff). 1 debt tracking entry. 2 income sources (employment + child benefit).
 
 ### 5.5 Create First Workspace
 
@@ -377,6 +378,7 @@ User navigates to Dashboard (default landing after login)
   → Dashboard shows:
     - Total balance across all accounts (summary card)
     - Account balances (card per account)
+    - Next pay date (e.g. "Pay day: 25th April — 3 days away")
     - Recent transactions (last 5–10)
     - Upcoming bills (next 7 days)
     - Budget status (this month — bar charts per category)
@@ -426,6 +428,25 @@ Admin → Subscriptions
   → Summary: total active, MRR, churn count (30d)
   → No direct billing actions — link to Stripe dashboard for payment issues
 ```
+
+### 5.12 Pay Date Tracking
+
+Pay date tracking is a cross-cutting feature, not a standalone page. It surfaces in three places:
+
+1. **Income page** (`/app/income`): Each income source has a frequency and a next pay date. Users set this during onboarding (step 3) or when adding/editing an income source. The system calculates future pay dates from the frequency and anchor date.
+
+2. **Dashboard**: A "Next pay day" card shows the nearest upcoming pay date across all income sources (e.g. "Pay day: 25th April — 3 days away"). If the user has multiple income sources with different dates, show the next one.
+
+3. **Cashflow calendar** (`/app/cashflow`): All income events (employment pay dates, benefits payment dates) are plotted on the calendar alongside bills and expenses, giving a complete view of money in and money out.
+
+### 5.13 Financial Goals vs Savings Goals
+
+Phase 1 lists both "savings goals" and "financial goal setting and tracking". These are handled on the same Goals page but are distinct types:
+
+- **Savings goal**: Save toward a positive target amount. Examples: "Holiday fund — save £1,500", "Emergency fund — save £3,000". Progress is tracked by contributions.
+- **Financial goal**: Achieve a financial outcome that is not purely saving. Examples: "Pay off credit card by December", "Reduce eating-out spending to under £50/month". Can be linked to a debt entry or a budget category.
+
+Both types appear on `/app/goals`, with a type indicator. Creating a goal offers a choice: "Save toward something" or "Reach a financial target".
 
 ---
 
@@ -525,8 +546,8 @@ These are deferred. The workspace model is designed to accommodate them later wi
 |------|--------|----------|-----------|----------------|
 | 1 | Welcome | Display name | Encouraged | Defaults to "User" |
 | 2 | Workspace | Workspace type: Personal / Personal + Household | Encouraged | Defaults to Personal |
-| 3 | Income | Income amount or range (bracket selector), pay frequency | Optional | Skips income setup; user can add later |
-| 4 | Benefits | "Do you receive benefits income?" → If yes: select types | Optional | Skips benefits; user can add later |
+| 3 | Income | Income amount or range (bracket selector), pay frequency, next pay date | Optional | Skips income setup; user can add later |
+| 4 | Benefits | "Do you receive benefits income?" → If yes: select named UK types (UC, PIP, Child Benefit, Carer's Allowance, ESA, Housing Benefit, Council Tax Reduction, Other) with optional amounts and frequency | Optional | Skips benefits; user can add later |
 | 5 | Start mode | Demo data / Blank workspace | Required (must choose one) | N/A — this step determines initial state |
 
 ### Post-onboarding state
@@ -586,8 +607,12 @@ The demo workspace is pre-populated with realistic UK-centric data:
 - Transport — £100/month
 - Entertainment — £50/month
 
-**Goals (1)**:
-- "Holiday Fund" — target £1,500, saved £620
+**Debt tracking (1)**:
+- Tesco Credit Card — balance £412.67, minimum payment £25/month, target payoff: 12 months
+
+**Goals (2)**:
+- Savings goal: "Holiday Fund" — target £1,500, saved £620
+- Financial goal: "Pay off credit card" — linked to Tesco Credit Card debt, target £0 balance by March 2027
 
 ### Demo UX rules
 
