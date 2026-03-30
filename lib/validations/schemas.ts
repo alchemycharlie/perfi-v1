@@ -122,3 +122,47 @@ export const billSchema = z.object({
 });
 
 export type BillInput = z.infer<typeof billSchema>;
+
+// ── Budget schemas ──
+
+export const budgetSchema = z.object({
+  category_id: z.string().uuid('Select a category'),
+  amount: z.coerce.number().positive('Amount must be greater than zero').max(999_999_999.99),
+  period: z.literal('monthly').default('monthly'),
+});
+
+export type BudgetInput = z.infer<typeof budgetSchema>;
+
+// ── Goal schemas ──
+
+export const goalSchema = z.object({
+  name: z.string().min(1, 'Name is required').max(100),
+  type: z.enum(['savings', 'financial']),
+  target_amount: z.coerce.number().positive('Target must be greater than zero').max(999_999_999.99),
+  target_date: z.string().optional().or(z.literal('')),
+  debt_id: z.string().uuid().optional().or(z.literal('')),
+  category_id: z.string().uuid().optional().or(z.literal('')),
+});
+
+export type GoalInput = z.infer<typeof goalSchema>;
+
+export const goalContributionSchema = z.object({
+  amount: z.coerce.number().positive('Amount must be greater than zero').max(999_999_999.99),
+  date: z.string().min(1, 'Date is required'),
+  notes: z.string().max(500).optional().or(z.literal('')),
+});
+
+export type GoalContributionInput = z.infer<typeof goalContributionSchema>;
+
+// ── Debt schemas ──
+
+export const debtSchema = z.object({
+  name: z.string().min(1, 'Name is required').max(100),
+  account_id: z.string().uuid().optional().or(z.literal('')),
+  balance: z.coerce.number().min(0).max(999_999_999.99),
+  minimum_payment: z.coerce.number().min(0).max(999_999_999.99),
+  interest_rate: z.coerce.number().min(0).max(100).optional().or(z.literal(0)),
+  next_payment_date: z.string().optional().or(z.literal('')),
+});
+
+export type DebtInput = z.infer<typeof debtSchema>;

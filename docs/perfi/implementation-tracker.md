@@ -14,7 +14,8 @@ This document tracks implementation progress across all build phases.
 | 4     | Database Migrations, RLS, Core Data Layer          | Complete    | 2026-03-30   | 2026-03-30     |
 | 5     | Onboarding, Demo Workspace, First Run Experience   | Complete    | 2026-03-30   | 2026-03-30     |
 | 6     | Accounts, Transactions, Income, Recurring Bills    | Complete    | 2026-03-30   | 2026-03-30     |
-| 7     | Polish, Accessibility, Launch                      | Not started | —            | —              |
+| 7     | Budgets, Goals, Debts, Cashflow, Settings          | Complete    | 2026-03-30   | 2026-03-30     |
+| 8     | Polish, Billing, Admin, Launch                     | Not started | —            | —              |
 
 ---
 
@@ -158,4 +159,18 @@ Post-audit corrections:
 - Built bills page: upcoming (14-day) section, all bills list, subscription badges
 - Built bill add dialog: 5 frequencies, 4 payment methods, subscription checkbox
 - All pages have empty states, loading states, error states, delete confirmations
+- Verified: TypeScript passes, ESLint passes, production build succeeds (38 routes)
+
+### 2026-03-30 — Implementation Phase 7: Core Finance B
+
+- Built budgets page: progress bars per category, spent calculation from current month transactions, colour coding (teal/amber/red), add/edit/delete
+- Built goals page: savings + financial goals with progress bars, type badges, goal detail with contribution history
+- Built goal detail: add contribution (updates current_amount), mark completed/abandoned, delete, 100% celebration
+- Built debts page: balance cards with min payment, APR, linked account/goal, edit inline, delete
+- Built cashflow calendar: 7-column CSS grid, income (teal) and bill (amber) dots, click-to-expand detail, projected balance
+- Implemented getNextOccurrences and getOccurrencesInRange in lib/utils/dates.ts (recurring date projection)
+- Built settings page: profile (display name), workspace info, replay tour, delete account (danger zone)
+- Added Zod schemas: budgetSchema, goalSchema, goalContributionSchema, debtSchema
+- Added 10 Server Actions: budgets (3), goals (4), debts (3)
+- All pages have empty states, loading states, error handling
 - Verified: TypeScript passes, ESLint passes, production build succeeds (38 routes)
