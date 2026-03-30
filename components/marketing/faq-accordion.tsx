@@ -45,8 +45,13 @@ function FAQItem({ question, answer }: FAQItem) {
 export function FAQGroup({ title, items }: FAQGroupProps) {
   return (
     <div>
-      <h2 className="text-lg font-semibold text-text-primary">{title}</h2>
-      <div className="mt-4 rounded-[var(--radius-lg)] border border-border bg-bg-primary px-4">
+      {title && <h2 className="text-lg font-semibold text-text-primary">{title}</h2>}
+      <div
+        className={cn(
+          title ? 'mt-4' : '',
+          'rounded-[var(--radius-lg)] border border-border bg-bg-primary px-4',
+        )}
+      >
         {items.map((item) => (
           <FAQItem key={item.question} {...item} />
         ))}
