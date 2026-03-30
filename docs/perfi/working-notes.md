@@ -98,3 +98,9 @@
 - Auth: httpOnly cookies, signup triggers, middleware checks all referenced from Phase 3.
 - Stripe: upgrade via Checkout, cancel via API, webhook handler for 5 events.
 - Entitlements: all 9 limits mapped to specific UI enforcement points with UpgradeBanner.
+- Mobile nav: bottom tab bar (Dashboard, Transactions, Budgets, Cashflow, More).
+- Error pages: 404, 500, disabled account, offline handling all specified.
+- Loading states: per-page skeleton specs for all 10 app pages.
+- Category management: settings section + inline add in transaction form dropdown.
+- Demo data banner: DemoBanner component with clear action, v1 clears all workspace data.
+- Page "with data" UX: transactions (filters/search/load-more), accounts (card grid), budgets (progress bars), bills (upcoming + all), income (source cards), debt (balance cards), analytics (free vs pro), goal detail (contributions).

@@ -1100,5 +1100,280 @@ All enforcement happens **both server-side** (Server Actions check `subscription
 
 ---
 
-*Document version: Phase 4 v1.1 (updated after cross-phase audit)*
+### 17.11 Mobile Navigation — Decision
+
+Phase 4 section 11 left this as "bottom tab bar or hamburger". Decision:
+
+**Bottom tab bar on mobile (<768px).**
+
+Rationale:
+- Bottom tabs are more accessible — thumb-reachable, always visible, predictable.
+- Hamburger menus hide navigation and add cognitive load (against ND principles).
+- PerFi has 10 sidebar items — too many for a tab bar. Solution: show the 5 most-used as tabs, with a "More" tab for the rest.
+
+**Mobile tab bar:**
+```
+[Dashboard]  [Transactions]  [Budgets]  [Cashflow]  [More ···]
+```
+
+"More" opens a slide-up panel with: Accounts, Bills, Goals, Debt, Income, Analytics.
+
+On tablet (768–1023px): sidebar collapses to icon-only rail (icons visible, labels hidden). Hover or focus shows label tooltip.
+
+### 17.12 Error Pages and Global Error Handling
+
+**404 — Not Found** (`app/not-found.tsx`):
+- Friendly message: "Page not found. It may have been moved or doesn't exist."
+- Link: "Go to Dashboard" (if authenticated) or "Go to Home" (if not).
+- Same layout as the surface the user was in (marketing layout for public pages, app layout for app pages).
+
+**500 — Server Error** (`app/error.tsx` and `app/global-error.tsx`):
+- Message: "Something went wrong. We're looking into it."
+- "Try again" button (calls `reset()` to retry the failed component).
+- No technical details shown to the user.
+
+**Disabled account** (redirect target from middleware):
+- Route: `/disabled` (simple static page, no auth layout)
+- Message: "Your account has been disabled. Please contact support."
+- Link to contact page.
+
+**Offline / network error**:
+- Not a dedicated page. Forms retain state (section 7). Failed fetches show an inline retry prompt within the component that failed.
+
+### 17.13 Loading State Pattern (Global)
+
+Dashboard uses Suspense with per-card skeletons (section 11). The same pattern applies everywhere:
+
+**Pattern**: Every page that fetches data uses a `loading.tsx` file in its route directory (Next.js convention). This shows a skeleton that matches the page layout.
+
+**Skeleton rules**:
+- Skeletons match the shape of the content they replace (rectangles for text, circles for avatars, bars for charts).
+- Animate with a subtle pulse (`animate-pulse` in Tailwind). Respect `prefers-reduced-motion` — show static grey blocks instead.
+- Never show a full-page spinner. Always show the page chrome (sidebar, top bar) immediately and skeleton the content area.
+
+**Per-page skeletons**:
+| Page | Skeleton |
+|------|----------|
+| Dashboard | 7 card skeletons in grid layout |
+| Transactions | Table with 8 shimmer rows |
+| Accounts | 3–5 card skeletons |
+| Budgets | 5 progress bar skeletons |
+| Bills | Table with 5 shimmer rows |
+| Cashflow | Calendar grid skeleton (grey boxes) |
+| Goals | 2 card skeletons |
+| Debt | 2 card skeletons |
+| Income | 3 card skeletons |
+| Analytics | Chart skeleton (grey rectangle) + stat cards |
+
+### 17.14 Category Management UX
+
+Phase 3 has a `categories` table. Phase 2 says users can add, edit, reorder, and delete custom categories. Category management is accessed from **two places**:
+
+**1. Settings → Workspace → Manage categories**
+
+A dedicated section showing all categories for the active workspace:
+
+```
+┌──────────────────────────────────────────┐
+│  Categories                  [+ Add]     │
+│                                          │
+│  EXPENSE                                 │
+│  ☰ 🟢 Groceries              [Edit] [×] │
+│  ☰ 🔵 Transport              [Edit] [×] │
+│  ☰ 🟡 Eating Out             [Edit] [×] │
+│  ☰ 🟣 Entertainment          [Edit] [×] │
+│  ☰ 🟤 Shopping               [Edit] [×] │
+│  ...                                     │
+│                                          │
+│  INCOME                                  │
+│  ☰ 🟢 Salary                 [Edit] [×] │
+│  ☰ 🔵 Benefits               [Edit] [×] │
+│  ...                                     │
+└──────────────────────────────────────────┘
+```
+
+- ☰ = drag handle for reordering (or up/down arrows for keyboard)
+- Edit: inline rename + colour picker
+- ×: delete (confirmation if category is used by transactions/budgets — "This category is used by 23 transactions. Delete anyway? Transactions will become uncategorised.")
+- "+ Add": inline form — name + type (expense/income) + optional colour
+- Default categories (seeded on workspace creation) are marked with a subtle "default" badge but can still be edited or deleted.
+
+**2. Inline "add category" in transaction form**
+
+When selecting a category in the quick-add transaction form, the dropdown includes a "+ Add category" option at the bottom. Clicking it opens a minimal inline form (name + type) within the dropdown. Fast path for when a user needs a new category mid-transaction.
+
+### 17.15 Demo Data Banner
+
+Phase 2 section 9 specifies: "persistent banner 'Exploring demo data' with a 'Clear demo data' action."
+
+**Implementation**:
+- A `DemoBanner` component rendered at the top of the app layout, below the top bar, above the page content.
+- Only shown when `workspaces.is_demo = true` for the active workspace.
+- Design: subtle background (light amber or light blue), not full-width alert — sits within the content area.
+- Content: "You're exploring demo data. [Clear demo data]"
+- "Clear demo data" triggers a confirmation dialog: "This will remove all demo data and leave your workspace blank. You can't undo this."
+- On confirm: Server Action deletes all data in the workspace and sets `is_demo = false`.
+- Banner disappears after clearing.
+- If the user adds real transactions alongside demo data, the banner adds: "You've added your own data too — clearing will only remove the demo entries." (Demo entries are flagged with `is_demo` on relevant tables, or all data is cleared and user is warned — simpler approach for v1: clear everything and warn.)
+
+**v1 simplification**: Clear everything in the workspace (not selective). The confirmation makes this clear. Adding selective demo-data deletion is overengineering for v1.
+
+### 17.16 Page UX — Normal "With Data" States
+
+Phase 4 has empty states, forms, and dashboard layout, but several key pages need their "with data" UX specified.
+
+**Transactions page** (`/app/transactions`):
+
+```
+┌──────────────────────────────────────────────┐
+│  Transactions                  [+ Transaction]│
+│                                              │
+│  [Search: payee or description...]           │
+│  Filters: [All types ▾] [All categories ▾]  │
+│           [All accounts ▾] [Date range ▾]    │
+│                                              │
+│  ┌─ Today ──────────────────────────────┐    │
+│  │ Tesco         Groceries    -£34.50   │    │
+│  │ TfL           Transport     -£5.40   │    │
+│  └──────────────────────────────────────┘    │
+│  ┌─ Yesterday ──────────────────────────┐    │
+│  │ Greggs        Eating Out    -£3.85   │    │
+│  │ Salary        Income     +£2,400.00  │    │
+│  └──────────────────────────────────────┘    │
+│                                              │
+│  [Load more]  Showing 20 of 147              │
+└──────────────────────────────────────────────┘
+```
+
+- Grouped by date (Today, Yesterday, date headings)
+- Click a row → expands inline to show: notes, account, edit/delete actions (progressive disclosure)
+- Search: client-side filter for visible rows, server-side search on submit
+- Filters: dropdowns for type, category, account, date range. Applied as query params.
+- Pagination: "Load more" button (not infinite scroll — predictable for ND users)
+- Income rows shown in teal text, expenses in default text colour. No red/green.
+
+**Accounts page** (`/app/accounts`):
+
+Card grid showing each account:
+```
+┌─────────────────┐  ┌─────────────────┐
+│ Barclays Current │  │ Nationwide Sav. │
+│ Current account  │  │ Savings         │
+│ £1,847.32        │  │ £3,200.00       │
+│ [View →]         │  │ [View →]        │
+└─────────────────┘  └─────────────────┘
+```
+Click → Account detail page: transaction list filtered to that account, balance at top.
+
+**Budgets page** (`/app/budgets`):
+
+Month selector at top: [← Feb] **March 2026** [Apr →]
+
+Category budget cards stacked vertically:
+```
+Groceries          £218 / £300           73%
+████████████████░░░░░░░
+Eating Out         £36 / £80             45%
+█████████░░░░░░░░░░░░░
+Transport          £62 / £100            62%
+████████████░░░░░░░░░░
+```
+- Bar colour: teal when ≤80%, amber when 80–100%, muted red-brown when >100%
+- Click a category → shows transactions for that category this month
+- "Set budget" button next to categories without budgets
+
+**Bills page** (`/app/bills`):
+
+Two sections: "Upcoming" and "All bills"
+
+Upcoming (next 14 days):
+```
+Energy        3rd Apr    Direct debit    £85.00
+Netflix       20th Apr   Card            £10.99
+```
+
+All bills: DataTable with name, amount, frequency, next due, payment method, active toggle.
+- `is_subscription` items show a "Sub" badge
+- Filter: Subscriptions only / All
+
+**Income page** (`/app/income`):
+
+Card per income source:
+```
+┌──────────────────────────────────────┐
+│ Salary — Acme Ltd           Employment│
+│ £2,400/month    Next: 25th Apr       │
+│ Pays into: Barclays Current          │
+│                         [Edit] [···] │
+├──────────────────────────────────────┤
+│ Child Benefit              Benefit   │
+│ £96.00/4-weekly  Next: 8th Apr       │
+│ Pays into: Barclays Current          │
+│                         [Edit] [···] │
+└──────────────────────────────────────┘
+```
+Benefits and employment income use the same card design — equal visual weight (Phase 1 principle).
+
+**Debt page** (`/app/debt`):
+
+Card per debt:
+```
+┌──────────────────────────────────────┐
+│ Tesco Credit Card                    │
+│ Balance: £412.67                     │
+│ Min payment: £25/month               │
+│ Interest: 19.9% APR                  │
+│ Next payment: 1st Apr                │
+│ ████████░░░░░ 73% remaining          │
+│                         [Edit] [···] │
+└──────────────────────────────────────┘
+```
+- Progress bar shows payoff progress (if linked to a financial goal)
+- If linked to a goal: "Linked to goal: Pay off credit card"
+
+**Analytics page** (`/app/analytics`):
+
+Free users see:
+```
+Spending by Category (this month)
+[Donut chart: Groceries 35%, Transport 15%, ...]
+
+[UpgradeBanner: "Unlock trends, net worth, and forecasting with Pro"]
+```
+
+Pro users see:
+```
+[Period selector: This month / Last 3 months / Last 6 months / Custom]
+
+Spending by Category        Income vs Expenses
+[Donut chart]               [Stacked bar chart, monthly]
+
+Spending Over Time
+[Line/area chart, monthly trend]
+
+Net Worth
+[Single number + trend arrow: £4,634 ↑ from £4,200]
+```
+
+**Goal detail page** (`/app/goals/[id]`):
+
+```
+┌──────────────────────────────────────┐
+│ Holiday Fund              Savings    │
+│ £620 / £1,500            41%         │
+│ ████████░░░░░░░░░░░░                 │
+│ Target date: August 2026             │
+│                                      │
+│ Contributions                        │
+│ 15th Mar   +£100   "March savings"   │
+│ 15th Feb   +£100   "Feb savings"     │
+│ 10th Jan   +£420   "Initial"         │
+│                                      │
+│ [+ Add contribution]     [Edit goal] │
+└──────────────────────────────────────┘
+```
+
+---
+
+*Document version: Phase 4 v1.2 (updated after second audit)*
 *Created: 2026-03-30*

@@ -26,7 +26,7 @@
 14. Interactive preview — Granola-style scroll showcase + simpler tabbed fallback for v1
 15. Admin panel UX — 6 admin pages with UX specs, dense-but-scannable design philosophy
 16. Email capture and contact — waitlist form, contact form, anti-spam, auth emails, invite email strategy
-17. Supplementary sections (10 gap fixes from cross-phase audit):
+17. Supplementary sections (16 gap fixes from cross-phase audits):
     - 17.1 CSV export UX
     - 17.2 Undo support (toast-based for single-item deletions)
     - 17.3 Onboarding 5-step flow UX
@@ -37,6 +37,12 @@
     - 17.8 Auth implementation reference (from Phase 3)
     - 17.9 Stripe integration reference (from Phase 3)
     - 17.10 Entitlement enforcement map (9 limits mapped to UI)
+    - 17.11 Mobile navigation decision (bottom tab bar)
+    - 17.12 Error pages (404, 500, disabled, offline)
+    - 17.13 Loading state pattern (per-page skeletons)
+    - 17.14 Category management UX
+    - 17.15 Demo data banner component
+    - 17.16 Page "with data" UX (8 pages: transactions, accounts, budgets, bills, income, debt, analytics, goal detail)
 
 ## Key decisions made
 
@@ -74,6 +80,12 @@
 | Auth details — not referenced | Phase 3 section 8 | Added section 17.8: httpOnly cookies, signup triggers, middleware checks |
 | Stripe integration — not detailed | Phase 3 section 14 | Added section 17.9: upgrade/cancel flows, webhook handler |
 | Entitlements — not mapped to UI | Phase 3 section 14 | Added section 17.10: all 9 limits mapped to specific UI enforcement points |
+| Mobile nav — undecided | Phase 4 section 11 | Added section 17.11: bottom tab bar (5 tabs + More) |
+| Error/404/500 pages — missing | Cross-cutting | Added section 17.12: not-found, error, disabled account, offline |
+| Loading state pattern — dashboard only | Cross-cutting | Added section 17.13: per-page skeleton specs |
+| Category management — no UX | Phase 3 categories table | Added section 17.14: settings section + inline add in forms |
+| Demo data banner — not designed | Phase 2 section 9 | Added section 17.15: DemoBanner component with clear action |
+| Page "with data" UX — missing for 8 pages | Phase 2 page inventory | Added section 17.16: transactions (filters/search/pagination), accounts, budgets, bills, income, debt, analytics (free vs pro), goal detail |
 
 ## Readiness for Phase 5
 
