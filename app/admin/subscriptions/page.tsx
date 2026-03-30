@@ -1,6 +1,8 @@
 import { createAdminClient } from '@/lib/supabase/admin';
 import { formatCurrency } from '@/lib/utils/currency';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminSubscriptionsPage() {
   const supabase = createAdminClient();
 

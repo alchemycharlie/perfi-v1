@@ -1,6 +1,8 @@
 import { createAdminClient } from '@/lib/supabase/admin';
 import { FeatureFlagToggle } from '@/components/admin/feature-flag-toggle';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminSystemPage() {
   const supabase = createAdminClient();
 

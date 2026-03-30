@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
-import { stripe } from '@/lib/stripe/config';
+import { getStripe } from '@/lib/stripe/config';
 import { createAdminClient } from '@/lib/supabase/admin';
 import type Stripe from 'stripe';
 
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET!);
+    event = getStripe().webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET!);
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown error';
     return NextResponse.json(
@@ -58,7 +58,7 @@ export async function POST(request: Request) {
 
         if (subscriptionId) {
           // Retrieve subscription and extract period dates
-          const stripeSubscription = (await stripe.subscriptions.retrieve(
+          const stripeSubscription = (await getStripe().subscriptions.retrieve(
             subscriptionId,
           )) as unknown as Record<string, unknown>;
           const periodStart =

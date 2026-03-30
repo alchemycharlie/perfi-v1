@@ -2,7 +2,7 @@
 
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { stripe, STRIPE_PRO_PRICE_ID } from '@/lib/stripe/config';
+import { getStripe, STRIPE_PRO_PRICE_ID } from '@/lib/stripe/config';
 import type { ActionResult } from '@/lib/actions/utils';
 
 /**
@@ -26,7 +26,7 @@ export async function createCheckoutSession(): Promise<ActionResult> {
   let customerId = subscription?.stripe_customer_id;
 
   if (!customerId) {
-    const customer = await stripe.customers.create({
+    const customer = await getStripe().customers.create({
       email: user.email,
       metadata: { supabase_user_id: user.id },
     });
@@ -38,7 +38,7 @@ export async function createCheckoutSession(): Promise<ActionResult> {
       .eq('user_id', user.id);
   }
 
-  const session = await stripe.checkout.sessions.create({
+  const session = await getStripe().checkout.sessions.create({
     customer: customerId,
     mode: 'subscription',
     line_items: [{ price: STRIPE_PRO_PRICE_ID, quantity: 1 }],
@@ -76,7 +76,7 @@ export async function createPortalSession(): Promise<ActionResult> {
     return { success: false, error: 'No Stripe customer found.' };
   }
 
-  const session = await stripe.billingPortal.sessions.create({
+  const session = await getStripe().billingPortal.sessions.create({
     customer: subscription.stripe_customer_id,
     return_url: `${process.env.NEXT_PUBLIC_APP_URL}/app/settings/billing`,
   });
@@ -104,7 +104,7 @@ export async function cancelSubscription(): Promise<ActionResult> {
     return { success: false, error: 'No active subscription.' };
   }
 
-  await stripe.subscriptions.update(subscription.stripe_subscription_id, {
+  await getStripe().subscriptions.update(subscription.stripe_subscription_id, {
     cancel_at_period_end: true,
   });
 
@@ -137,7 +137,7 @@ export async function resumeSubscription(): Promise<ActionResult> {
     return { success: false, error: 'No active subscription.' };
   }
 
-  await stripe.subscriptions.update(subscription.stripe_subscription_id, {
+  await getStripe().subscriptions.update(subscription.stripe_subscription_id, {
     cancel_at_period_end: false,
   });
 
