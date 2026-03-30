@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { formatCurrency } from '@/lib/utils/currency';
 import { EmptyState } from '@/components/shared/empty-state';
 import { DebtCard } from '@/components/app/debts/debt-card';
+import { AddDebtDialog } from '@/components/app/debts/add-debt-dialog';
 
 export default async function DebtPage() {
   const supabase = await createClient();
@@ -58,6 +59,7 @@ export default async function DebtPage() {
             </p>
           )}
         </div>
+        <AddDebtDialog workspaceId={workspaceId} accounts={accounts || []} />
       </div>
 
       {debtList.length === 0 ? (

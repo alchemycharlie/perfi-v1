@@ -12,16 +12,16 @@ import { cn } from '@/lib/utils/cn';
  */
 
 const navItems = [
-  { href: '/app/dashboard', label: 'Dashboard', icon: LayoutIcon },
-  { href: '/app/accounts', label: 'Accounts', icon: WalletIcon },
-  { href: '/app/transactions', label: 'Transactions', icon: ListIcon },
-  { href: '/app/budgets', label: 'Budgets', icon: PieIcon },
-  { href: '/app/bills', label: 'Bills & Subscriptions', icon: CalendarIcon },
-  { href: '/app/cashflow', label: 'Cashflow', icon: TrendIcon },
-  { href: '/app/goals', label: 'Goals', icon: TargetIcon },
-  { href: '/app/debt', label: 'Debt', icon: CreditCardIcon },
-  { href: '/app/income', label: 'Income', icon: BanknoteIcon },
-  { href: '/app/analytics', label: 'Analytics', icon: ChartIcon },
+  { href: '/app/dashboard', label: 'Dashboard', icon: LayoutIcon, pro: false },
+  { href: '/app/accounts', label: 'Accounts', icon: WalletIcon, pro: false },
+  { href: '/app/transactions', label: 'Transactions', icon: ListIcon, pro: false },
+  { href: '/app/budgets', label: 'Budgets', icon: PieIcon, pro: false },
+  { href: '/app/bills', label: 'Bills & Subscriptions', icon: CalendarIcon, pro: false },
+  { href: '/app/cashflow', label: 'Cashflow', icon: TrendIcon, pro: false },
+  { href: '/app/goals', label: 'Goals', icon: TargetIcon, pro: false },
+  { href: '/app/debt', label: 'Debt', icon: CreditCardIcon, pro: false },
+  { href: '/app/income', label: 'Income', icon: BanknoteIcon, pro: false },
+  { href: '/app/analytics', label: 'Analytics', icon: ChartIcon, pro: true },
 ];
 
 export function AppSidebar() {
@@ -52,7 +52,12 @@ export function AppSidebar() {
               )}
             >
               <Icon className="h-4 w-4 shrink-0" />
-              {item.label}
+              <span className="flex-1">{item.label}</span>
+              {item.pro && (
+                <span className="rounded-full bg-accent/10 px-1.5 py-0.5 text-[10px] font-medium text-accent">
+                  Pro
+                </span>
+              )}
             </Link>
           );
         })}
