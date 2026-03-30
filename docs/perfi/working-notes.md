@@ -44,6 +44,8 @@
 - Transaction balance updates: recommend DB trigger on transactions to update accounts.balance. Document in Phase 5.
 - Budget spent calculation: application logic filtering transactions by calendar month. Document approach in Phase 5.
 - Users with zero workspaces: middleware redirects to onboarding, but app must handle gracefully.
+- Recurring date calculation: next_pay_date and next_due_date are single dates. App logic needed to project future occurrences for cashflow calendar. Document as utility in Phase 5.
+- MRR for admin dashboard: calculated at query time from active Pro subscriptions. No schema field needed at v1 scale.
 
 ## Resolved questions
 
@@ -58,3 +60,4 @@
 - Account deletion: cascade delete through all workspace data + Supabase Auth deletion.
 - Soft delete: no soft deletes in v1 — hard delete with cascades.
 - profiles.is_disabled: added to schema, checked in middleware.
+- Tour tracking: profiles.preferences jsonb includes has_seen_tour key.

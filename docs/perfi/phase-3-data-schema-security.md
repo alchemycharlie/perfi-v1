@@ -177,7 +177,7 @@ auth.users (Supabase managed)
 | `display_name` | text | Set during onboarding |
 | `onboarding_completed` | boolean | Default false |
 | `onboarding_step` | smallint | Track progress if user abandons mid-flow |
-| `preferences` | jsonb | Theme prefs, UI settings — flexible bag |
+| `preferences` | jsonb | Theme prefs, UI settings, tour state — flexible bag. Includes `has_seen_tour: boolean` for the in-app walkthrough (Phase 2 section 9). |
 | `role` | text | `user` or `admin`. Default `user` |
 | `is_disabled` | boolean | Default false. Set by admin to block login |
 | `created_at` | timestamptz | |

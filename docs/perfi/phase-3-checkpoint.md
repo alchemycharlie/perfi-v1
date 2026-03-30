@@ -50,10 +50,13 @@
 
 ## Contradictions and risks found
 
-- **`profiles.is_disabled` field**: Referenced in admin access model and route protection but not in the schema outline table. **Resolution needed**: Add `is_disabled boolean DEFAULT false` to the `profiles` table. (Will fix before commit.)
+- **`profiles.is_disabled` field**: Referenced in admin access model and route protection but not in the schema outline table. **Resolved**: Added `is_disabled boolean DEFAULT false` to profiles table.
+- **Tour completion tracking**: Phase 2 specifies in-app walkthrough "shows once per user". No dedicated field existed. **Resolved**: Documented `has_seen_tour` as a key in `profiles.preferences` jsonb field.
 - **Workspace creation during onboarding**: Auth triggers create profile and subscription, but workspace creation happens during onboarding. If a user signs up but never completes onboarding, they have a profile but no workspace. The middleware redirect to `/app/onboarding` handles this, but the app must gracefully handle users with zero workspaces.
 - **Budget period**: Schema has a `period` column set to `monthly` in v1, but there's no month-specific scoping. Budget spent calculations need to filter transactions by the current calendar month. This is application logic, not a schema issue, but should be documented in Phase 5.
 - **Transaction balance updates**: When a transaction is added/edited/deleted, `accounts.balance` must be updated. This could be a DB trigger or application logic. Recommend a DB trigger for consistency — document in Phase 5 implementation.
+- **Recurring date calculation**: `income_sources.next_pay_date` and `bills.next_due_date` store a single date. Generating future occurrences for the cashflow calendar (e.g. next 6 months of pay dates from frequency + anchor date) is application logic. Should be documented as a utility function in Phase 5.
+- **MRR calculation for admin**: Admin dashboard needs MRR. No dedicated field — calculated at query time from active Pro subscriptions × £4.99. Acceptable for v1 scale.
 
 ## Readiness for Phase 4
 
