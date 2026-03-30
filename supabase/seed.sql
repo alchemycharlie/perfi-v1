@@ -1,0 +1,13 @@
+-- PerFi Demo Data Seed
+-- Phase C: Populates a workspace with demo data per Phase 2 section 9.
+--
+-- Demo data includes:
+--   3 accounts
+--   2 income sources
+--   ~30 transactions
+--   5 bills
+--   4 budgets
+--   1 debt
+--   2 goals
+--
+-- This file will be populated during Phase C (Core App implementation).
