@@ -1,31 +1,68 @@
-import { UpgradeBanner } from '@/components/shared/upgrade-banner';
+import { createClient } from '@/lib/supabase/server';
+import { AnalyticsContent } from '@/components/app/analytics/analytics-content';
 
 /**
- * Analytics page.
- * Phase 4: Basic analytics on Free, advanced on Pro.
- * Full chart implementation deferred to a later phase.
+ * Analytics page — Server Component.
+ * Phase 4 Section 17.16:
+ *   Free: spending by category (donut)
+ *   Pro: + trends, income vs expenses, net worth
  */
-export default function AnalyticsPage() {
-  return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-semibold text-text-primary">Analytics</h1>
-      <p className="text-sm text-text-secondary">
-        See how your spending, income, and budgets are trending over time.
-      </p>
+export default async function AnalyticsPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return null;
 
-      {/* Basic analytics (free) - placeholder */}
-      <section className="rounded-[var(--radius-lg)] border border-border bg-bg-primary p-6">
-        <h2 className="text-sm font-semibold text-text-primary">Spending by category</h2>
-        <p className="mt-2 text-sm text-text-muted">
-          Charts and spending breakdowns will appear here once you have enough transaction data.
-        </p>
-      </section>
+  const { data: membership } = await supabase
+    .from('workspace_members')
+    .select('workspace_id')
+    .eq('user_id', user.id)
+    .limit(1)
+    .single();
 
-      {/* Pro analytics teaser */}
-      <UpgradeBanner
-        feature="Advanced analytics"
-        message="Unlock trends over time, net worth tracking, and cashflow forecasting with Pro."
-      />
-    </div>
-  );
+  if (!membership) return null;
+  const workspaceId = membership.workspace_id;
+
+  // Fetch subscription to check plan
+  const { data: subscription } = await supabase
+    .from('subscriptions')
+    .select('plan')
+    .eq('user_id', user.id)
+    .single();
+
+  const isPro = subscription?.plan === 'pro';
+
+  // Get transactions for last 6 months for trend data
+  const sixMonthsAgo = new Date();
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+  const sixMonthsAgoStr = sixMonthsAgo.toISOString().split('T')[0];
+
+  const { data: transactions } = await supabase
+    .from('transactions')
+    .select('amount, type, date, category:categories(name, colour)')
+    .eq('workspace_id', workspaceId)
+    .gte('date', sixMonthsAgoStr)
+    .order('date');
+
+  const normalizedTxns = (transactions || []).map((t) => ({
+    ...t,
+    category: Array.isArray(t.category) ? t.category[0] || null : t.category,
+  })) as Array<{
+    amount: number;
+    type: string;
+    date: string;
+    category: { name: string; colour: string | null } | null;
+  }>;
+
+  // Total balance for net worth
+  const { data: accounts } = await supabase
+    .from('accounts')
+    .select('balance')
+    .eq('workspace_id', workspaceId)
+    .eq('is_active', true);
+
+  const netWorth = (accounts || []).reduce((s, a) => s + a.balance, 0);
+
+  return <AnalyticsContent transactions={normalizedTxns} netWorth={netWorth} isPro={isPro} />;
 }

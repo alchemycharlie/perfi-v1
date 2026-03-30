@@ -15,7 +15,8 @@ This document tracks implementation progress across all build phases.
 | 5     | Onboarding, Demo Workspace, First Run Experience   | Complete    | 2026-03-30   | 2026-03-30     |
 | 6     | Accounts, Transactions, Income, Recurring Bills    | Complete    | 2026-03-30   | 2026-03-30     |
 | 7     | Budgets, Goals, Debts, Cashflow, Settings          | Complete    | 2026-03-30   | 2026-03-30     |
-| 8     | Polish, Billing, Admin, Launch                     | Not started | —            | —              |
+| 8     | Dashboard, Analytics, Forecasting, Net Worth       | Complete    | 2026-03-30   | 2026-03-30     |
+| 9     | Billing, Admin, Polish, Launch                     | Not started | —            | —              |
 
 ---
 
@@ -173,4 +174,17 @@ Post-audit corrections:
 - Added Zod schemas: budgetSchema, goalSchema, goalContributionSchema, debtSchema
 - Added 10 Server Actions: budgets (3), goals (4), debts (3)
 - All pages have empty states, loading states, error handling
+- Verified: TypeScript passes, ESLint passes, production build succeeds (38 routes)
+
+### 2026-03-30 — Implementation Phase 8: Dashboard, Analytics, Forecasting, Net Worth
+
+- Enhanced dashboard with full summary layer: total balance, account cards, next pay day, upcoming bills, budget status bars, goals progress, recent transactions
+- All dashboard data fetched in parallel (Promise.all). Every section links to its detail page.
+- Built analytics page with Recharts (code-split via dynamic import):
+  - Free: spending by category donut chart (current month)
+  - Pro: income vs expenses stacked bar, spending trend area chart, net worth display
+- Built cashflow balance forecasting: projected balance step chart across current month (Pro only)
+- Net worth tracking: sum of active account balances on analytics page
+- Free/Pro gating: subscription.plan checked in Server Components, UpgradeBanner at Pro sections
+- 4 chart components: SpendingDonut, IncomeVsExpenses, SpendingTrend, ForecastChart
 - Verified: TypeScript passes, ESLint passes, production build succeeds (38 routes)

@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { EmptyState } from '@/components/shared/empty-state';
 import { CashflowCalendar } from '@/components/app/cashflow/cashflow-calendar';
+import { BalanceForecast } from '@/components/app/cashflow/balance-forecast';
 import { getOccurrencesInRange, getMonthRange, toDateString } from '@/lib/utils/dates';
 import type { Frequency } from '@/lib/utils/dates';
 
@@ -116,6 +117,37 @@ export default async function CashflowPage() {
 
   const currentBalance = accounts.reduce((s, a) => s + a.balance, 0);
 
+  // Check subscription for forecasting
+  const {
+    data: { user: authUser },
+  } = await supabase.auth.getUser();
+  const { data: subscription } = authUser
+    ? await supabase.from('subscriptions').select('plan').eq('user_id', authUser.id).single()
+    : { data: null };
+  const isPro = subscription?.plan === 'pro';
+
+  // Build daily balance data for forecast chart
+  const sortedDates = Array.from({ length: end.getDate() }, (_, i) => {
+    const d = new Date(start.getFullYear(), start.getMonth(), i + 1);
+    return toDateString(d);
+  });
+
+  let runningBalance = currentBalance;
+  const eventsByDate = new Map<string, typeof events>();
+  for (const evt of events) {
+    if (!eventsByDate.has(evt.date)) eventsByDate.set(evt.date, []);
+    eventsByDate.get(evt.date)!.push(evt);
+  }
+
+  const dailyBalances = sortedDates.map((dateStr) => {
+    const dayEvents = eventsByDate.get(dateStr) || [];
+    for (const evt of dayEvents) {
+      if (evt.type === 'income') runningBalance += evt.amount;
+      else runningBalance -= evt.amount;
+    }
+    return { date: dateStr, balance: Math.round(runningBalance * 100) / 100 };
+  });
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-semibold text-text-primary">Cashflow</h1>
@@ -125,6 +157,7 @@ export default async function CashflowPage() {
         month={now.getMonth()}
         currentBalance={currentBalance}
       />
+      <BalanceForecast dailyBalances={dailyBalances} isPro={isPro} />
     </div>
   );
 }
