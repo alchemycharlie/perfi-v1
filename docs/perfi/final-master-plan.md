@@ -245,7 +245,7 @@ Footer and terms must include: "PerFi is a tracking and planning tool. It does n
 
 | Priority | Feature |
 |----------|---------|
-| v1.1 | Resend email integration, dark mode, notifications (bill reminders), annual billing |
+| v1.1 | Resend email integration, dark mode, notifications (bill reminders), annual billing, recurring transaction templates, Setup assistant (re-onboarding), bill category auto-suggestion, account reordering, category icon picker |
 | v1.2 | OAuth (Google/Apple), audit logging, advanced reporting |
 | v2 | Shared workspaces, partner invites, Side Business workspace type |
 | Later | Open Banking (optional), mobile native apps, receipt upload, multi-currency, API access for power users, irregular income tools (freelancer/gig) |
@@ -260,7 +260,7 @@ Footer and terms must include: "PerFi is a tracking and planning tool. It does n
 | `phase-2-ia-flows-pricing.md` | IA, routes, user flows, pricing, onboarding, demo, landing page |
 | `phase-3-data-schema-security.md` | Schema (17 tables), RLS, auth, admin, Stripe, benefits |
 | `phase-4-frontend-ux-admin.md` | Architecture, components, UX, accessibility, all page designs |
-| `phase-5-roadmap-handoff.md` | Build order, risks, deployment, email tools, launch path |
+| `phase-5-roadmap-handoff.md` | Build order, risks, deployment, email tools, launch path, errata |
 | `final-master-plan.md` | This file — consolidated reference |
 | `working-notes.md` | Progress log, open/resolved questions |
 | `phase-[1-5]-checkpoint.md` | Per-phase summaries and audit results |

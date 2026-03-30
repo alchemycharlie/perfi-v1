@@ -554,7 +554,107 @@ These are implementation details that are best decided in context, not pre-plann
 5. Deploy to Vercel
 6. Start building Phase B (marketing site) while the app skeleton is live
 
----
+## 11. Errata: Items Dropped or Underspecified Across Phases
 
-*Document version: Phase 5 v1.0*
-*Created: 2026-03-30*
+This section documents items that were specified in earlier phases but quietly dropped or left incomplete. Each is either fixed here or explicitly deferred.
+
+### 11.1 Recurring transaction templates (Phase 1 risk mitigation — DEFERRED)
+
+Phase 1 section 13 lists "recurring transaction templates" as a mitigation for manual entry friction. No template mechanism was designed in any later phase.
+
+**Clarification**: The `bills` table with `is_recurring` on transactions and `bill_id` linking transactions to bills IS the recurring mechanism for known regular expenses. A general "transaction template" feature (e.g. "I buy coffee at Pret every day, save this as a template") is a post-v1 convenience feature.
+
+**Status**: Deferred to v1.1. The bills-based recurring system covers the primary use case (regular bills). General templates are a UX improvement, not a v1 requirement.
+
+### 11.2 "Features" marketing nav link (Phase 2 — RESOLVED)
+
+Phase 2 section 1 header nav includes "Features" but no `/features` route exists.
+
+**Resolution**: "Features" is an anchor link that scrolls to the Feature Highlights section on the home page (`/#features`). This was noted in Phase 2 checkpoint but never formally resolved. It is now confirmed: no separate features page. The anchor scroll is implemented as part of Build Phase B (marketing header).
+
+### 11.3 Bill category auto-suggestion (Phase 2 section 5.8 — DEFERRED)
+
+Phase 2 specifies "Category (auto-suggested based on name)" in the bill form. No auto-suggestion logic was designed.
+
+**Status**: Deferred to v1.1. In v1, the bill form has a standard category dropdown with no auto-suggestion. Auto-suggestion (e.g. "Netflix" → "Entertainment") can be added later as a simple name-matching lookup against existing categories.
+
+### 11.4 Default category lists per workspace type (Phase 2 section 7 — NOW SPECIFIED)
+
+Phase 2 defines two category sets but they were never formally confirmed as the seeding spec.
+
+**Confirmed default categories for seeding:**
+
+**Personal workspace:**
+Groceries, Transport, Eating Out, Entertainment, Shopping, Health, Utilities, Rent/Mortgage, Other (expense). Salary, Other Income (income). Transfer (transfer).
+
+**Personal + Household workspace:**
+All Personal categories plus: Childcare, School, Groceries — Household, Home Maintenance, Family Activities (expense).
+
+These are seeded into `categories` with `is_default = true` when a workspace is created during onboarding. Users can add, rename, reorder, and delete any category including defaults.
+
+### 11.5 Re-onboarding / Setup assistant (Phase 2 section 8 — DEFERRED)
+
+Phase 2 specifies "Users can access a 'Setup assistant' from Settings that replays the onboarding steps, pre-filled with current values."
+
+Phase 4 Settings page (section 17.5) includes a "Tour" section to replay the guided tour, but NOT a Setup assistant to replay onboarding steps.
+
+**Status**: Deferred to v1.1. In v1, users can edit their display name, income, and benefits directly in Settings without replaying the onboarding flow. The Setup assistant is a UX convenience, not essential for v1.
+
+### 11.6 `profiles.onboarding_step` usage (Phase 3 — NOW DOCUMENTED)
+
+Phase 3 schema defines `onboarding_step smallint` but no phase documents how it is used.
+
+**Usage**: When a user begins onboarding and closes the browser mid-flow, the middleware redirects them to `/app/onboarding`. The `onboarding_step` field tells the onboarding page which step to resume from. Each time the user completes a step, a Server Action updates `profiles.onboarding_step`. When onboarding completes, `onboarding_completed` is set to `true`.
+
+This is implementation logic for Build Phase C (onboarding flow).
+
+### 11.7 `accounts.sort_order` — no reorder UX (Phase 3 — DEFERRED)
+
+Phase 3 defines `sort_order smallint` on accounts. Phase 4 accounts page shows a card grid but no reorder mechanism.
+
+**Status**: Deferred. In v1, accounts display in creation order. The `sort_order` field exists for future drag-to-reorder. Low priority.
+
+### 11.8 `categories.icon` — no icon picker UX (Phase 3/Phase 4 — CLARIFIED)
+
+Phase 3 defines `icon text` on categories. Phase 4 category management shows coloured dots but no icon picker.
+
+**Clarification**: In v1, categories use the `colour` field only (displayed as a coloured dot). The `icon` field exists in the schema for future use (emoji or icon-library identifiers) but no picker UI is built in v1. Phase 4 section 17.14's category edit UX is "inline rename + colour picker" — no icon editing.
+
+### 11.9 `goals.status` — no UX to complete or abandon a goal (Phase 3/Phase 4 — FIXED)
+
+Phase 3 defines `goals.status` with values `active`, `completed`, `abandoned`. Phase 4 goal detail page shows progress and contributions but no mechanism to mark a goal as completed or abandoned.
+
+**Fix**: Add to the goal detail page (`/app/goals/[id]`):
+- When a savings goal reaches 100% of target, show a "Mark as completed" button with a celebratory message ("You did it!").
+- In the `[···]` menu on any goal card or detail page, include: "Mark as completed" and "Abandon goal".
+- Completed goals move to a "Completed" section at the bottom of the goals list (collapsed by default).
+- Abandoned goals are hidden from the goals list but accessible via a "Show abandoned" toggle.
+
+This is part of Build Phase D (Goals page).
+
+### 11.10 `debts.interest_rate` — displayed but no edit form (Phase 3/Phase 4 — FIXED)
+
+Phase 3 defines `interest_rate numeric(5,2)` as nullable. Phase 4 debt page display shows "Interest: 19.9% APR" but the debt form validation (Phase 4 section 7) does not mention interest rate.
+
+**Fix**: Add to the debt form (Build Phase D):
+- Field: "Annual interest rate (APR)" — numeric input, optional, suffix "% APR"
+- Validation: if provided, must be between 0 and 100
+- Displayed on the debt card as "Interest: X.X% APR" (or hidden if not set)
+
+### 11.11 Admin Support page — conflated scope (Phase 2/Phase 4 — CLARIFIED)
+
+Phase 4 section 15 describes the Support admin page as "List of users with admin notes." Phase 4 section 16 says contact form submissions are reviewed from the Support section. This conflates two concerns.
+
+**Clarification**: The Admin Support page has two tabs:
+- **Contact submissions**: Table of `contact_submissions` (name, email, message, date, status). Admin can mark as read/responded, add notes.
+- **User notes**: Table of users who have admin notes, with note history. Admin can add new notes.
+
+Both live on `/admin/support` as a tabbed view. This is part of Build Phase E.
+
+### 11.12 Annual frequency — bills vs income (Phase 3 — DOCUMENTED)
+
+Bills can be `annually` but income sources cannot. This is intentional: annual bills (e.g. car insurance, TV licence) are common; annual income is rare and better tracked as a one-off transaction.
+
+No change needed. This is now documented as an intentional design decision.
+
+---
