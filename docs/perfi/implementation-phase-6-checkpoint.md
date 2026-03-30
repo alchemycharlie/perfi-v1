@@ -15,6 +15,7 @@
 - [x] Account card grid with type labels, names, balances
 - [x] 5 account types: current, savings, credit_card, cash, investments
 - [x] Add account dialog (name, type, starting balance)
+- [x] Edit account form on detail page (name, type)
 - [x] Account detail page with filtered transactions
 - [x] Delete account with confirmation
 - [x] Empty state: "No accounts yet"
@@ -23,6 +24,7 @@
 
 - [x] Transaction list grouped by date (Today, Yesterday, date headings)
 - [x] Progressive disclosure: click to expand row details
+- [x] Edit transaction form in expanded row (all fields)
 - [x] Quick-add transaction slide-out panel
 - [x] Expense/Income type toggle
 - [x] Category colour dots, income in teal
@@ -35,6 +37,7 @@
 - [x] Income source cards with type, amount, frequency, next pay date
 - [x] Employment/benefit/other type selector
 - [x] Add income source dialog
+- [x] Edit income source form on cards (all fields including benefit type)
 - [x] Delete with confirmation
 - [x] Empty state: "No income sources"
 
@@ -60,6 +63,7 @@
 - [x] Upcoming section (next 14 days)
 - [x] Subscription badge for is_subscription items
 - [x] Add bill dialog with all fields
+- [x] Edit bill form on bill rows (all fields)
 - [x] Delete with confirmation
 - [x] Empty state: "No bills tracked"
 
@@ -97,13 +101,13 @@
 
 ## Known Caveats
 
-1. **No inline editing**: The click-to-edit pattern (rename account, adjust values) is deferred. Currently, editing requires delete + recreate or future edit forms.
+1. **Transaction list is not paginated**: Currently loads up to 100 transactions. Load-more pagination should be added when data volume requires it.
 
-2. **Transaction list is not paginated**: Currently loads up to 100 transactions. Load-more pagination should be added when data volume requires it.
+2. **No search/filter on transactions**: The Phase 4 spec includes search and filter dropdowns (type, category, account, date range). These are deferred to a polish pass.
 
-3. **No search/filter on transactions**: The Phase 4 spec includes search and filter dropdowns (type, category, account, date range). These are deferred to a polish pass.
+3. **Account balance is read-only**: Balance is managed by the database trigger on transactions. The starting balance set during account creation is the initial value.
 
-4. **Account balance is read-only**: Balance is managed by the database trigger on transactions. The starting balance set during account creation is the initial value.
+4. **Edit forms are toggle-based**: Edit forms appear inline when the Edit button is clicked, rather than a separate page. This matches the Phase 4 "click-to-edit" pattern.
 
 ---
 

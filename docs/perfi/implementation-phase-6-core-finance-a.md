@@ -97,16 +97,22 @@ All actions: Zod validation, workspace-scoped RLS, revalidatePath for affected r
 
 ### 9. Supporting components
 
-| Component             | File                                                    | Purpose                                       |
-| --------------------- | ------------------------------------------------------- | --------------------------------------------- |
-| AddAccountDialog      | `components/app/accounts/add-account-dialog.tsx`        | Modal form for creating accounts              |
-| DeleteAccountButton   | `components/app/accounts/delete-account-button.tsx`     | Confirm + delete on account detail            |
-| TransactionList       | `components/app/transactions/transaction-list.tsx`      | Date-grouped list with progressive disclosure |
-| QuickAddTransaction   | `components/app/transactions/quick-add-transaction.tsx` | Slide-out panel form                          |
-| AddIncomeSourceDialog | `components/app/income/add-income-dialog.tsx`           | Modal form with benefit type handling         |
-| DeleteIncomeButton    | `components/app/income/delete-income-button.tsx`        | Confirm + delete on income cards              |
-| AddBillDialog         | `components/app/bills/add-bill-dialog.tsx`              | Modal form with all bill fields               |
-| DeleteBillButton      | `components/app/bills/delete-bill-button.tsx`           | Confirm + delete on bill rows                 |
+| Component             | File                                                    | Purpose                                         |
+| --------------------- | ------------------------------------------------------- | ----------------------------------------------- |
+| AddAccountDialog      | `components/app/accounts/add-account-dialog.tsx`        | Modal form for creating accounts                |
+| EditAccountForm       | `components/app/accounts/edit-account-form.tsx`         | Inline edit form on account detail (name, type) |
+| DeleteAccountButton   | `components/app/accounts/delete-account-button.tsx`     | Confirm + delete on account detail              |
+| TransactionList       | `components/app/transactions/transaction-list.tsx`      | Date-grouped list with progressive disclosure   |
+| QuickAddTransaction   | `components/app/transactions/quick-add-transaction.tsx` | Slide-out panel form                            |
+| EditTransactionForm   | `components/app/transactions/edit-transaction-form.tsx` | Inline edit form in expanded row                |
+| AddIncomeSourceDialog | `components/app/income/add-income-dialog.tsx`           | Modal form with benefit type handling           |
+| IncomeCard            | `components/app/income/income-card.tsx`                 | Card with edit toggle for income sources        |
+| EditIncomeForm        | `components/app/income/edit-income-form.tsx`            | Inline edit form on income cards                |
+| DeleteIncomeButton    | `components/app/income/delete-income-button.tsx`        | Confirm + delete on income cards                |
+| AddBillDialog         | `components/app/bills/add-bill-dialog.tsx`              | Modal form with all bill fields                 |
+| BillRow               | `components/app/bills/bill-row.tsx`                     | Row with edit toggle for bills                  |
+| EditBillForm          | `components/app/bills/edit-bill-form.tsx`               | Inline edit form on bill rows                   |
+| DeleteBillButton      | `components/app/bills/delete-bill-button.tsx`           | Confirm + delete on bill rows                   |
 
 ---
 
@@ -118,4 +124,4 @@ All actions: Zod validation, workspace-scoped RLS, revalidatePath for affected r
 - No analytics dashboard
 - No Stripe billing
 - No CSV import/export
-- No editing inline (click-to-edit pattern deferred)
+- No CSV import/export
