@@ -8,18 +8,18 @@ Prepare the repository for serious implementation. No product features — only 
 
 ## Stack Confirmed
 
-| Layer | Choice | Version |
-|-------|--------|---------|
-| Framework | Next.js App Router | 16.2.1 |
-| Language | TypeScript | ^5 |
-| Styling | Tailwind CSS | ^4 |
-| Components | Radix UI primitives + Tailwind | Various |
-| Database | Supabase (Postgres + Auth + RLS) | ^2.100 |
-| Payments | Stripe | ^21 |
-| Validation | Zod | ^4 |
-| Charts | Recharts | ^3 |
-| Formatting | Prettier | ^3 |
-| Linting | ESLint (Next.js + TS + Prettier) | ^9 |
+| Layer      | Choice                           | Version |
+| ---------- | -------------------------------- | ------- |
+| Framework  | Next.js App Router               | 16.2.1  |
+| Language   | TypeScript                       | ^5      |
+| Styling    | Tailwind CSS                     | ^4      |
+| Components | Radix UI primitives + Tailwind   | Various |
+| Database   | Supabase (Postgres + Auth + RLS) | ^2.100  |
+| Payments   | Stripe                           | ^21     |
+| Validation | Zod                              | ^4      |
+| Charts     | Recharts                         | ^3      |
+| Formatting | Prettier                         | ^3      |
+| Linting    | ESLint (Next.js + TS + Prettier) | ^9      |
 
 ---
 
@@ -30,7 +30,15 @@ perfi-v1/
 ├── app/
 │   ├── (marketing)/          # Public marketing pages
 │   │   ├── layout.tsx        # Marketing header + footer
-│   │   └── page.tsx          # Home page placeholder
+│   │   ├── page.tsx          # Home page placeholder
+│   │   ├── pricing/page.tsx
+│   │   ├── faq/page.tsx
+│   │   ├── about/page.tsx
+│   │   ├── contact/page.tsx
+│   │   ├── waitlist/page.tsx
+│   │   └── legal/
+│   │       ├── privacy/page.tsx
+│   │       └── terms/page.tsx
 │   ├── (auth)/               # Login, signup, password reset
 │   │   ├── layout.tsx        # Centred card layout
 │   │   ├── login/page.tsx
@@ -41,20 +49,24 @@ perfi-v1/
 │   │   ├── layout.tsx        # App shell: sidebar + top bar
 │   │   ├── dashboard/page.tsx
 │   │   ├── accounts/page.tsx
+│   │   ├── accounts/[id]/page.tsx
 │   │   ├── transactions/page.tsx
 │   │   ├── budgets/page.tsx
 │   │   ├── bills/page.tsx
 │   │   ├── cashflow/page.tsx
 │   │   ├── goals/page.tsx
+│   │   ├── goals/[id]/page.tsx
 │   │   ├── debt/page.tsx
 │   │   ├── income/page.tsx
 │   │   ├── analytics/page.tsx
 │   │   ├── onboarding/page.tsx
-│   │   └── settings/page.tsx
+│   │   ├── settings/page.tsx
+│   │   └── settings/billing/page.tsx
 │   ├── admin/                # Internal admin area
 │   │   ├── layout.tsx        # Admin shell
 │   │   ├── dashboard/page.tsx
 │   │   ├── users/page.tsx
+│   │   ├── users/[id]/page.tsx
 │   │   ├── waitlist/page.tsx
 │   │   ├── subscriptions/page.tsx
 │   │   ├── support/page.tsx
@@ -89,11 +101,13 @@ perfi-v1/
 │   └── validations/
 │       └── schemas.ts        # Zod schemas
 ├── supabase/
-│   └── migrations/           # SQL migrations (Phase 2)
+│   ├── migrations/           # SQL migrations (Phase 2)
+│   └── seed.sql              # Demo data seed (Phase C)
 ├── public/
 │   └── images/
 ├── docs/perfi/               # Planning + implementation docs
 ├── middleware.ts              # Next.js middleware entry point
+├── README.md                 # Project overview and developer setup
 ├── .env.example              # Environment variable template
 ├── .editorconfig
 ├── .prettierrc
@@ -112,15 +126,15 @@ perfi-v1/
 
 All required variables documented in `.env.example`:
 
-| Variable | Purpose | Public |
-|----------|---------|--------|
-| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL | Yes |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anonymous key | Yes |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase admin key (bypasses RLS) | No |
-| `STRIPE_SECRET_KEY` | Stripe server-side API key | No |
-| `STRIPE_WEBHOOK_SECRET` | Stripe webhook signature verification | No |
-| `STRIPE_PRO_PRICE_ID` | Stripe price ID for Pro plan | No |
-| `NEXT_PUBLIC_APP_URL` | Application base URL | Yes |
+| Variable                        | Purpose                               | Public |
+| ------------------------------- | ------------------------------------- | ------ |
+| `NEXT_PUBLIC_SUPABASE_URL`      | Supabase project URL                  | Yes    |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anonymous key                | Yes    |
+| `SUPABASE_SERVICE_ROLE_KEY`     | Supabase admin key (bypasses RLS)     | No     |
+| `STRIPE_SECRET_KEY`             | Stripe server-side API key            | No     |
+| `STRIPE_WEBHOOK_SECRET`         | Stripe webhook signature verification | No     |
+| `STRIPE_PRO_PRICE_ID`           | Stripe price ID for Pro plan          | No     |
+| `NEXT_PUBLIC_APP_URL`           | Application base URL                  | Yes    |
 
 ---
 
@@ -140,27 +154,27 @@ CSS custom properties defined in `globals.css` per Phase 4 Section 4:
 
 ## npm Scripts
 
-| Script | Purpose |
-|--------|---------|
-| `npm run dev` | Start dev server with Turbopack |
-| `npm run build` | Production build |
-| `npm run start` | Start production server |
-| `npm run lint` | ESLint check |
-| `npm run lint:fix` | ESLint auto-fix |
-| `npm run format` | Prettier format all files |
-| `npm run format:check` | Prettier check (CI-friendly) |
-| `npm run typecheck` | TypeScript type check |
-| `npm run check` | Run all checks (typecheck + lint + format) |
+| Script                 | Purpose                                    |
+| ---------------------- | ------------------------------------------ |
+| `npm run dev`          | Start dev server with Turbopack            |
+| `npm run build`        | Production build                           |
+| `npm run start`        | Start production server                    |
+| `npm run lint`         | ESLint check                               |
+| `npm run lint:fix`     | ESLint auto-fix                            |
+| `npm run format`       | Prettier format all files                  |
+| `npm run format:check` | Prettier check (CI-friendly)               |
+| `npm run typecheck`    | TypeScript type check                      |
+| `npm run check`        | Run all checks (typecheck + lint + format) |
 
 ---
 
 ## Deviations from Planning Docs
 
-| Area | Plan | Actual | Reason |
-|------|------|--------|--------|
-| Font loading | `next/font/google` for Inter | System sans-serif fallback | Google Fonts blocked in build environment. Self-hosted Inter to be added in Phase B/C when deployment environment is confirmed. |
-| Middleware naming | `middleware.ts` | `middleware.ts` (deprecated in Next.js 16, now "proxy") | Next.js 16 renamed middleware to proxy. The file still works under the old name. Will evaluate migration in a future phase. |
-| Hosting | Phase 5 recommends Vercel | Not yet deployed | Deployment is part of Build Phase A in the planning docs. Will be addressed in Implementation Phase 2. |
+| Area              | Plan                         | Actual                                                  | Reason                                                                                                                          |
+| ----------------- | ---------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Font loading      | `next/font/google` for Inter | System sans-serif fallback                              | Google Fonts blocked in build environment. Self-hosted Inter to be added in Phase B/C when deployment environment is confirmed. |
+| Middleware naming | `middleware.ts`              | `middleware.ts` (deprecated in Next.js 16, now "proxy") | Next.js 16 renamed middleware to proxy. The file still works under the old name. Will evaluate migration in a future phase.     |
+| Hosting           | Phase 5 recommends Vercel    | Not yet deployed                                        | Deployment is part of Build Phase A in the planning docs. Will be addressed in Implementation Phase 2.                          |
 
 ---
 

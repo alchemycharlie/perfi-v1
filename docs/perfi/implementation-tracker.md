@@ -6,15 +6,15 @@ This document tracks implementation progress across all build phases.
 
 ## Phase Status
 
-| Phase | Name | Status | Date Started | Date Completed |
-|-------|------|--------|-------------|----------------|
-| 1 | Project Setup, Repo Hardening, Delivery Foundation | Complete | 2026-03-30 | 2026-03-30 |
-| 2 | Database, Auth, Middleware | Not started | — | — |
-| 3 | Marketing Site + Waitlist | Not started | — | — |
-| 4 | Core App (Accounts, Transactions, Dashboard) | Not started | — | — |
-| 5 | Full Features (Budgets, Bills, Income, Goals, Debt, Cashflow) | Not started | — | — |
-| 6 | Payments, Entitlements, Admin | Not started | — | — |
-| 7 | Polish, Accessibility, Launch | Not started | — | — |
+| Phase | Name                                                          | Status      | Date Started | Date Completed |
+| ----- | ------------------------------------------------------------- | ----------- | ------------ | -------------- |
+| 1     | Project Setup, Repo Hardening, Delivery Foundation            | Complete    | 2026-03-30   | 2026-03-30     |
+| 2     | Database, Auth, Middleware                                    | Not started | —            | —              |
+| 3     | Marketing Site + Waitlist                                     | Not started | —            | —              |
+| 4     | Core App (Accounts, Transactions, Dashboard)                  | Not started | —            | —              |
+| 5     | Full Features (Budgets, Bills, Income, Goals, Debt, Cashflow) | Not started | —            | —              |
+| 6     | Payments, Entitlements, Admin                                 | Not started | —            | —              |
+| 7     | Polish, Accessibility, Launch                                 | Not started | —            | —              |
 
 ---
 
@@ -43,7 +43,7 @@ This document tracks implementation progress across all build phases.
   - `(auth)` with centred card layout
   - `app/` with sidebar + top bar skeleton
   - `admin/` with admin sidebar skeleton
-- Created placeholder pages for all 29 routes
+- Created placeholder pages for all 36 routes (marketing, auth, app, admin, detail pages)
 - Created API route stubs: `/api/webhooks/stripe`, `/api/waitlist`, `/api/contact`
 - Created error pages: `not-found.tsx`, `error.tsx`
 - Created Supabase client structure: `client.ts`, `server.ts`, `middleware.ts`, `admin.ts`
@@ -53,4 +53,18 @@ This document tracks implementation progress across all build phases.
 - Created utility foundations: `cn`, `currency`, `dates`, `entitlements`
 - Created Zod validation schema foundation with auth, contact, waitlist schemas
 - Created `.env.example` with all required environment variables
+- Created `README.md` with local setup instructions and project overview
+- Created `supabase/seed.sql` placeholder for demo data (Phase C)
 - Verified: TypeScript type check passes, ESLint passes, production build succeeds
+
+### 2026-03-30 — Phase 1 Audit Fix
+
+Post-audit corrections:
+
+- Added missing marketing routes: `/pricing`, `/faq`, `/about`, `/contact`, `/waitlist`, `/legal/privacy`, `/legal/terms`
+- Added missing detail routes: `/app/accounts/[id]`, `/app/goals/[id]`, `/app/settings/billing`, `/admin/users/[id]`
+- Created `README.md` with local setup instructions
+- Created `supabase/seed.sql` placeholder
+- Removed leftover `create-next-app` SVGs from `public/`
+- Removed empty `styles/` directory (not in Phase 4 plan)
+- Total route count: 36 (was 29, now matches full Phase 2 IA)
