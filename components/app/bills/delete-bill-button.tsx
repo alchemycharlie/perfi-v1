@@ -1,0 +1,35 @@
+'use client';
+
+import { useState } from 'react';
+import { deleteBill } from '@/lib/actions/bills';
+import { Button } from '@/components/ui/button';
+
+export function DeleteBillButton({ billId, billName }: { billId: string; billName: string }) {
+  const [confirming, setConfirming] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  async function handleDelete() {
+    setLoading(true);
+    await deleteBill(billId);
+  }
+
+  if (!confirming) {
+    return (
+      <Button variant="ghost" size="sm" onClick={() => setConfirming(true)}>
+        Delete
+      </Button>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-xs text-text-muted">Delete {billName}?</span>
+      <Button variant="danger" size="sm" onClick={handleDelete} disabled={loading}>
+        {loading ? '...' : 'Yes'}
+      </Button>
+      <Button variant="ghost" size="sm" onClick={() => setConfirming(false)}>
+        No
+      </Button>
+    </div>
+  );
+}

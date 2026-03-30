@@ -13,7 +13,7 @@ This document tracks implementation progress across all build phases.
 | 3     | Auth, Protected Routing, App Shell, Admin Shell    | Complete    | 2026-03-30   | 2026-03-30     |
 | 4     | Database Migrations, RLS, Core Data Layer          | Complete    | 2026-03-30   | 2026-03-30     |
 | 5     | Onboarding, Demo Workspace, First Run Experience   | Complete    | 2026-03-30   | 2026-03-30     |
-| 6     | Payments, Entitlements, Admin                      | Not started | —            | —              |
+| 6     | Accounts, Transactions, Income, Recurring Bills    | Complete    | 2026-03-30   | 2026-03-30     |
 | 7     | Polish, Accessibility, Launch                      | Not started | —            | —              |
 
 ---
@@ -143,4 +143,19 @@ Post-audit corrections:
 - Built DashboardContent: handles demo/blank/active workspace states
 - Updated dashboard to Server Component that fetches profile, workspace, accounts, transactions, bills
 - Step 3-4 are skippable, "Skip setup entirely" creates default workspace
+- Verified: TypeScript passes, ESLint passes, production build succeeds (38 routes)
+
+### 2026-03-30 — Implementation Phase 6: Core Finance A
+
+- Built Zod validation schemas for accounts, transactions, income sources, bills
+- Built 12 Server Actions: CRUD for accounts (3), transactions (3), income sources (3), bills (3)
+- Built accounts page: card grid with type labels, balances, add account dialog, empty state
+- Built account detail page: balance display, filtered transaction list, delete with confirmation
+- Built transactions page: date-grouped list with progressive disclosure (click to expand)
+- Built quick-add transaction slide-out panel: expense/income toggle, category filtering by type
+- Built income page: source cards with type/benefit badges, frequency, pay date, linked account
+- Built income add dialog: employment/benefit/other selector, 8 named UK benefit types
+- Built bills page: upcoming (14-day) section, all bills list, subscription badges
+- Built bill add dialog: 5 frequencies, 4 payment methods, subscription checkbox
+- All pages have empty states, loading states, error states, delete confirmations
 - Verified: TypeScript passes, ESLint passes, production build succeeds (38 routes)
