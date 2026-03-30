@@ -14,9 +14,31 @@ import './globals.css';
  */
 
 export const metadata: Metadata = {
-  title: 'PerFi — Personal Finance Planner',
+  title: {
+    default: 'PerFi — Personal Finance Planner',
+    template: '%s | PerFi',
+  },
   description:
-    'UK-focused personal finance planner built for clarity, accessibility, and real life.',
+    'UK-focused personal finance planner built for clarity, accessibility, and real life. No bank sync needed.',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://perfi.co.uk'),
+  openGraph: {
+    title: 'PerFi — Personal Finance Planner',
+    description:
+      'Track income, benefits, budgets, and cashflow. Built for the UK, designed for everyone.',
+    type: 'website',
+    locale: 'en_GB',
+    siteName: 'PerFi',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'PerFi — Personal Finance Planner',
+    description:
+      'Track income, benefits, budgets, and cashflow. Built for the UK, designed for everyone.',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

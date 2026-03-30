@@ -6,6 +6,8 @@ import { Input } from '@/components/ui/input';
 
 export function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   if (submitted) {
     return (
@@ -20,10 +22,28 @@ export function ContactForm() {
 
   return (
     <form
-      onSubmit={(e) => {
+      onSubmit={async (e) => {
         e.preventDefault();
-        // Phase B backend: submit to /api/contact
-        setSubmitted(true);
+        setLoading(true);
+        setError(null);
+        const form = e.currentTarget;
+        const data = {
+          name: (form.elements.namedItem('name') as HTMLInputElement).value,
+          email: (form.elements.namedItem('email') as HTMLInputElement).value,
+          message: (form.elements.namedItem('message') as HTMLTextAreaElement).value,
+        };
+        try {
+          const res = await fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          });
+          if (res.ok) setSubmitted(true);
+          else setError('Something went wrong. Please try again.');
+        } catch {
+          setError('Something went wrong. Please try again.');
+        }
+        setLoading(false);
       }}
       className="space-y-4"
     >
@@ -57,8 +77,10 @@ export function ContactForm() {
         />
       </div>
 
-      <Button type="submit" className="w-full">
-        Send message
+      {error && <p className="text-sm text-danger">{error}</p>}
+
+      <Button type="submit" className="w-full" disabled={loading}>
+        {loading ? 'Sending...' : 'Send message'}
       </Button>
     </form>
   );

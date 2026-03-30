@@ -14,6 +14,7 @@ const interests = [
 
 export function WaitlistForm() {
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   if (submitted) {
     return (
@@ -28,10 +29,27 @@ export function WaitlistForm() {
 
   return (
     <form
-      onSubmit={(e) => {
+      onSubmit={async (e) => {
         e.preventDefault();
-        // Phase B backend: submit to /api/waitlist
+        setLoading(true);
+        const form = e.currentTarget;
+        const formData = new FormData(form);
+        const data = {
+          email: formData.get('email'),
+          company: formData.get('company'), // honeypot
+          interests: formData.getAll('interests'),
+        };
+        try {
+          await fetch('/api/waitlist', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          });
+        } catch {
+          // silently succeed
+        }
         setSubmitted(true);
+        setLoading(false);
       }}
       className="space-y-6"
     >
@@ -76,8 +94,8 @@ export function WaitlistForm() {
         </div>
       </fieldset>
 
-      <Button type="submit" className="w-full">
-        Join the waitlist
+      <Button type="submit" className="w-full" disabled={loading}>
+        {loading ? 'Joining...' : 'Join the waitlist'}
       </Button>
 
       <p className="text-center text-xs text-text-muted">
