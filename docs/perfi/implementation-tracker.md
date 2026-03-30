@@ -11,7 +11,7 @@ This document tracks implementation progress across all build phases.
 | 1     | Project Setup, Repo Hardening, Delivery Foundation            | Complete    | 2026-03-30   | 2026-03-30     |
 | 2     | Public Marketing Site Shell                                   | Complete    | 2026-03-30   | 2026-03-30     |
 | 3     | Auth, Protected Routing, App Shell, Admin Shell               | Complete    | 2026-03-30   | 2026-03-30     |
-| 4     | Core App (Accounts, Transactions, Dashboard)                  | Not started | —            | —              |
+| 4     | Database Migrations, RLS, Core Data Layer                     | Complete    | 2026-03-30   | 2026-03-30     |
 | 5     | Full Features (Budgets, Bills, Income, Goals, Debt, Cashflow) | Not started | —            | —              |
 | 6     | Payments, Entitlements, Admin                                 | Not started | —            | —              |
 | 7     | Polish, Accessibility, Launch                                 | Not started | —            | —              |
@@ -110,4 +110,21 @@ Post-audit corrections:
 - Created /disabled page for disabled accounts
 - Simplified ActionResult type (removed generic, added data as optional string)
 - Removed 'use server' from utils.ts (was causing non-async export error)
+- Verified: TypeScript passes, ESLint passes, production build succeeds (38 routes)
+
+### 2026-03-30 — Implementation Phase 4: Database Migrations, RLS, Core Data Layer
+
+- Created 6 SQL migration files in `supabase/migrations/`:
+  - 001: `handle_updated_at()` trigger function
+  - 002: All 17 tables with CHECK constraints, FKs, CASCADE deletes
+  - 003: RLS enabled on all 17 tables, 44 policies (standard workspace pattern)
+  - 004: 15 performance indexes (workspace_members, transactions compound indexes, etc.)
+  - 005: Signup trigger — auto-create profile + subscription on auth.users INSERT
+  - 006: Transaction balance trigger — auto-adjust account balance on CUD
+- Created TypeScript database types (`lib/types/database.ts`):
+  - Complete interfaces for all 17 tables
+  - Enum-like type unions for all constrained fields
+  - 8 named UK benefit types (universal_credit, pip, child_benefit, etc.)
+- Fixed WorkspaceProvider lint error (lazy useState initialisation)
+- Removed stale supabase/migrations/.gitkeep
 - Verified: TypeScript passes, ESLint passes, production build succeeds (38 routes)

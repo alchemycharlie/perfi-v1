@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useState } from 'react';
 
 /**
  * Workspace context provider.
@@ -26,16 +26,15 @@ const WorkspaceContext = createContext<WorkspaceContextValue>({
 
 const STORAGE_KEY = 'perfi_active_workspace';
 
-export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
-  const [activeWorkspaceId, setActiveWorkspaceIdState] = useState<string | null>(null);
+function getStoredWorkspaceId(): string | null {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem(STORAGE_KEY);
+}
 
-  // Hydrate from localStorage on mount
-  useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      setActiveWorkspaceIdState(stored);
-    }
-  }, []);
+export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
+  const [activeWorkspaceId, setActiveWorkspaceIdState] = useState<string | null>(
+    getStoredWorkspaceId,
+  );
 
   const setActiveWorkspaceId = useCallback((id: string) => {
     setActiveWorkspaceIdState(id);
