@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { formatCurrency } from '@/lib/utils/currency';
 import { deleteTransaction } from '@/lib/actions/transactions';
 import { Button } from '@/components/ui/button';
+import { EditTransactionForm } from '@/components/app/transactions/edit-transaction-form';
 
 interface Transaction {
   id: string;
@@ -23,7 +24,12 @@ interface TransactionListProps {
   categories: Array<{ id: string; name: string; type: string }>;
 }
 
-export function TransactionList({ transactions }: TransactionListProps) {
+export function TransactionList({
+  transactions,
+  workspaceId,
+  accounts,
+  categories,
+}: TransactionListProps) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   // Group transactions by date
@@ -41,6 +47,9 @@ export function TransactionList({ transactions }: TransactionListProps) {
               <TransactionRow
                 key={txn.id}
                 transaction={txn}
+                workspaceId={workspaceId}
+                accounts={accounts}
+                categories={categories}
                 expanded={expandedId === txn.id}
                 onToggle={() => setExpandedId(expandedId === txn.id ? null : txn.id)}
               />
@@ -56,12 +65,19 @@ function TransactionRow({
   transaction,
   expanded,
   onToggle,
+  workspaceId,
+  accounts,
+  categories,
 }: {
   transaction: Transaction;
   expanded: boolean;
   onToggle: () => void;
+  workspaceId: string;
+  accounts: Array<{ id: string; name: string }>;
+  categories: Array<{ id: string; name: string; type: string }>;
 }) {
   const [deleting, setDeleting] = useState(false);
+  const [editMode, setEditMode] = useState(false);
 
   async function handleDelete() {
     setDeleting(true);
@@ -104,22 +120,47 @@ function TransactionRow({
       {/* Progressive disclosure: expanded row details */}
       {expanded && (
         <div className="border-t border-border bg-bg-secondary px-4 py-3">
-          <div className="flex items-start justify-between">
-            <div className="space-y-1 text-sm">
-              {transaction.notes && (
-                <p className="text-text-secondary">
-                  <span className="font-medium text-text-primary">Notes:</span> {transaction.notes}
-                </p>
-              )}
-              <p className="text-text-muted">Date: {transaction.date}</p>
-              {transaction.account && (
-                <p className="text-text-muted">Account: {transaction.account.name}</p>
-              )}
+          {editMode ? (
+            <EditTransactionForm
+              transactionId={transaction.id}
+              workspaceId={workspaceId}
+              accounts={accounts}
+              categories={categories}
+              initial={{
+                account_id: transaction.account?.id || '',
+                category_id: transaction.category?.id || '',
+                type: transaction.type,
+                amount: transaction.amount,
+                description: transaction.description,
+                date: transaction.date,
+                notes: transaction.notes || '',
+              }}
+              onClose={() => setEditMode(false)}
+            />
+          ) : (
+            <div className="flex items-start justify-between">
+              <div className="space-y-1 text-sm">
+                {transaction.notes && (
+                  <p className="text-text-secondary">
+                    <span className="font-medium text-text-primary">Notes:</span>{' '}
+                    {transaction.notes}
+                  </p>
+                )}
+                <p className="text-text-muted">Date: {transaction.date}</p>
+                {transaction.account && (
+                  <p className="text-text-muted">Account: {transaction.account.name}</p>
+                )}
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" onClick={() => setEditMode(true)}>
+                  Edit
+                </Button>
+                <Button variant="danger" size="sm" onClick={handleDelete} disabled={deleting}>
+                  {deleting ? 'Deleting...' : 'Delete'}
+                </Button>
+              </div>
             </div>
-            <Button variant="danger" size="sm" onClick={handleDelete} disabled={deleting}>
-              {deleting ? 'Deleting...' : 'Delete'}
-            </Button>
-          </div>
+          )}
         </div>
       )}
     </div>

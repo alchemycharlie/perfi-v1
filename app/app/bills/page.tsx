@@ -2,15 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { formatCurrency } from '@/lib/utils/currency';
 import { EmptyState } from '@/components/shared/empty-state';
 import { AddBillDialog } from '@/components/app/bills/add-bill-dialog';
-import { DeleteBillButton } from '@/components/app/bills/delete-bill-button';
-
-const frequencyLabels: Record<string, string> = {
-  weekly: 'Weekly',
-  fortnightly: 'Fortnightly',
-  four_weekly: 'Every 4 weeks',
-  monthly: 'Monthly',
-  annually: 'Annually',
-};
+import { BillRow } from '@/components/app/bills/bill-row';
 
 const paymentMethodLabels: Record<string, string> = {
   direct_debit: 'Direct debit',
@@ -120,29 +112,24 @@ export default async function BillsPage() {
             <h2 className="text-sm font-semibold text-text-primary">All bills</h2>
             <div className="mt-3 divide-y divide-border rounded-[var(--radius-lg)] border border-border bg-bg-primary">
               {billList.map((bill) => (
-                <div key={bill.id} className="flex items-center justify-between px-4 py-3">
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="text-sm font-medium text-text-primary">{bill.name}</p>
-                      {bill.is_subscription && (
-                        <span className="rounded-full bg-accent/10 px-2 py-0.5 text-xs text-accent">
-                          Sub
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-xs text-text-muted">
-                      {frequencyLabels[bill.frequency]} &middot;{' '}
-                      {paymentMethodLabels[bill.payment_method]} &middot; Next: {bill.next_due_date}
-                      {bill.account && <> &middot; {(bill.account as { name: string }).name}</>}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm font-medium tabular-nums text-text-primary">
-                      {formatCurrency(bill.amount)}
-                    </span>
-                    <DeleteBillButton billId={bill.id} billName={bill.name} />
-                  </div>
-                </div>
+                <BillRow
+                  key={bill.id}
+                  bill={{
+                    id: bill.id,
+                    name: bill.name,
+                    amount: bill.amount,
+                    frequency: bill.frequency,
+                    next_due_date: bill.next_due_date,
+                    payment_method: bill.payment_method,
+                    account_id: bill.account_id,
+                    category_id: bill.category_id,
+                    is_subscription: bill.is_subscription,
+                    notes: bill.notes,
+                    account: bill.account as { name: string } | null,
+                  }}
+                  accounts={accounts || []}
+                  categories={categories || []}
+                />
               ))}
             </div>
           </section>

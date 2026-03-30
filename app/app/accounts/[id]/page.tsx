@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { formatCurrency } from '@/lib/utils/currency';
 import { DeleteAccountButton } from '@/components/app/accounts/delete-account-button';
+import { EditAccountForm } from '@/components/app/accounts/edit-account-form';
 
 const typeLabels: Record<string, string> = {
   current: 'Current account',
@@ -51,7 +52,14 @@ export default async function AccountDetailPage({ params }: { params: Promise<{ 
             {formatCurrency(account.balance)}
           </p>
         </div>
-        <DeleteAccountButton accountId={account.id} accountName={account.name} />
+        <div className="flex items-center gap-2">
+          <EditAccountForm
+            accountId={account.id}
+            initialName={account.name}
+            initialType={account.type}
+          />
+          <DeleteAccountButton accountId={account.id} accountName={account.name} />
+        </div>
       </div>
 
       {/* Transactions for this account */}
