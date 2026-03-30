@@ -460,7 +460,7 @@ Both types appear on `/app/goals`, with a type indicator. Creating a goal offers
 | **Transactions** | Unlimited | Unlimited |
 | **Budgets** | Up to 5 categories | Unlimited categories |
 | **Bills tracking** | Unlimited | Unlimited |
-| **Savings goals** | Up to 2 | Unlimited |
+| **Goals** (savings + financial) | Up to 2 | Unlimited |
 | **Debt tracking** | Yes | Yes |
 | **Income tracking** | Yes (all types incl. benefits) | Yes |
 | **Cashflow calendar** | Yes | Yes |
@@ -486,7 +486,7 @@ Both types appear on `/app/goals`, with a type indicator. Creating a goal offers
 |---------|---------|
 | Creating 4th account | "Free plans support up to 3 accounts. Upgrade to Pro for unlimited." |
 | Creating 6th budget category | "Free plans support up to 5 budget categories. Upgrade to Pro for unlimited." |
-| Creating 3rd savings goal | "Free plans support up to 2 savings goals. Upgrade to Pro for unlimited." |
+| Creating 3rd goal (savings or financial) | "Free plans support up to 2 goals. Upgrade to Pro for unlimited." |
 | Creating 2nd workspace | "Multiple workspaces are a Pro feature." |
 | Accessing Analytics (advanced) | "Advanced analytics, trends, and net worth tracking are Pro features." |
 | Accessing Cashflow forecasting | "Cashflow forecasting is a Pro feature." |
@@ -613,6 +613,17 @@ The demo workspace is pre-populated with realistic UK-centric data:
 **Goals (2)**:
 - Savings goal: "Holiday Fund" — target £1,500, saved £620
 - Financial goal: "Pay off credit card" — linked to Tesco Credit Card debt, target £0 balance by March 2027
+
+### In-app walkthrough (guided tour)
+
+When a user starts with demo data, a short guided tour highlights key areas of the app:
+
+1. **Dashboard**: "This is your dashboard. It shows your balances, upcoming bills, and budget status at a glance."
+2. **Quick-add button**: "Tap here to add a transaction quickly from anywhere."
+3. **Sidebar navigation**: "Use the sidebar to explore your accounts, budgets, cashflow, and more."
+4. **Cashflow calendar**: "Your cashflow calendar shows when money comes in and goes out."
+
+Implementation: lightweight tooltip-based tour (e.g. a step-through overlay). Not a video. Not a modal sequence. Dismissible at any point with "Got it" or "Skip tour". Shows once per user. Can be replayed from Settings → Help.
 
 ### Demo UX rules
 
