@@ -80,11 +80,24 @@ Implement the second major set of finance planning features to deepen core produ
 
 budgetSchema, goalSchema, goalContributionSchema, debtSchema
 
+### 9. Free/Pro distinction
+
+- `UpgradeBanner` component: soft inline banner at plan limit gating points (`components/shared/upgrade-banner.tsx`)
+- `ProBadge` component: small badge for Pro-only features
+- "Pro" badge on Analytics sidebar nav item (per Phase 2: "Analytics [Pro badge if locked]")
+- Analytics page shows UpgradeBanner for advanced analytics
+- `PLAN_LIMITS` defined in `lib/utils/entitlements.ts` (from Phase 1)
+
+### 10. Debt creation
+
+- `AddDebtDialog` component: modal form with name, balance, min payment, APR, next payment date, linked account
+- Wired into debt page header alongside existing DebtCard edit/delete
+
 ---
 
 ## What this phase did NOT do
 
-- No Stripe billing enforcement (free/pro gating deferred)
+- No Stripe billing enforcement (server-side entitlement checks deferred)
 - No analytics charts (deferred to polish phase)
 - No CSV export
 - No admin panel features

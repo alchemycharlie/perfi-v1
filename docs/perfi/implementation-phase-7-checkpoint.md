@@ -39,6 +39,7 @@
 
 ### 4. Debt tracking
 
+- [x] Add debt dialog (name, balance, min payment, APR, next payment date, linked account)
 - [x] Debt cards with balance, min payment, APR, next payment date
 - [x] Linked account display
 - [x] Linked goal cross-reference
@@ -84,6 +85,14 @@
 - [x] Workspace section (name and type)
 - [x] Help section (replay tour)
 - [x] Danger zone (delete account with confirmation)
+
+### 10. Free/Pro distinction scaffolding
+
+- [x] UpgradeBanner component (soft inline banner at gating points)
+- [x] ProBadge component
+- [x] "Pro" badge on Analytics sidebar nav item
+- [x] Analytics page with UpgradeBanner for advanced features
+- [x] PLAN_LIMITS defined in entitlements.ts
 
 ---
 
