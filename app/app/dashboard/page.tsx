@@ -1,33 +1,99 @@
-export default function DashboardPage() {
+import { createClient } from '@/lib/supabase/server';
+import { DashboardContent } from '@/components/app/dashboard-content';
+
+/**
+ * Dashboard page — Server Component that fetches data and passes to client.
+ * Renders different states:
+ * - Demo workspace: shows demo data with tour trigger
+ * - Blank workspace: shows empty states with CTAs
+ * - Active workspace: shows real financial data (Phase C+)
+ */
+export default async function DashboardPage() {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return null;
+
+  // Fetch profile
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('display_name, preferences')
+    .eq('id', user.id)
+    .single();
+
+  // Fetch workspace membership
+  const { data: membership } = await supabase
+    .from('workspace_members')
+    .select('workspace_id')
+    .eq('user_id', user.id)
+    .limit(1)
+    .single();
+
+  const workspaceId = membership?.workspace_id;
+
+  // Fetch workspace details
+  const { data: workspace } = workspaceId
+    ? await supabase.from('workspaces').select('id, name, is_demo').eq('id', workspaceId).single()
+    : { data: null };
+
+  // Fetch accounts summary
+  const { data: accounts } = workspaceId
+    ? await supabase
+        .from('accounts')
+        .select('id, name, type, balance, is_active')
+        .eq('workspace_id', workspaceId)
+        .eq('is_active', true)
+        .order('sort_order')
+    : { data: null };
+
+  // Fetch recent transactions
+  const { data: rawTransactions } = workspaceId
+    ? await supabase
+        .from('transactions')
+        .select('id, description, amount, type, date, category:categories(name, colour)')
+        .eq('workspace_id', workspaceId)
+        .order('date', { ascending: false })
+        .limit(5)
+    : { data: null };
+
+  // Normalize the joined category from Supabase's format
+  const recentTransactions = (rawTransactions || []).map((txn) => ({
+    ...txn,
+    category: Array.isArray(txn.category) ? txn.category[0] || null : txn.category,
+  })) as Array<{
+    id: string;
+    description: string;
+    amount: number;
+    type: string;
+    date: string;
+    category: { name: string; colour: string | null } | null;
+  }>;
+
+  // Fetch upcoming bills
+  const { data: upcomingBills } = workspaceId
+    ? await supabase
+        .from('bills')
+        .select('id, name, amount, next_due_date')
+        .eq('workspace_id', workspaceId)
+        .eq('is_active', true)
+        .order('next_due_date')
+        .limit(5)
+    : { data: null };
+
+  const hasSeenTour = (profile?.preferences as Record<string, unknown>)?.has_seen_tour === true;
+
   return (
-    <div>
-      <h1 className="text-2xl font-semibold text-text-primary">Dashboard</h1>
-      <p className="mt-2 text-sm text-text-secondary">
-        Your financial overview at a glance. Full dashboard coming in Phase C.
-      </p>
-
-      {/* Placeholder dashboard cards */}
-      <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        <DashboardCard title="Total Balance" value="—" />
-        <DashboardCard title="This Month Spending" value="—" />
-        <DashboardCard title="Budget Status" value="—" />
-      </div>
-
-      <div className="mt-8 rounded-[var(--radius-lg)] border border-border bg-bg-secondary p-6">
-        <h2 className="text-sm font-semibold text-text-primary">Recent Transactions</h2>
-        <p className="mt-2 text-sm text-text-muted">
-          No transactions yet. Add your first transaction using the button above.
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function DashboardCard({ title, value }: { title: string; value: string }) {
-  return (
-    <div className="rounded-[var(--radius-lg)] border border-border bg-bg-primary p-4">
-      <p className="text-sm text-text-secondary">{title}</p>
-      <p className="mt-1 text-2xl font-semibold tabular-nums text-text-primary">{value}</p>
-    </div>
+    <DashboardContent
+      displayName={profile?.display_name || 'User'}
+      workspace={workspace}
+      accounts={accounts || []}
+      recentTransactions={recentTransactions || []}
+      upcomingBills={upcomingBills || []}
+      hasSeenTour={hasSeenTour}
+      userId={user.id}
+    />
   );
 }

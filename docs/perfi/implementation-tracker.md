@@ -6,15 +6,15 @@ This document tracks implementation progress across all build phases.
 
 ## Phase Status
 
-| Phase | Name                                                          | Status      | Date Started | Date Completed |
-| ----- | ------------------------------------------------------------- | ----------- | ------------ | -------------- |
-| 1     | Project Setup, Repo Hardening, Delivery Foundation            | Complete    | 2026-03-30   | 2026-03-30     |
-| 2     | Public Marketing Site Shell                                   | Complete    | 2026-03-30   | 2026-03-30     |
-| 3     | Auth, Protected Routing, App Shell, Admin Shell               | Complete    | 2026-03-30   | 2026-03-30     |
-| 4     | Database Migrations, RLS, Core Data Layer                     | Complete    | 2026-03-30   | 2026-03-30     |
-| 5     | Full Features (Budgets, Bills, Income, Goals, Debt, Cashflow) | Not started | —            | —              |
-| 6     | Payments, Entitlements, Admin                                 | Not started | —            | —              |
-| 7     | Polish, Accessibility, Launch                                 | Not started | —            | —              |
+| Phase | Name                                               | Status      | Date Started | Date Completed |
+| ----- | -------------------------------------------------- | ----------- | ------------ | -------------- |
+| 1     | Project Setup, Repo Hardening, Delivery Foundation | Complete    | 2026-03-30   | 2026-03-30     |
+| 2     | Public Marketing Site Shell                        | Complete    | 2026-03-30   | 2026-03-30     |
+| 3     | Auth, Protected Routing, App Shell, Admin Shell    | Complete    | 2026-03-30   | 2026-03-30     |
+| 4     | Database Migrations, RLS, Core Data Layer          | Complete    | 2026-03-30   | 2026-03-30     |
+| 5     | Onboarding, Demo Workspace, First Run Experience   | Complete    | 2026-03-30   | 2026-03-30     |
+| 6     | Payments, Entitlements, Admin                      | Not started | —            | —              |
+| 7     | Polish, Accessibility, Launch                      | Not started | —            | —              |
 
 ---
 
@@ -127,4 +127,20 @@ Post-audit corrections:
   - 8 named UK benefit types (universal_credit, pip, child_benefit, etc.)
 - Fixed WorkspaceProvider lint error (lazy useState initialisation)
 - Removed stale supabase/migrations/.gitkeep
+- Verified: TypeScript passes, ESLint passes, production build succeeds (38 routes)
+
+### 2026-03-30 — Implementation Phase 5: Onboarding, Demo Workspace, First Run
+
+- Built 5-step progressive onboarding flow (display name, workspace type, income, benefits, start mode)
+- Built onboarding Server Actions: updateOnboardingStep (5 step handlers), skipOnboarding, clearDemoData
+- Built workspace creation with default category seeding (12 personal / 17 household categories)
+- Built full demo data seeding per Phase 2 Section 9:
+  - 3 accounts, 2 income sources, 5 bills, 4 budgets, 1 debt, 2 goals, ~30 transactions
+  - All UK-centric (GBP, UK retailers, UK benefits)
+- Built DemoBanner component with "Clear demo data" action
+- Built EmptyState component (reusable across app)
+- Built GuidedTour: 4-step tooltip walkthrough for demo users
+- Built DashboardContent: handles demo/blank/active workspace states
+- Updated dashboard to Server Component that fetches profile, workspace, accounts, transactions, bills
+- Step 3-4 are skippable, "Skip setup entirely" creates default workspace
 - Verified: TypeScript passes, ESLint passes, production build succeeds (38 routes)
