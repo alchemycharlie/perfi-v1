@@ -146,8 +146,13 @@ CREATE TABLE public.categories (
   colour text,
   is_default boolean NOT NULL DEFAULT false,
   sort_order smallint NOT NULL DEFAULT 0,
-  created_at timestamptz NOT NULL DEFAULT now()
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
 );
+
+CREATE TRIGGER categories_updated_at
+  BEFORE UPDATE ON public.categories
+  FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
 
 -- ── debts ──
 -- Created before goals so goals can reference debts
