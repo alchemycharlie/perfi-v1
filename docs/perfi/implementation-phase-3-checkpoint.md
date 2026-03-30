@@ -37,6 +37,7 @@
 - [x] Settings link in sidebar footer
 - [x] Active state highlighting on current route
 - [x] Icons for every nav item
+- [x] WorkspaceProvider context wrapping app layout (Phase 3 Section 9 / Phase 4 Section 6)
 
 ### 4. Admin route group shell
 
@@ -53,6 +54,7 @@
 - [x] User avatar menu: Settings, Billing, Help, Sign out
 - [x] Mobile slide-out nav drawer with full nav items
 - [x] Dashboard placeholder with stat cards and empty state
+- [x] Workspace context provider (`useWorkspace` hook, localStorage persistence)
 
 ### 6. Admin layout shell
 
