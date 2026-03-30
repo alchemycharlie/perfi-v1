@@ -1,5 +1,3 @@
-'use server';
-
 /**
  * Server Action utilities for PerFi.
  *
@@ -24,11 +22,11 @@ import type { z } from 'zod';
  *   if (state.error) → show general error toast
  *   if (state.success) → show success feedback
  */
-export type ActionResult<T = void> = {
+export type ActionResult = {
   success: boolean;
   error?: string;
   errors?: Record<string, string[]>;
-  data?: T;
+  data?: string;
 };
 
 /**

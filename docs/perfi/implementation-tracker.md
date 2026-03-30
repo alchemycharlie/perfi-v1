@@ -10,7 +10,7 @@ This document tracks implementation progress across all build phases.
 | ----- | ------------------------------------------------------------- | ----------- | ------------ | -------------- |
 | 1     | Project Setup, Repo Hardening, Delivery Foundation            | Complete    | 2026-03-30   | 2026-03-30     |
 | 2     | Public Marketing Site Shell                                   | Complete    | 2026-03-30   | 2026-03-30     |
-| 3     | Database, Auth, Middleware                                    | Not started | —            | —              |
+| 3     | Auth, Protected Routing, App Shell, Admin Shell               | Complete    | 2026-03-30   | 2026-03-30     |
 | 4     | Core App (Accounts, Transactions, Dashboard)                  | Not started | —            | —              |
 | 5     | Full Features (Budgets, Bills, Income, Goals, Debt, Cashflow) | Not started | —            | —              |
 | 6     | Payments, Entitlements, Admin                                 | Not started | —            | —              |
@@ -86,3 +86,28 @@ Post-audit corrections:
 - Updated marketing layout to use real header/footer components
 - All forms are client-side only (backend wiring deferred to Phase 3)
 - Verified: TypeScript passes, ESLint passes, production build succeeds (all 36 routes)
+
+### 2026-03-30 — Implementation Phase 3: Auth, App Shell, Admin Shell
+
+- Implemented full middleware route protection per Phase 3 Section 9:
+  - /app/\* requires auth, checks is_disabled, checks onboarding_completed
+  - /admin/\* requires auth + admin role
+  - /login, /signup redirect to dashboard if already authed
+  - Marketing routes remain public
+- Built 6 auth Server Actions: signUp, signIn, signInWithMagicLink, resetPasswordRequest, updatePassword, signOut
+- Built auth callback route for email verification and magic link code exchange
+- Built 4 auth pages with real Supabase Auth wiring:
+  - Login: email+password form, magic link form, forgot password link, error/success states
+  - Signup: email+password, validation, success state with "check email", terms links
+  - Forgot password: email form, success confirmation
+  - Reset password: new password form, redirect to login
+- Built app shell with AppSidebar (10 nav items with icons) and AppTopBar (hamburger, quick-add, user menu)
+- Built mobile slide-out nav drawer
+- Built user avatar menu: Settings, Billing, Help/Support, Sign out
+- Built admin shell with AdminSidebar (6 nav items) and AdminTopBar
+- Updated dashboard placeholder with stat cards and empty state
+- Updated onboarding placeholder with 5-step progress indicator
+- Created /disabled page for disabled accounts
+- Simplified ActionResult type (removed generic, added data as optional string)
+- Removed 'use server' from utils.ts (was causing non-async export error)
+- Verified: TypeScript passes, ESLint passes, production build succeeds (38 routes)

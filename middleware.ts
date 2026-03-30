@@ -2,16 +2,9 @@ import { type NextRequest } from 'next/server';
 import { updateSession } from '@/lib/supabase/middleware';
 
 /**
- * Next.js middleware for auth guards, redirects, and session refresh.
- *
- * Phase 3 Section 9 — Protected Route Model:
- * - /app/*       → require auth, check is_disabled, check onboarding
- * - /admin/*     → require auth + admin role
- * - /login, /signup → redirect to /app/dashboard if already authed
- * - /(marketing) → public, no auth
- *
- * Full guard logic will be implemented in Implementation Phase 2.
- * Currently only refreshes the Supabase session.
+ * Next.js middleware entry point.
+ * Delegates to Supabase middleware for session refresh and route protection.
+ * See lib/supabase/middleware.ts for full guard logic.
  */
 export async function middleware(request: NextRequest) {
   return await updateSession(request);
