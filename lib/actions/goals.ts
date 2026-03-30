@@ -3,6 +3,8 @@
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { goalSchema, goalContributionSchema } from '@/lib/validations/schemas';
+import { canCreate, UPGRADE_MESSAGES } from '@/lib/utils/entitlements';
+import type { Plan } from '@/lib/utils/entitlements';
 import type { ActionResult } from '@/lib/actions/utils';
 
 export async function createGoal(
@@ -11,6 +13,28 @@ export async function createGoal(
   formData: FormData,
 ): Promise<ActionResult> {
   const supabase = await createClient();
+
+  // Server-side entitlement check
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { success: false, error: 'Not authenticated.' };
+
+  const { data: sub } = await supabase
+    .from('subscriptions')
+    .select('plan')
+    .eq('user_id', user.id)
+    .single();
+  const plan = (sub?.plan as Plan) || 'free';
+
+  const { count } = await supabase
+    .from('goals')
+    .select('id', { count: 'exact', head: true })
+    .eq('workspace_id', workspaceId);
+  if (!canCreate(plan, 'goals', count || 0)) {
+    return { success: false, error: UPGRADE_MESSAGES.goals };
+  }
+
   const raw = Object.fromEntries(formData.entries());
   const parsed = goalSchema.safeParse(raw);
 

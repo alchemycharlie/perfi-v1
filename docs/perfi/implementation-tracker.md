@@ -16,7 +16,8 @@ This document tracks implementation progress across all build phases.
 | 6     | Accounts, Transactions, Income, Recurring Bills    | Complete    | 2026-03-30   | 2026-03-30     |
 | 7     | Budgets, Goals, Debts, Cashflow, Settings          | Complete    | 2026-03-30   | 2026-03-30     |
 | 8     | Dashboard, Analytics, Forecasting, Net Worth       | Complete    | 2026-03-30   | 2026-03-30     |
-| 9     | Billing, Admin, Polish, Launch                     | Not started | —            | —              |
+| 9     | Stripe Billing, Entitlements, Premium Gating       | Complete    | 2026-03-30   | 2026-03-30     |
+| 10    | Admin, Polish, Launch                              | Not started | —            | —              |
 
 ---
 
@@ -187,4 +188,14 @@ Post-audit corrections:
 - Net worth tracking: sum of active account balances on analytics page
 - Free/Pro gating: subscription.plan checked in Server Components, UpgradeBanner at Pro sections
 - 4 chart components: SpendingDonut, IncomeVsExpenses, SpendingTrend, ForecastChart
+- Verified: TypeScript passes, ESLint passes, production build succeeds (38 routes)
+
+### 2026-03-30 — Implementation Phase 9: Stripe Billing, Entitlements, Premium Gating
+
+- Built 4 Stripe billing Server Actions: createCheckoutSession, createPortalSession, cancelSubscription, resumeSubscription
+- Built Stripe webhook handler for 5 events with signature verification (uses service_role)
+- Added server-side entitlement enforcement to createAccount (≤3), createBudget (≤5), createGoal (≤2)
+- Enhanced entitlements.ts: canCreate, canAccessFeature, getUserPlan, UPGRADE_MESSAGES
+- Built billing page with 4 plan states: Free, Pro active, Pro cancelling, Pro past due
+- Downgrade handling: data preserved, creation blocked beyond limits, Pro features show UpgradeBanner
 - Verified: TypeScript passes, ESLint passes, production build succeeds (38 routes)
