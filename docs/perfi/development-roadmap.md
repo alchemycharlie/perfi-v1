@@ -19,3 +19,15 @@ A running list of improvements, feedback, and planned changes.
 - [ ] Create webhook endpoint in Stripe pointing to `https://perfi-v1.vercel.app/api/webhooks/stripe` — subscribe to: `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.payment_failed`, `invoice.paid`
 - [ ] Add `STRIPE_WEBHOOK_SECRET` to Vercel env vars (from Developers > Webhooks, after creating the endpoint)
 - [ ] Add `STRIPE_PRO_PRICE_ID` to Vercel env vars (from Product Catalog, after creating the price)
+
+## Known Issues
+
+- [ ] Workspace creation during onboarding (step 2) may fail with RLS policy violation — root cause suspected to be session cookie timing; direct SQL insert works fine. Workaround: create workspace and membership via Supabase SQL Editor if it occurs
+- [ ] Supabase free tier rate limits auth emails aggressively (3/hour per recipient) — can be an issue during development/testing. Workaround: manually confirm users via Supabase Dashboard > Authentication > Users
+
+## Infrastructure
+
+- [x] Vercel environment variables configured (Supabase keys set, Stripe pending)
+- [x] Supabase database migrations applied (001–006)
+- [ ] Set up Supabase CLI for local development (`supabase init`, `supabase link`)
+- [ ] Configure Vercel preview environment variables for PR deploys
