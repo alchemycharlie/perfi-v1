@@ -33,8 +33,32 @@ export async function signUp(_prevState: ActionResult, formData: FormData): Prom
 
   return {
     success: true,
-    data: 'Check your email for a verification link.',
+    data: email,
   };
+}
+
+export async function verifyOtp(_prevState: ActionResult, formData: FormData): Promise<ActionResult> {
+  const supabase = await createClient();
+
+  const email = formData.get('email') as string;
+  const token = formData.get('token') as string;
+
+  if (!email || !token) {
+    return { success: false, error: 'Email and verification code are required.' };
+  }
+
+  const { error } = await supabase.auth.verifyOtp({
+    email,
+    token,
+    type: 'signup',
+  });
+
+  if (error) {
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath('/', 'layout');
+  redirect('/app/onboarding');
 }
 
 export async function signIn(_prevState: ActionResult, formData: FormData): Promise<ActionResult> {
